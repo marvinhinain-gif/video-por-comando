@@ -1,0 +1,6 @@
+Coloque aqui os arquivos reais:
+- VSL (.mp4) e capa (.jpg/.webp)
+- Vídeos de exemplo da galeria
+- Vídeo original e editado do comparador
+- Legendas .vtt
+Depois aponte os caminhos em js/config.js e js/content.js.
