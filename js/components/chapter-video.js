@@ -16,6 +16,7 @@ const ICON = {
 export function createChapterVideo({ src, poster, chapters = [], aspect = '4 / 5', title = 'Demonstração', loop = true, autoplay = true, showChapters = true }) {
   const video = h('video', { muted: true, playsinline: true, 'webkit-playsinline': true, preload: 'none', poster: poster || null, 'aria-label': title, loop: loop || null });
   video.muted = true;
+  if (autoplay) video.dataset.auto = '1';
   const base = src.replace(/\.(mp4|webm)$/, '');
   video.append(h('source', { src: `${base}.mp4`, type: 'video/mp4' }), h('source', { src: `${base}.webm`, type: 'video/webm' }));
 
@@ -65,7 +66,7 @@ export function createChapterVideo({ src, poster, chapters = [], aspect = '4 / 5
 
   const toggle = () => {
     if (video.ended) { video.currentTime = 0; tryPlay(); return; }
-    if (video.paused) { userPaused = false; if (video.readyState === 0) video.preload = 'auto'; tryPlay(); } else { userPaused = true; video.pause(); }
+    if (video.paused) { userPaused = false; delete video.dataset.userPaused; if (video.readyState === 0) video.preload = 'auto'; tryPlay(); } else { userPaused = true; video.dataset.userPaused = '1'; video.pause(); }
   };
   playBtn.addEventListener('click', toggle);
   video.addEventListener('click', toggle);
@@ -73,9 +74,13 @@ export function createChapterVideo({ src, poster, chapters = [], aspect = '4 / 5
   if (autoplay && !reducedMotion()) {
     new IntersectionObserver((es) => {
       inView = es[0].isIntersecting;
-      if (inView && !userPaused && !video.ended) { if (video.readyState === 0) video.preload = 'auto'; tryPlay(); }
+      if (inView && !userPaused && !video.ended) {
+        if (video.readyState === 0) { video.preload = 'auto'; video.load(); }
+        tryPlay();
+      }
       if (!inView) video.pause();
-    }, { threshold: 0.3 }).observe(frame);
+    }, { threshold: 0.25 }).observe(frame);
+    video.addEventListener('canplay', () => { if (inView && !userPaused && video.paused) tryPlay(); });
   }
 
   return {

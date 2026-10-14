@@ -11,12 +11,22 @@ import { track } from '../core/tracking.js';
 export function initFitText() {
   const els = $$('.fit');
   if (!els.length) return;
+  const MOBILE = 600;
+  // Linhas do computador ficam no HTML; no celular usa data-mobile-lines
+  // ("linha|linha|linha", com [trecho] sublinhado).
+  els.forEach((el) => { el._desk = el.innerHTML; });
+  const mobileHTML = (el) => {
+    const lines = el.dataset.mobileLines.split('|').map((l) => l.replace(/\[(.+?)\]/g, '<span class="hl">$1</span>'));
+    lines[lines.length - 1] += '<span class="period" aria-hidden="true"></span>';
+    return lines.map((l) => `<span>${l}</span>`).join('');
+  };
   const fit = () => {
+    const mobile = innerWidth < MOBILE;
     els.forEach((el) => {
-      const max = +el.dataset.max, min = +el.dataset.min || 9.5;
+      if (el.dataset.mobileLines && el._mode !== mobile) { el.innerHTML = mobile ? mobileHTML(el) : el._desk; el._mode = mobile; }
       el.classList.remove('fit-wrap');
-      // No celular: texto quebra naturalmente, com o tamanho definido no CSS (maior e mais legível).
-      if (el.dataset.mobileWrap && innerWidth < +el.dataset.mobileWrap) { el.style.fontSize = ''; el.classList.add('fit-wrap'); return; }
+      if (el.dataset.mobileWrap && mobile) { el.style.fontSize = ''; el.classList.add('fit-wrap'); return; }
+      const max = +el.dataset.max, min = +el.dataset.min || 9.5;
       el.style.fontSize = `${max}px`;
       const wrap = el.closest('.wrap') || el.parentElement;
       const cs = getComputedStyle(wrap);
@@ -28,11 +38,39 @@ export function initFitText() {
       if (size >= min) el.style.fontSize = `${size}px`;
       else { el.style.fontSize = `${min}px`; el.classList.add('fit-wrap'); }
     });
+    sizeHeroVideo();
   };
   fit();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   let lastW = innerWidth;
   addEventListener('resize', () => { if (innerWidth !== lastW) { lastW = innerWidth; fit(); } });
+}
+
+/** Celular: o vídeo do topo encolhe o necessário para o botão principal
+ *  caber na primeira tela (selo, headline, subheadline, vídeo e botão). */
+function sizeHeroVideo() {
+  const stage = $('#vstage'), cta = $('#ctaMain'), vcta = $('.v-cta');
+  if (!stage || !cta) return;
+  stage.style.removeProperty('--cw');
+  if (innerWidth >= 600) return;
+  const stageTop = stage.getBoundingClientRect().top + scrollY;
+  const gap = parseFloat(getComputedStyle(vcta).marginTop) || 0;
+  const avail = innerHeight - stageTop - gap - cta.offsetHeight - 14;
+  const cw = Math.max(150, Math.min(innerWidth * 0.66, 270, (avail - 4) * 9 / 16));
+  stage.style.setProperty('--cw', `${Math.floor(cw)}px`);
+}
+
+/** Vídeos que tocam sozinhos: alguns celulares (modo economia de energia) só
+ *  liberam após o primeiro toque na página — nesse toque, retomamos os vídeos visíveis. */
+export function initAutoplayUnlock() {
+  const kick = () => {
+    $$('video[data-auto]').forEach((v) => {
+      const r = v.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < innerHeight && v.paused && !v.dataset.userPaused) { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+    });
+  };
+  ['touchend', 'click'].forEach((ev) => addEventListener(ev, kick, { passive: true }));
+  addEventListener('scroll', () => { clearTimeout(kick._t); kick._t = setTimeout(kick, 150); }, { passive: true });
 }
 
 /** Topo: fundo ao rolar + botão aparece depois do botão principal. */

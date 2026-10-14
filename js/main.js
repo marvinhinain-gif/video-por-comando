@@ -15,7 +15,7 @@ import { mountBeforeAfter } from './components/before-after.js';
 import { mountFileDemo } from './components/file-demo.js';
 import { mountMindmap } from './components/mindmap.js';
 import { mountFaq } from './components/faq.js';
-import { initFitText, initHeader, initHeroMotion, initDust, initBuyBar, initOfferView, applyConfigText } from './components/page-chrome.js';
+import { initAutoplayUnlock, initFitText, initHeader, initHeroMotion, initDust, initBuyBar, initOfferView, applyConfigText } from './components/page-chrome.js';
 
 const COMPONENTS = {
   'hero-vsl': mountHeroVsl,
@@ -53,3 +53,4 @@ initHeroMotion();
 initDust();
 initBuyBar();
 initOfferView();
+initAutoplayUnlock();
