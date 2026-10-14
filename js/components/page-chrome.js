@@ -15,6 +15,8 @@ export function initFitText() {
     els.forEach((el) => {
       const max = +el.dataset.max, min = +el.dataset.min || 9.5;
       el.classList.remove('fit-wrap');
+      // No celular: texto quebra naturalmente, com o tamanho definido no CSS (maior e mais legível).
+      if (el.dataset.mobileWrap && innerWidth < +el.dataset.mobileWrap) { el.style.fontSize = ''; el.classList.add('fit-wrap'); return; }
       el.style.fontSize = `${max}px`;
       const wrap = el.closest('.wrap') || el.parentElement;
       const cs = getComputedStyle(wrap);

@@ -121,7 +121,7 @@ a { color: inherit; }
 .hero::before { content: ""; position: absolute; left: 50%; top: 38%; width: min(1100px, 160vw); aspect-ratio: 1; translate: -50% calc(var(--p, 0) * 120px); z-index: -2; background: radial-gradient(closest-side, rgba(214, 163, 41, .14), transparent 70%); }
 .hero-in { display: flex; flex-direction: column; align-items: center; padding-block: clamp(24px, 4.5vw, 56px) var(--sec); }
 .hcopy { display: flex; flex-direction: column; align-items: center; will-change: transform, opacity; transform: translate3d(0, calc(var(--p, 0) * -60px), 0) scale(calc(1 - var(--p, 0) * .04)); opacity: calc(1 - var(--p, 0) * .6); }
-.pre { display: inline-flex; align-items: center; margin: 0 0 clamp(14px, 2vw, 22px); padding: 7px 13px; border: 1px solid rgba(214, 163, 41, .38); border-radius: 10px; background: rgba(214, 163, 41, .07); box-shadow: inset 0 1px 0 rgba(242, 212, 136, .08); font-size: 13px; line-height: 1.3; animation: fadeUp .8s var(--ease) .2s both; }
+.pre { display: inline-flex; align-items: center; margin: 0 0 clamp(14px, 2vw, 22px); padding: 5px 11px; border: 1px solid rgba(214, 163, 41, .38); border-radius: 10px; background: rgba(214, 163, 41, .07); box-shadow: inset 0 1px 0 rgba(242, 212, 136, .08); font-size: 11.5px; line-height: 1.3; animation: fadeUp .8s var(--ease) .2s both; }
 .pre b { font-weight: 600; }
 .pip { width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 3px rgba(214, 163, 41, .18); flex: none; }
 .h1 { max-width: none; font-weight: 700; font-size: clamp(26px, 4.4vw, 58px); line-height: 1.06; letter-spacing: -.025em; text-transform: uppercase; animation: fadeUp .9s var(--ease) .3s both; }
@@ -528,7 +528,10 @@ a { color: inherit; }
   .brand img { width: 40px; }
   .hero { padding-top: calc(60px + env(safe-area-inset-top, 0px)); }
   .hero-in { padding-top: 18px; }
-  .pre { font-size: 11.5px; padding: 6px 10px; }
+  .pre { font-size: 10.5px; padding: 4px 9px; border-radius: 8px; }
+  .pip { width: 5px; height: 5px; margin-right: 6px; }
+  .h1.fit-wrap { font-size: clamp(29px, 8.7vw, 38px); line-height: 1.08; text-wrap: balance; }
+  .sub.fit-wrap { font-size: 15.5px; line-height: 1.5; max-width: 30em; }
   .vstage { --cw: min(66vw, 270px); }
   .vcard { border-radius: 22px; }
   .vframe { border-radius: 20px; }

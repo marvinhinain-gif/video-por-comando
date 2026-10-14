@@ -43,8 +43,7 @@ export function mountGallery(root) {
       players.push(p);
       media = p.el;
     } else {
-      const v = createChapterVideo({ ...demo(ex.demo), aspect: '9 / 16', loop: true, autoplay: false, showChapters: false, title: `Ilustração: ${ex.title}` });
-      v.video.addEventListener('play', () => players.forEach((o) => o !== v && o.pause()));
+      const v = createChapterVideo({ ...demo(ex.demo), aspect: '9 / 16', loop: true, autoplay: true, showChapters: false, title: `Ilustração: ${ex.title}` });
       players.push(v);
       media = v.el;
     }
@@ -60,7 +59,7 @@ export function mountGallery(root) {
   function playActive() {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const idx = Math.round(track.scrollLeft / cardW());
-    players.forEach((p, j) => { if (j === idx && galleryInView && p.play) p.play(); else p.pause(); });
+    players.forEach((p) => { if (galleryInView && p.play && p.video && p.video.loop) p.play(); });
   }
 
   function pick(i) {

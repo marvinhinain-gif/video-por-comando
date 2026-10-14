@@ -13,7 +13,7 @@ const ICON = {
   replay: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
 };
 
-export function createChapterVideo({ src, poster, chapters = [], aspect = '4 / 5', title = 'Demonstração', loop = false, autoplay = true, showChapters = true }) {
+export function createChapterVideo({ src, poster, chapters = [], aspect = '4 / 5', title = 'Demonstração', loop = true, autoplay = true, showChapters = true }) {
   const video = h('video', { muted: true, playsinline: true, 'webkit-playsinline': true, preload: 'none', poster: poster || null, 'aria-label': title, loop: loop || null });
   video.muted = true;
   const base = src.replace(/\.(mp4|webm)$/, '');
@@ -75,7 +75,7 @@ export function createChapterVideo({ src, poster, chapters = [], aspect = '4 / 5
       inView = es[0].isIntersecting;
       if (inView && !userPaused && !video.ended) { if (video.readyState === 0) video.preload = 'auto'; tryPlay(); }
       if (!inView) video.pause();
-    }, { threshold: 0.55 }).observe(frame);
+    }, { threshold: 0.3 }).observe(frame);
   }
 
   return {

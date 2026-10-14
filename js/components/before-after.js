@@ -68,6 +68,13 @@ export function mountBeforeAfter(root) {
     [vo, ve].forEach((v) => { v.preload = 'metadata'; v.load(); });
   }, { rootMargin: '300px' });
   io.observe(root);
+  // Ilustração: os dois vídeos tocam sozinhos, sem som e em loop, quando aparecem na tela.
+  if (illus && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    [vo, ve].forEach((v) => { v.loop = true; v.muted = true; v.preload = 'auto'; });
+    new IntersectionObserver((es) => {
+      [vo, ve].forEach((v) => { if (es[0].isIntersecting) { const p = v.play(); if (p && p.catch) p.catch(() => {}); } else v.pause(); });
+    }, { threshold: 0.3 }).observe(grid);
+  }
 
   const paintDur = () => {
     const o = vo.duration, e = ve.duration;
