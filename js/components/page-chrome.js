@@ -55,8 +55,8 @@ function sizeHeroVideo() {
   if (innerWidth >= 600) return;
   const stageTop = stage.getBoundingClientRect().top + scrollY;
   const gap = parseFloat(getComputedStyle(vcta).marginTop) || 0;
-  const avail = innerHeight - stageTop - gap - cta.offsetHeight - 14;
-  const cw = Math.max(150, Math.min(innerWidth * 0.66, 270, (avail - 4) * 9 / 16));
+  const avail = innerHeight - stageTop - gap - cta.offsetHeight - 10;
+  const cw = Math.max(160, Math.min(innerWidth * 0.74, 300, (avail - 4) * 9 / 16));
   stage.style.setProperty('--cw', `${Math.floor(cw)}px`);
 }
 

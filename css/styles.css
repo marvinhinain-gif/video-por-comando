@@ -532,16 +532,16 @@ a { color: inherit; }
   .pip { width: 5px; height: 5px; margin-right: 6px; }
   .h1 { letter-spacing: -.035em; line-height: 1.04; }
   .hero-in { padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); }
-  .sub.fit-wrap { font-size: 15px; line-height: 1.45; max-width: 30em; }
+  .sub.fit-wrap { font-size: 13px; line-height: 1.4; max-width: 31em; }
   .pre { margin-bottom: 10px; }
   .vt-cap { padding: 7px 10px; white-space: nowrap; }
   .vt-cap small { font-size: 10.5px; }
   .vt-cap b { font-size: 13.5px; }
   .vt-play { width: 56px; }
   .vt-badge { padding: 4px 8px; font-size: 9.5px; }
-  .sub { margin-top: 10px; }
-  .vstage { margin-top: 16px; }
-  .v-cta { margin-top: 14px; gap: 8px; }
+  .sub { margin-top: 8px; }
+  .vstage { margin-top: 12px; }
+  .v-cta { margin-top: 12px; gap: 8px; }
   .vstage { --cw: min(66vw, 270px); }
   .vcard { border-radius: 22px; }
   .vframe { border-radius: 20px; }
