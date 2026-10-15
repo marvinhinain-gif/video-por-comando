@@ -26,7 +26,7 @@ export function initFitText() {
       if (el.dataset.mobileLines && el._mode !== mobile) { el.innerHTML = mobile ? mobileHTML(el) : el._desk; el._mode = mobile; }
       el.classList.remove('fit-wrap');
       if (el.dataset.mobileWrap && mobile) { el.style.fontSize = ''; el.classList.add('fit-wrap'); return; }
-      const max = +el.dataset.max, min = +el.dataset.min || 9.5;
+      const max = mobile && el.dataset.mobileMax ? +el.dataset.mobileMax : +el.dataset.max, min = +el.dataset.min || 9.5;
       el.style.fontSize = `${max}px`;
       const wrap = el.closest('.wrap') || el.parentElement;
       const cs = getComputedStyle(wrap);
@@ -56,7 +56,7 @@ function sizeHeroVideo() {
   const stageTop = stage.getBoundingClientRect().top + scrollY;
   const gap = parseFloat(getComputedStyle(vcta).marginTop) || 0;
   const avail = innerHeight - stageTop - gap - cta.offsetHeight - 10;
-  const cw = Math.max(160, Math.min(innerWidth * 0.74, 300, (avail - 4) * 9 / 16));
+  const cw = Math.max(148, Math.min(innerWidth * 0.74, 300, (avail - 4) * 9 / 16));
   stage.style.setProperty('--cw', `${Math.floor(cw)}px`);
 }
 

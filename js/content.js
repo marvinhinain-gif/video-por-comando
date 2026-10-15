@@ -128,7 +128,7 @@ export const GUIDED_COMMANDS = [
 export const GALLERY = [
   {
     id: 'social', icon: '📱', label: 'Vídeos para redes sociais',
-    description: 'Crie conteúdos, Reels e vídeos curtos para Instagram, TikTok e outras redes.',
+    description: 'Crie Reels, conteúdos e vídeos curtos sem começar do zero.',
     examples: [
       { title: 'Reels de dica rápida', goal: 'Ensinar uma dica em poucos segundos.',
         command: 'Transforma essa dica num Reels curto, com texto na tela.',
@@ -142,7 +142,7 @@ export const GALLERY = [
   },
   {
     id: 'ads', icon: '🚀', label: 'Anúncios para vender',
-    description: 'Transforme suas ideias em vídeos de anúncios para divulgar seus produtos e serviços.',
+    description: 'Crie anúncios para apresentar seus produtos e chamar a atenção.',
     examples: [
       { title: 'Anúncio de produto', goal: 'Apresentar o produto e levar ao clique.',
         command: 'Quero criar um anúncio para o meu produto.',
@@ -156,7 +156,7 @@ export const GALLERY = [
   },
   {
     id: 'company', icon: '🎬', label: 'Vídeos para sua empresa',
-    description: 'Crie apresentações para mostrar seu negócio, divulgar seus serviços e valorizar sua marca.',
+    description: 'Apresente seu negócio e divulgue seus serviços com vídeos.',
     examples: [
       { title: 'Apresentação da empresa', goal: 'Mostrar quem vocês são e o que fazem.',
         command: 'Quero um vídeo apresentando minha empresa.',
@@ -174,7 +174,7 @@ export const GALLERY = [
 export const REQUESTS = [
   {
     id: 'curto',
-    label: 'Quer um vídeo mais curto? Peça.',
+    label: 'Quer um vídeo mais curto? É só pedir.',
     ask: 'Quero deixar meu vídeo mais curto.',
     action: 'Encontrar pausas, repetições e trechos que não mudam a mensagem, e propor o que sai.',
     result: 'Lista de cortes por trecho, para você aprovar, mantendo a fala principal.',
@@ -182,7 +182,7 @@ export const REQUESTS = [
   },
   {
     id: 'mensagem',
-    label: 'Quer deixar a mensagem mais interessante? Peça.',
+    label: 'Quer melhorar seu vídeo? Basta falar.',
     ask: 'Quero melhorar a mensagem desse vídeo.',
     action: 'Ler o que é dito, apontar onde a ideia se perde e sugerir uma ordem mais clara.',
     result: 'Nova versão do roteiro, com abertura mais forte e a ideia principal dita mais cedo.',
@@ -190,7 +190,7 @@ export const REQUESTS = [
   },
   {
     id: 'anuncio',
-    label: 'Quer transformar sua ideia em um anúncio? É só falar.',
+    label: 'Quer criar um anúncio? A IA ajuda.',
     ask: 'Quero transformar minha ideia em um anúncio.',
     action: 'Transformar a ideia em estrutura de venda: atenção, apresentação, objeção e chamada.',
     result: 'Roteiro de anúncio com abertura, apresentação do produto e chamada para a compra.',
@@ -256,19 +256,19 @@ export const MINDMAP = {
 /* ---------- BLOCO 09 · Perguntas frequentes (copy obrigatória) ---------- */
 export const FAQ = [
   { q: 'Preciso saber editar vídeos?',
-    a: 'Não. Você não precisa dominar programas de edição. A ideia é facilitar seu trabalho usando comandos simples. Algumas etapas podem precisar de ajustes ou revisão.' },
+    a: 'Não. Basta explicar o que você deseja. A IA ajuda na criação e edição, embora algumas etapas possam exigir revisão.' },
   { q: 'Como faço para começar?',
-    a: 'É simples. Você recebe o arquivo, adiciona ao Claude e começa a dar seus comandos.' },
+    a: 'Você recebe o arquivo, adiciona ao Claude e começa a enviar seus comandos.' },
   { q: 'Posso mandar comandos por áudio?',
-    a: 'Sim. Se seu celular ou computador tiver digitação por voz, você pode usar o microfone para ditar o que deseja, sem precisar digitar tudo.' },
+    a: 'Sim. Use o microfone do celular ou computador para ditar seus comandos, quando houver essa função.' },
   { q: 'Que tipos de vídeos posso criar?',
-    a: 'Você pode usar o mecanismo para ajudar a produzir conteúdos para redes sociais, anúncios e vídeos de apresentação de empresas.' },
+    a: 'Reels, anúncios, conteúdos para redes sociais e apresentações de empresas.' },
   { q: 'O Claude faz tudo sozinho?',
-    a: 'O mecanismo ajuda a criar e editar, mas algumas tarefas dependem de ferramentas adicionais e dos recursos disponíveis.' },
+    a: 'Nem sempre. Algumas edições e exportações dependem das ferramentas e recursos disponíveis.' },
   { q: 'O que é o mapa mental?',
-    a: 'É um guia visual que mostra como organizar seus vídeos para você não ficar perdido sem saber o que criar ou pedir para a IA.' },
+    a: 'Um guia visual para organizar seus vídeos e saber exatamente o que pedir à IA.' },
   { q: 'Preciso pagar pelo Claude?',
-    a: 'Alguns recursos podem exigir um plano pago do Claude ou ferramentas adicionais. Esses custos não estão incluídos na compra.' },
+    a: 'Alguns recursos podem exigir um plano pago ou ferramentas adicionais, não incluídos na compra.' },
 ];
 
 /* ---------- VÍDEOS DE DEMONSTRAÇÃO (assets/media/demo) ----------
