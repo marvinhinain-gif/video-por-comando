@@ -14,8 +14,9 @@
 export const COMMAND_DEMOS = [
   {
     id: 'instagram',
-    label: 'Vídeo para o Instagram',
-    command: 'Quero transformar essa ideia em um vídeo para o Instagram.',
+    label: 'Vídeo para Instagram',
+    command: 'Transforma essa gravação em um Reels de 30 segundos, com um começo que chame atenção.',
+    summary: 'A IA entende o pedido, ajuda a organizar as cenas, preparar os textos e orientar a edição.',
     steps: [
       { title: 'Comando enviado',
         body: 'Você escreve ou dita o pedido no Claude, com o arquivo Vídeo por Comando™ já adicionado.',
@@ -36,8 +37,9 @@ export const COMMAND_DEMOS = [
   },
   {
     id: 'anuncio',
-    label: 'Anúncio do produto',
-    command: 'Quero criar um anúncio para o meu produto.',
+    label: 'Anúncio de produto',
+    command: 'Quero transformar essa ideia em um anúncio para vender meu produto.',
+    summary: 'A IA ajuda a criar uma abertura forte, apresentar o produto e terminar com uma chamada para ação.',
     steps: [
       { title: 'Comando enviado',
         body: 'Você escreve ou dita o pedido no Claude, com o arquivo Vídeo por Comando™ já adicionado.',
@@ -63,24 +65,24 @@ export const PROCESSES = {
   traditional: {
     label: 'Processo tradicional',
     steps: [
-      { t: 'Abrir um editor.',       d: 'Escolher e aprender um programa de edição.' },
-      { t: 'Organizar arquivos.',    d: 'Importar gravações, imagens e áudios no lugar certo.' },
-      { t: 'Realizar cortes.',       d: 'Encontrar cada pausa e erro na linha do tempo.' },
-      { t: 'Inserir textos.',        d: 'Criar, posicionar e sincronizar cada texto na tela.' },
-      { t: 'Ajustar elementos.',     d: 'Cores, transições, áudio e enquadramento, um a um.' },
-      { t: 'Revisar.',               d: 'Assistir de novo e voltar aos passos anteriores.' },
-      { t: 'Exportar.',              d: 'Escolher formato, resolução e esperar a renderização.' },
+      { t: 'Abrir um programa de edição.', d: 'Escolher e aprender um programa de edição.' },
+      { t: 'Organizar todas as gravações.', d: 'Importar gravações, imagens e áudios no lugar certo.' },
+      { t: 'Cortar erros e pausas.', d: 'Encontrar cada pausa e erro na linha do tempo.' },
+      { t: 'Colocar legendas e textos.', d: 'Criar, posicionar e sincronizar cada texto na tela.' },
+      { t: 'Ajustar efeitos e cenas.', d: 'Cores, transições, áudio e enquadramento, um a um.' },
+      { t: 'Revisar tudo novamente.', d: 'Assistir de novo e voltar aos passos anteriores.' },
+      { t: 'Exportar o vídeo.', d: 'Escolher formato, resolução e esperar a renderização.' },
     ],
   },
   assisted: {
-    label: 'Processo assistido por IA',
+    label: 'Processo com IA',
     steps: [
-      { who: 'Você', t: 'Abrir o Claude.',                     d: 'Com o arquivo Vídeo por Comando™ adicionado.' },
-      { who: 'Você', t: 'Informar o objetivo.',                d: 'Dizer, em palavras simples, o vídeo que você quer.' },
-      { who: 'Você', t: 'Enviar os materiais necessários.',    d: 'Gravações, imagens ou só a ideia, conforme o pedido.' },
-      { who: 'Você', t: 'Solicitar a criação ou edição.',      d: 'Escrevendo ou ditando pelo microfone do aparelho.' },
-      { who: 'IA ajuda', t: 'Acompanhar as etapas compatíveis.',   d: 'O assistente mostra o que está fazendo e o que depende de outras ferramentas.' },
-      { who: 'Você + IA', t: 'Revisar e finalizar.',                d: 'Você continua no controle: revisa e pede ajustes.' },
+      { who: 'Você', t: 'Abrir sua IA.', d: 'No computador ou no celular.' },
+      { who: 'Você', t: 'Adicionar o Vídeo por Comando™.', d: 'Seguindo o vídeo de instrução.' },
+      { who: 'Você', t: 'Enviar sua gravação ou ideia.', d: 'Gravações, imagens ou só a ideia.' },
+      { who: 'Você', t: 'Dizer o que precisa.', d: 'Escrevendo ou ditando pelo microfone.' },
+      { who: 'IA ajuda', t: 'Deixar a IA ajudar na edição.', d: 'Dentro do que suas ferramentas permitem.' },
+      { who: 'Você + IA', t: 'Conferir e ajustar o resultado.', d: 'Você revisa e pede novos ajustes.' },
     ],
   },
 };
@@ -128,7 +130,7 @@ export const GUIDED_COMMANDS = [
 export const GALLERY = [
   {
     id: 'social', icon: '📱', label: 'Vídeos para redes sociais',
-    description: 'Crie Reels, conteúdos e vídeos curtos sem começar do zero.',
+    description: 'Crie Reels, TikToks e conteúdos curtos sem ficar perdido na edição.',
     examples: [
       { title: 'Reels de dica rápida', goal: 'Ensinar uma dica em poucos segundos.',
         command: 'Transforma essa dica num Reels curto, com texto na tela.',
@@ -142,7 +144,7 @@ export const GALLERY = [
   },
   {
     id: 'ads', icon: '🚀', label: 'Anúncios para vender',
-    description: 'Crie anúncios para apresentar seus produtos e chamar a atenção.',
+    description: 'Transforme suas ideias em vídeos de anúncios para divulgar seus produtos e serviços.',
     examples: [
       { title: 'Anúncio de produto', goal: 'Apresentar o produto e levar ao clique.',
         command: 'Quero criar um anúncio para o meu produto.',
@@ -156,7 +158,7 @@ export const GALLERY = [
   },
   {
     id: 'company', icon: '🎬', label: 'Vídeos para sua empresa',
-    description: 'Apresente seu negócio e divulgue seus serviços com vídeos.',
+    description: 'Crie vídeos para apresentar seu negócio, mostrar seu trabalho e divulgar seus serviços.',
     examples: [
       { title: 'Apresentação da empresa', goal: 'Mostrar quem vocês são e o que fazem.',
         command: 'Quero um vídeo apresentando minha empresa.',
@@ -174,24 +176,24 @@ export const GALLERY = [
 export const REQUESTS = [
   {
     id: 'curto',
-    label: 'Quer um vídeo mais curto? É só pedir.',
-    ask: 'Quero deixar meu vídeo mais curto.',
+    label: 'Quer um vídeo mais curto?',
+    ask: 'Remove as pausas e deixa esse vídeo com 30 segundos.',
     action: 'Encontrar pausas, repetições e trechos que não mudam a mensagem, e propor o que sai.',
     result: 'Lista de cortes por trecho, para você aprovar, mantendo a fala principal.',
     next: { ask: 'Agora deixa com no máximo 30 segundos.', answer: 'Proponho cortar a introdução e a segunda explicação. O restante cabe em cerca de 30 segundos.' },
   },
   {
     id: 'mensagem',
-    label: 'Quer melhorar seu vídeo? Basta falar.',
-    ask: 'Quero melhorar a mensagem desse vídeo.',
+    label: 'Quer melhorar seu vídeo?',
+    ask: 'Coloca uma abertura mais forte e deixa a mensagem mais dinâmica.',
     action: 'Ler o que é dito, apontar onde a ideia se perde e sugerir uma ordem mais clara.',
     result: 'Nova versão do roteiro, com abertura mais forte e a ideia principal dita mais cedo.',
     next: { ask: 'Deixa o final mais convidativo.', answer: 'Troquei o encerramento por uma chamada que convida a pessoa a comentar a própria experiência.' },
   },
   {
     id: 'anuncio',
-    label: 'Quer criar um anúncio? A IA ajuda.',
-    ask: 'Quero transformar minha ideia em um anúncio.',
+    label: 'Quer criar um anúncio?',
+    ask: 'Transforma essa gravação em um anúncio para o meu produto.',
     action: 'Transformar a ideia em estrutura de venda: atenção, apresentação, objeção e chamada.',
     result: 'Roteiro de anúncio com abertura, apresentação do produto e chamada para a compra.',
     next: { ask: 'Faz uma versão de 15 segundos.', answer: 'Mantive só a abertura, um benefício e a chamada final, para caber em cerca de 15 segundos.' },
@@ -200,14 +202,14 @@ export const REQUESTS = [
 
 /* ---------- BLOCO 07 · Demonstração do arquivo ---------- */
 export const FILE_DEMO = [
-  { id: 'oque', label: 'O que é', title: 'Um arquivo de instruções para o Claude',
-    body: 'O Vídeo por Comando™ é um arquivo que orienta o Claude a trabalhar como assistente de criação e edição de vídeos. Você não precisa escrever comandos difíceis.' },
-  { id: 'onde', label: 'Onde usa', title: 'Na sua conta do Claude',
-    body: 'Ele é usado dentro do Claude, no computador ou no celular. Algumas edições e exportações dependem de ferramentas compatíveis.' },
-  { id: 'como', label: 'Como adiciona', title: 'Seguindo as instruções que acompanham o arquivo',
-    body: 'Você recebe o arquivo depois da compra e o adiciona ao seu Claude seguindo o passo a passo que vem junto.' },
+  { id: 'oque', label: 'O que é', title: 'Um arquivo de instruções para a sua IA',
+    body: 'O Vídeo por Comando™ é um arquivo que orienta uma IA compatível a trabalhar como assistente de criação e edição de vídeos. Você não precisa escrever comandos difíceis.' },
+  { id: 'onde', label: 'Onde usa', title: 'Na sua IA',
+    body: 'Ele é usado dentro de uma IA compatível, no computador ou no celular. Algumas edições e exportações dependem de ferramentas compatíveis.' },
+  { id: 'como', label: 'Como adiciona', title: 'Seguindo o vídeo de instrução',
+    body: 'Você recebe o arquivo e um vídeo com o passo a passo depois da compra. É só seguir para adicionar o arquivo à sua IA.' },
   { id: 'depois', label: 'Depois da instalação', title: 'Você pede, a IA ajuda',
-    body: 'Basta escrever ou ditar o que você quer criar. O Claude organiza o pedido, ajuda a criar e você pede ajustes na mesma conversa.' },
+    body: 'Basta escrever ou ditar o que você quer criar. A IA organiza o pedido, ajuda a criar e você pede ajustes na mesma conversa.' },
 ];
 
 /* ---------- BLOCO 07 · Prévia do mapa mental ----------
@@ -256,19 +258,21 @@ export const MINDMAP = {
 /* ---------- BLOCO 09 · Perguntas frequentes (copy obrigatória) ---------- */
 export const FAQ = [
   { q: 'Preciso saber editar vídeos?',
-    a: 'Não. Basta explicar o que você deseja. A IA ajuda na criação e edição, embora algumas etapas possam exigir revisão.' },
+    a: 'Não! Você só precisa dizer o que quer criar ou mudar. A IA ajuda na edição, e você acompanha o resultado.' },
   { q: 'Como faço para começar?',
-    a: 'Você recebe o arquivo, adiciona ao Claude e começa a enviar seus comandos.' },
+    a: 'Você recebe o arquivo e um vídeo com o passo a passo. Basta adicionar o arquivo a uma IA compatível e começar a enviar seus pedidos.' },
   { q: 'Posso mandar comandos por áudio?',
-    a: 'Sim. Use o microfone do celular ou computador para ditar seus comandos, quando houver essa função.' },
+    a: 'Sim! Se seu celular ou computador tiver microfone com digitação por voz, basta falar o que deseja e enviar o comando.' },
   { q: 'Que tipos de vídeos posso criar?',
-    a: 'Reels, anúncios, conteúdos para redes sociais e apresentações de empresas.' },
+    a: 'Reels, anúncios, vídeos para redes sociais e apresentações do seu negócio.' },
   { q: 'O Claude faz tudo sozinho?',
-    a: 'Nem sempre. Algumas edições e exportações dependem das ferramentas e recursos disponíveis.' },
+    a: 'A IA ajuda a criar, organizar e editar seus vídeos. Algumas tarefas podem depender de outras ferramentas ou da sua aprovação.' },
   { q: 'O que é o mapa mental?',
-    a: 'Um guia visual para organizar seus vídeos e saber exatamente o que pedir à IA.' },
+    a: 'É um guia simples que mostra como organizar suas ideias para saber o que pedir à IA.' },
   { q: 'Preciso pagar pelo Claude?',
-    a: 'Alguns recursos podem exigir um plano pago ou ferramentas adicionais, não incluídos na compra.' },
+    a: 'O Vídeo por Comando™ é uma compra única. Você pode utilizar os recursos disponíveis em plataformas compatíveis, como Claude, ChatGPT ou Gemini, respeitando as funções e os limites de cada uma.' },
+  { q: 'Tem garantia?',
+    a: 'Sim. Você tem 7 dias para testar. Se não funcionar como prometido ou simplesmente não gostar, pode pedir 100% do seu dinheiro de volta nesse período.' },
 ];
 
 /* ---------- VÍDEOS DE DEMONSTRAÇÃO (assets/media/demo) ----------

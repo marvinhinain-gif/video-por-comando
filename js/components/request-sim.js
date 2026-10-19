@@ -15,7 +15,7 @@ export function mountRequestSim(root) {
     REQUESTS.map((r, i) => h('button', {
       class: 'chip chip-cmd', role: 'tab', type: 'button', id: `${base}-t${i}`, 'aria-controls': `${base}-p`,
       onclick: () => pick(i, true),
-    }, h('span', { class: 'chip-q' }, r.label))));
+    }, h('span', { class: 'chip-q' }, r.label), h('span', { class: 'chip-v' }, `“${r.ask}”`))));
   const stage = h('div', { class: 'cv-stage', id: `${base}-p`, role: 'tabpanel' });
   root.append(tabs, stage);
   arrowNav(tabs, (i) => pick(i, true));

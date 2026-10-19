@@ -15,7 +15,7 @@ export function mountCommandDemo(root) {
     COMMAND_DEMOS.map((d, i) => h('button', {
       class: 'chip chip-cmd', role: 'tab', type: 'button', id: `${base}-t${i}`, 'aria-controls': `${base}-p`,
       onclick: () => pick(i, true),
-    }, h('span', { class: 'chip-v' }, `“${d.command}”`))));
+    }, h('span', { class: 'chip-k' }, d.label), h('span', { class: 'chip-v' }, `“${d.command}”`))));
   const stage = h('div', { class: 'cv-stage', id: `${base}-p`, role: 'tabpanel' });
   root.append(tabs, stage);
   arrowNav(tabs, (i) => pick(i, true));
@@ -26,7 +26,7 @@ export function mountCommandDemo(root) {
     const name = `cmd-${COMMAND_DEMOS[i].id}`;
     player = createChapterVideo({ ...demo(name), chapters: DEMO_CHAPTERS[name], title: `Simulação: ${COMMAND_DEMOS[i].command}` });
     player.el.classList.add('fade-in');
-    stage.replaceChildren(player.el);
+    stage.replaceChildren(player.el, h('p', { class: 'cv-summary' }, COMMAND_DEMOS[i].summary));
     if (user) player.play();
   }
   pick(0, false);

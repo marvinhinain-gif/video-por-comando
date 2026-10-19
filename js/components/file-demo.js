@@ -6,7 +6,7 @@
 import { h, $$, arrowNav, id } from '../core/dom.js';
 import { FILE_DEMO } from '../content.js';
 
-const FLOW = ['Arquivo', 'Claude', 'Seu pedido', 'Seu vídeo'];
+const FLOW = ['Arquivo', 'Sua IA', 'Seu pedido', 'Seu vídeo'];
 // qual nó do fluxo cada aba ilumina
 const LIGHT = { oque: [0], onde: [1], como: [0, 1], depois: [2, 3] };
 

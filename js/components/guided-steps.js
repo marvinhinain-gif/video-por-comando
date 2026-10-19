@@ -8,9 +8,9 @@ import { DEMO_CHAPTERS } from '../content.js';
 import { createChapterVideo, demo } from './chapter-video.js';
 
 const STEPS = [
-  { short: 'Adicione', title: '1. Adicione o arquivo', copy: 'Receba o Vídeo por Comando™ e adicione ao Claude seguindo as instruções.' },
-  { short: 'Diga', title: '2. Diga o que você quer', copy: 'Escreva ou mande um comando de voz dizendo o vídeo que deseja criar.' },
-  { short: 'Deixe a IA', title: '3. Deixe a IA ajudar', copy: 'O Claude organiza seu pedido e ajuda na criação e nas edições compatíveis.' },
+  { short: 'Adicione', title: '1. Receba e adicione o arquivo', copy: 'Depois da compra, você recebe o Vídeo por Comando™ e um vídeo mostrando como começar. É só seguir o passo a passo para adicionar o arquivo à sua IA.' },
+  { short: 'Diga', title: '2. Diga o que você quer', copy: 'Escreva ou mande um comando de voz, como: “Quero deixar esse vídeo mais curto e dinâmico.”' },
+  { short: 'Deixe a IA', title: '3. Deixe a IA ajudar na edição', copy: 'A IA entende seu pedido e ajuda a organizar e executar as etapas que suas ferramentas permitem. Não gostou de alguma coisa? É só pedir outro ajuste.' },
 ];
 
 export function mountGuidedSteps(root) {
