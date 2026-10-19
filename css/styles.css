@@ -586,3 +586,12 @@ a { color: inherit; }
 .chip .chip-v { font-size: 13px; }
 .chip-q + .chip-v { color: var(--muted); }
 .cv-summary { margin-top: 12px; color: var(--muted); font-size: 15px; text-align: center; max-width: 34em; }
+
+/* Oferta enxuta */
+.offer-slim { gap: 16px; max-width: 440px; }
+.offer-slim .offer-logo { width: min(200px, 70%); }
+.offer-slim .check-list { gap: 10px; }
+.offer-slim .check-list b { font-size: 15px; font-weight: 500; }
+.offer-slim .price { padding: 12px 0; border: 0; }
+.offer-slim .price-model { color: var(--muted); font-weight: 400; }
+.offer-meta { font-size: 13px; color: var(--muted); }
