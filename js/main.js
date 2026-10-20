@@ -1,5 +1,5 @@
 /* =====================================================================
-   VÍDEO POR COMANDO™ — ENTRADA
+   VÍDEO POR COMANDO — ENTRADA
    Monta cada componente no seu ponto [data-component].
    ===================================================================== */
 import { $$ } from './core/dom.js';

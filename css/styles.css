@@ -595,3 +595,37 @@ a { color: inherit; }
 .offer-slim .price { padding: 12px 0; border: 0; }
 .offer-slim .price-model { color: var(--muted); font-weight: 400; }
 .offer-meta { font-size: 13px; color: var(--muted); }
+
+/* Checklist do bloco 3: um item de cada vez */
+.proc-anim .proc-step { opacity: 0; transform: translateX(-10px); }
+.proc-anim.proc-in .proc-step { animation: stepIn .45s var(--ease) both; animation-delay: calc(var(--i) * .32s + .15s); }
+.proc-anim.proc-in .proc-assisted .proc-step { animation-delay: calc(var(--i) * .32s + .35s); }
+.proc-anim.proc-in .proc-step .who { animation: whoPop .5s var(--ease) both; animation-delay: inherit; }
+@keyframes stepIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
+@keyframes whoPop { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.12); opacity: 1; } 100% { transform: none; } }
+
+/* Pulsar suave nos botões */
+.btn { animation: softPulse 2.6s ease-in-out infinite; }
+.btn:hover { animation-play-state: paused; }
+@keyframes softPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 18px 50px -20px rgba(214, 163, 41, .75), 0 0 0 0 rgba(214, 163, 41, .35); }
+  50% { transform: scale(1.025); box-shadow: 0 22px 60px -18px rgba(214, 163, 41, .9), 0 0 0 10px rgba(214, 163, 41, 0); }
+}
+.btn-sm, .btn-buy { animation-duration: 3s; }
+
+/* Espaçamentos mais curtos em todo o site */
+:root { --sec: clamp(40px, 5.5vw, 68px); }
+.sec-head { gap: 10px; margin-bottom: clamp(18px, 2.6vw, 28px); }
+.punch { margin-top: clamp(20px, 3vw, 32px); }
+.cta-row { margin-top: clamp(18px, 2.6vw, 26px); }
+.center-line { margin-top: 16px; }
+.panel { gap: 14px; }
+.panel + .panel { margin-top: 14px; }
+.deliver { gap: clamp(24px, 3vw, 36px); }
+.deliver-item { gap: 8px; }
+.deliver-p { margin-bottom: 4px; }
+.hero-in { padding-bottom: clamp(36px, 5vw, 64px); }
+.v-cta { margin-top: clamp(16px, 2.4vw, 26px); }
+.foot { padding-block: 26px calc(26px + env(safe-area-inset-bottom, 0px)); }
+.gallery { gap: 12px; }
+.compare-proc { gap: 10px; }

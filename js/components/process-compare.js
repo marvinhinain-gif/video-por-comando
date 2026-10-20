@@ -28,6 +28,17 @@ export function mountProcessCompare(root) {
   });
 
   root.append(tabs, h('div', { class: 'proc-cols' }, ...cols));
+  // Checklist animado: as etapas entram uma de cada vez quando o bloco aparece.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    root.classList.add('proc-anim');
+    $$('.proc-col', root).forEach((col) => $$('.proc-step', col).forEach((li, i) => li.style.setProperty('--i', i)));
+    const io = new IntersectionObserver((es) => {
+      if (!es.some((e) => e.isIntersecting)) return;
+      root.classList.add('proc-in');
+      io.disconnect();
+    }, { threshold: 0.25 });
+    io.observe(root);
+  }
   arrowNav(tabs, (i) => setFocus(keys[i]));
 
   function setFocus(k) {

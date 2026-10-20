@@ -1,5 +1,5 @@
 /* =====================================================================
-   VÍDEO POR COMANDO™ — CONTEÚDO DAS DEMONSTRAÇÕES
+   VÍDEO POR COMANDO — CONTEÚDO DAS DEMONSTRAÇÕES
    ---------------------------------------------------------------------
    Textos das simulações, exemplos da galeria, prévia do mapa mental
    e perguntas frequentes. A copy comercial dos blocos fica no
@@ -19,7 +19,7 @@ export const COMMAND_DEMOS = [
     summary: 'A IA entende o pedido, ajuda a organizar as cenas, preparar os textos e orientar a edição.',
     steps: [
       { title: 'Comando enviado',
-        body: 'Você escreve ou dita o pedido no Claude, com o arquivo Vídeo por Comando™ já adicionado.',
+        body: 'Você escreve ou dita o pedido no Claude, com o arquivo Vídeo por Comando já adicionado.',
         bubble: { from: 'user', text: 'Quero transformar essa ideia em um vídeo para o Instagram.' } },
       { title: 'Interpretação do pedido',
         body: 'O assistente identifica o objetivo e o formato, e pergunta o que falta.',
@@ -42,7 +42,7 @@ export const COMMAND_DEMOS = [
     summary: 'A IA ajuda a criar uma abertura forte, apresentar o produto e terminar com uma chamada para ação.',
     steps: [
       { title: 'Comando enviado',
-        body: 'Você escreve ou dita o pedido no Claude, com o arquivo Vídeo por Comando™ já adicionado.',
+        body: 'Você escreve ou dita o pedido no Claude, com o arquivo Vídeo por Comando já adicionado.',
         bubble: { from: 'user', text: 'Quero criar um anúncio para o meu produto.' } },
       { title: 'Interpretação do pedido',
         body: 'O assistente entende que é um vídeo de venda e levanta as informações do produto.',
@@ -78,7 +78,7 @@ export const PROCESSES = {
     label: 'Processo com IA',
     steps: [
       { who: 'Você', t: 'Abrir sua IA.', d: 'No computador ou no celular.' },
-      { who: 'Você', t: 'Adicionar o Vídeo por Comando™.', d: 'Seguindo o vídeo de instrução.' },
+      { who: 'Você', t: 'Adicionar o Vídeo por Comando.', d: 'Seguindo o vídeo de instrução.' },
       { who: 'Você', t: 'Enviar sua gravação ou ideia.', d: 'Gravações, imagens ou só a ideia.' },
       { who: 'Você', t: 'Dizer o que precisa.', d: 'Escrevendo ou ditando pelo microfone.' },
       { who: 'IA ajuda', t: 'Deixar a IA ajudar na edição.', d: 'Dentro do que suas ferramentas permitem.' },
@@ -90,7 +90,7 @@ export const PROCESSES = {
 /* ---------- BLOCO 04 · Demonstração guiada ---------- */
 // Etapa 1 — confirme com o procedimento real de instalação do arquivo.
 export const INSTALL_STEPS = [
-  { t: 'Receba o arquivo', d: 'Depois da compra, você recebe o arquivo Vídeo por Comando™ e as instruções.' },
+  { t: 'Receba o arquivo', d: 'Depois da compra, você recebe o arquivo Vídeo por Comando e as instruções.' },
   { t: 'Abra o Claude', d: 'No computador ou no celular, na sua conta do Claude.' },
   { t: 'Adicione o arquivo', d: 'Siga as instruções que acompanham o arquivo para adicioná-lo ao seu Claude.' },
   { t: 'Assistente pronto', d: 'O Claude passa a responder como seu assistente de criação e edição de vídeos.' },
@@ -203,7 +203,7 @@ export const REQUESTS = [
 /* ---------- BLOCO 07 · Demonstração do arquivo ---------- */
 export const FILE_DEMO = [
   { id: 'oque', label: 'O que é', title: 'Um arquivo de instruções para a sua IA',
-    body: 'O Vídeo por Comando™ é um arquivo que orienta uma IA compatível a trabalhar como assistente de criação e edição de vídeos. Você não precisa escrever comandos difíceis.' },
+    body: 'O Vídeo por Comando é um arquivo que orienta uma IA compatível a trabalhar como assistente de criação e edição de vídeos. Você não precisa escrever comandos difíceis.' },
   { id: 'onde', label: 'Onde usa', title: 'Na sua IA',
     body: 'Ele é usado dentro de uma IA compatível, no computador ou no celular. Algumas edições e exportações dependem de ferramentas compatíveis.' },
   { id: 'como', label: 'Como adiciona', title: 'Seguindo o vídeo de instrução',
@@ -270,7 +270,7 @@ export const FAQ = [
   { q: 'O que é o mapa mental?',
     a: 'É um guia simples que mostra como organizar suas ideias para saber o que pedir à IA.' },
   { q: 'Preciso pagar pelo Claude?',
-    a: 'O Vídeo por Comando™ é uma compra única. Você pode utilizar os recursos disponíveis em plataformas compatíveis, como Claude, ChatGPT ou Gemini, respeitando as funções e os limites de cada uma.' },
+    a: 'O Vídeo por Comando é uma compra única. Você pode utilizar os recursos disponíveis em plataformas compatíveis, como Claude, ChatGPT ou Gemini, respeitando as funções e os limites de cada uma.' },
   { q: 'Tem garantia?',
     a: 'Sim. Você tem 7 dias para testar. Se não funcionar como prometido ou simplesmente não gostar, pode pedir 100% do seu dinheiro de volta nesse período.' },
 ];
