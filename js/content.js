@@ -135,11 +135,11 @@ export const GALLERY = [
       { title: 'Reels de dica rápida', goal: 'Ensinar uma dica em poucos segundos.',
         command: 'Transforma essa dica num Reels curto, com texto na tela.',
         mock: { hook: '3 erros que travam seus Reels', caption: 'o primeiro é o mais comum', tone: 'gold' },
-        demo: 'reel-dica', src: '', instagram: '', poster: '', captions: '', resultSummary: '' },
+        demo: 'reel-dica', real: true, src: '', instagram: '', poster: '', captions: '', resultSummary: '' },
       { title: 'Bastidores do negócio', goal: 'Aproximar o público da sua rotina.',
         command: 'Organiza essas gravações do meu dia num vídeo de bastidores.',
         mock: { hook: 'Um dia no meu negócio', caption: '06:30 · começa assim', tone: 'ember' },
-        demo: 'reel-bastidores', src: '', instagram: '', poster: '', captions: '', resultSummary: '' },
+        demo: 'reel-bastidores', real: true, src: '', instagram: '', poster: '', captions: '', resultSummary: '' },
     ],
   },
   {

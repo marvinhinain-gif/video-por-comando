@@ -43,7 +43,7 @@ export function mountGallery(root) {
       players.push(p);
       media = p.el;
     } else {
-      const v = createChapterVideo({ ...demo(ex.demo), aspect: '9 / 16', loop: true, autoplay: true, showChapters: false, title: `Ilustração: ${ex.title}` });
+      const v = createChapterVideo({ ...demo(ex.demo), aspect: '9 / 16', loop: true, autoplay: true, showChapters: false, title: ex.real ? ex.title : `Ilustração: ${ex.title}` });
       players.push(v);
       media = v.el;
     }
