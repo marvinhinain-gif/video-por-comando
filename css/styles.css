@@ -633,3 +633,12 @@ a { color: inherit; }
 /* Logo Clique Edite no topo */
 .brand img { width: 150px; height: auto; filter: none; }
 @media (max-width: 520px) { .brand img { width: 124px; } }
+
+/* Antes e depois: barra de progresso e pausa */
+.ba-frame { position: relative; }
+.ba-frame video { cursor: pointer; }
+.ba-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: rgba(255, 255, 255, .18); pointer-events: none; }
+.ba-bar i { position: absolute; inset: 0; background: var(--red); transform-origin: 0 50%; transform: scaleX(0); box-shadow: 0 0 10px rgba(255, 43, 43, .7); }
+.ba-pause { position: absolute; left: 50%; top: 50%; width: 54px; height: 54px; margin: -27px; border-radius: 50%; display: grid; place-items: center; background: rgba(0, 0, 0, .55); border: 1px solid rgba(255, 255, 255, .2); color: #fff; opacity: 0; transform: scale(.8); transition: opacity .25s, transform .25s; pointer-events: none; }
+.ba-pause svg { width: 22px; height: 22px; margin-left: 3px; }
+.ba-frame.paused .ba-pause { opacity: 1; transform: none; }

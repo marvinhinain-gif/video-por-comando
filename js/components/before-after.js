@@ -25,10 +25,11 @@ export function mountBeforeAfter(root) {
   const edit = ready ? cfg.edited : { ...demo('corte-editado'), captions: '' };
 
   const mk = (v, label) => {
-    const video = h('video', { playsinline: true, preload: 'none', controls: true, poster: v.poster || null, 'data-sync-group': base, 'aria-label': label });
+    const video = h('video', { playsinline: true, muted: true, loop: true, preload: 'none', poster: v.poster || null, 'data-sync-group': base, 'aria-label': label });
     if (illus) { const b = v.src.replace(/\.mp4$/, ''); video.append(h('source', { src: `${b}.mp4`, type: 'video/mp4' }), h('source', { src: `${b}.webm`, type: 'video/webm' })); }
     else video.append(h('source', { src: v.src }));
     if (v.captions) video.append(h('track', { kind: 'captions', src: v.captions, srclang: 'pt', label: 'Português' }));
+    video.muted = true;
     registerVideo(video);
     return video;
   };
@@ -36,8 +37,19 @@ export function mountBeforeAfter(root) {
   const ve = mk(edit, illus ? 'Ilustração: vídeo editado' : 'Vídeo editado');
   const durO = h('span', { class: 'ba-dur' }, 'Duração: carregando…');
   const durE = h('span', { class: 'ba-dur' }, 'Duração: carregando…');
-  const figO = h('figure', { class: 'ba-fig' }, h('figcaption', {}, h('span', {}, 'Vídeo original'), durO), h('div', { class: 'ba-frame' }, vo));
-  const figE = h('figure', { class: 'ba-fig' }, h('figcaption', {}, h('span', {}, 'Vídeo editado'), durE), h('div', { class: 'ba-frame' }, ve));
+  // Moldura com barra de progresso e ícone de pausa (sem controles nativos, sempre sem som).
+  const frame = (v) => {
+    const bar = h('i');
+    const pause = h('span', { class: 'ba-pause', 'aria-hidden': 'true', html: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>' });
+    const tick = () => { if (v.duration) bar.style.transform = `scaleX(${v.currentTime / v.duration})`; if (!v.paused) requestAnimationFrame(tick); };
+    v.addEventListener('play', () => { v.parentElement.classList.remove('paused'); tick(); });
+    v.addEventListener('pause', () => v.parentElement.classList.add('paused'));
+    v.addEventListener('seeked', tick);
+    v.addEventListener('click', () => { if (v.paused) { v.dataset.userPaused = ''; delete v.dataset.userPaused; v.play().catch(() => {}); } else { v.dataset.userPaused = '1'; v.pause(); } });
+    return h('div', { class: 'ba-frame' }, v, pause, h('span', { class: 'ba-bar', 'aria-hidden': 'true' }, bar));
+  };
+  const figO = h('figure', { class: 'ba-fig' }, h('figcaption', {}, h('span', {}, 'Vídeo original'), durO), frame(vo));
+  const figE = h('figure', { class: 'ba-fig' }, h('figcaption', {}, h('span', {}, 'Vídeo editado'), durE), frame(ve));
 
   const stats = h('dl', { class: 'ba-stats' },
     h('div', {}, h('dt', {}, 'Original'), h('dd', { 'data-k': 'o' }, '–:––')),
@@ -50,8 +62,6 @@ export function mountBeforeAfter(root) {
   const viewTabs = h('div', { class: 'seg', role: 'tablist', 'aria-label': 'Versão exibida', hidden: true },
     h('button', { class: 'seg-btn', role: 'tab', type: 'button', 'aria-selected': 'true', onclick: () => show('o') }, 'Original'),
     h('button', { class: 'seg-btn', role: 'tab', type: 'button', 'aria-selected': 'false', onclick: () => show('e') }, 'Editado'));
-  const syncBtn = h('button', { class: 'btn-ghost btn-ghost-gold', type: 'button' }, '▶ Tocar os dois juntos');
-  const syncNote = h('p', { class: 'muted small', role: 'status' });
 
   const grid = h('div', { class: 'ba-grid' }, figO, figE);
   if (illus) { stats.hidden = true; [durO, durE].forEach((d) => { d.hidden = true; }); }
@@ -59,7 +69,7 @@ export function mountBeforeAfter(root) {
     ? h('div', {}, h('p', { class: 'mini-h' }, 'Principais modificações'), h('ul', { class: 'tick-list' }, cfg.changes.map((c) => h('li', {}, c))))
     : h('p', { class: 'note' }, 'Lista de modificações ainda não preenchida na configuração.');
 
-  root.append(head, h('div', { class: 'ba-ctrls' }, modeTabs, viewTabs, syncBtn), grid, syncNote, stats, changes);
+  root.append(head, h('div', { class: 'ba-ctrls' }, modeTabs, viewTabs), grid, stats, changes);
 
   /* Durações reais: carrega só os metadados quando o comparador se aproxima da tela */
   const io = new IntersectionObserver((ents) => {
@@ -68,13 +78,17 @@ export function mountBeforeAfter(root) {
     [vo, ve].forEach((v) => { v.preload = 'metadata'; v.load(); });
   }, { rootMargin: '300px' });
   io.observe(root);
-  // Ilustração: os dois vídeos tocam sozinhos, sem som e em loop, quando aparecem na tela.
-  // Os dois vídeos tocam sozinhos, sem som e em loop, quando aparecem na tela.
+  // Os vídeos tocam sozinhos, sempre sem som e em loop, quando aparecem na tela.
+  let inView = false;
+  const playVisible = () => {
+    [vo, ve].forEach((v) => {
+      const shown = !v.closest('figure').hidden;
+      if (inView && shown && !v.dataset.userPaused) { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); } else v.pause();
+    });
+  };
+  [vo, ve].forEach((v) => { v.preload = 'auto'; v.dataset.auto = '1'; v.addEventListener('canplay', () => { if (inView && v.paused && !v.dataset.userPaused && !v.closest('figure').hidden) v.play().catch(() => {}); }); });
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    [vo, ve].forEach((v) => { v.loop = true; v.muted = true; v.preload = 'auto'; v.dataset.auto = '1'; });
-    new IntersectionObserver((es) => {
-      [vo, ve].forEach((v) => { if (es[0].isIntersecting) { const p = v.play(); if (p && p.catch) p.catch(() => {}); } else v.pause(); });
-    }, { threshold: 0.3 }).observe(grid);
+    new IntersectionObserver((es) => { inView = es[0].isIntersecting; playVisible(); }, { threshold: 0.3 }).observe(grid);
   }
 
   const paintDur = () => {
@@ -90,27 +104,11 @@ export function mountBeforeAfter(root) {
   ve.addEventListener('loadedmetadata', paintDur);
   [vo, ve].forEach((v, i) => v.addEventListener('error', () => { (i ? durE : durO).textContent = 'Arquivo indisponível'; }, true));
 
-  let together = false;
-  syncBtn.addEventListener('click', async () => {
-    if (together) { vo.pause(); ve.pause(); return; }
-    vo.currentTime = 0; ve.currentTime = 0;
-    vo.muted = true;  // evita duas falas ao mesmo tempo
-    ve.muted = false; // o editado toca com som
-    try { await Promise.all([vo.play(), ve.play()]); } catch (_) { syncNote.textContent = 'Não foi possível tocar os dois juntos neste aparelho. Use o play de cada vídeo.'; }
-  });
-  const syncState = () => {
-    together = !vo.paused && !ve.paused;
-    syncBtn.textContent = together ? '❚❚ Pausar os dois' : '▶ Tocar os dois juntos';
-    syncNote.textContent = together && !ve.muted ? 'Tocando juntos. O áudio do original fica mudo para não sobrepor as falas.' : '';
-  };
-  ['play', 'pause'].forEach((ev) => { vo.addEventListener(ev, syncState); ve.addEventListener(ev, syncState); });
-
   function setMode(m) {
     $$('[role="tab"]', modeTabs).forEach((b, i) => b.setAttribute('aria-selected', String((m === 'side') === (i === 0))));
     root.dataset.mode = m;
     viewTabs.hidden = m !== 'toggle';
-    syncBtn.hidden = m === 'toggle';
-    if (m === 'toggle') { vo.pause(); ve.pause(); vo.muted = false; show('o'); } else { figO.hidden = false; figE.hidden = false; }
+    if (m === 'toggle') show('o'); else { figO.hidden = false; figE.hidden = false; playVisible(); }
   }
   function show(k) {
     $$('[role="tab"]', viewTabs).forEach((b, i) => b.setAttribute('aria-selected', String((k === 'o') === (i === 0))));
@@ -118,6 +116,7 @@ export function mountBeforeAfter(root) {
     off.querySelector('video').pause();
     off.hidden = true; on.hidden = false;
     on.classList.remove('fade-in'); void on.offsetWidth; on.classList.add('fade-in');
+    playVisible();
   }
   setMode('side');
 }
