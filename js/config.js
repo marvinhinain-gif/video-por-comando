@@ -68,11 +68,12 @@ export const CONFIG = {
      changes: liste as modificações reais feitas no vídeo editado.
      --------------------------------------------------------------- */
   comparison: {
-    original: { src: '', poster: '', captions: '' },
-    edited:   { src: '', poster: '', captions: '' },
+    original: { src: 'assets/media/antes-depois-bruto.mp4', poster: 'assets/media/antes-depois-bruto.jpg', captions: '' },
+    edited:   { src: 'assets/media/antes-depois-editado.mp4', poster: 'assets/media/antes-depois-editado.jpg', captions: '' },
     changes: [
-      // 'Pausas longas removidas',
-      // 'Legenda adicionada',
+      'Cortes nas pausas e trechos sem fala',
+      'Legendas e títulos na tela',
+      'Efeitos visuais: zoom, tela verde e parede de vídeos',
     ],
   },
 

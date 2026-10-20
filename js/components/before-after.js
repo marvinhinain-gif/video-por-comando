@@ -69,7 +69,8 @@ export function mountBeforeAfter(root) {
   }, { rootMargin: '300px' });
   io.observe(root);
   // Ilustração: os dois vídeos tocam sozinhos, sem som e em loop, quando aparecem na tela.
-  if (illus && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  // Os dois vídeos tocam sozinhos, sem som e em loop, quando aparecem na tela.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     [vo, ve].forEach((v) => { v.loop = true; v.muted = true; v.preload = 'auto'; v.dataset.auto = '1'; });
     new IntersectionObserver((es) => {
       [vo, ve].forEach((v) => { if (es[0].isIntersecting) { const p = v.play(); if (p && p.catch) p.catch(() => {}); } else v.pause(); });
@@ -94,12 +95,13 @@ export function mountBeforeAfter(root) {
     if (together) { vo.pause(); ve.pause(); return; }
     vo.currentTime = 0; ve.currentTime = 0;
     vo.muted = true;  // evita duas falas ao mesmo tempo
+    ve.muted = false; // o editado toca com som
     try { await Promise.all([vo.play(), ve.play()]); } catch (_) { syncNote.textContent = 'Não foi possível tocar os dois juntos neste aparelho. Use o play de cada vídeo.'; }
   });
   const syncState = () => {
     together = !vo.paused && !ve.paused;
     syncBtn.textContent = together ? '❚❚ Pausar os dois' : '▶ Tocar os dois juntos';
-    syncNote.textContent = together ? 'Tocando juntos. O áudio do original fica mudo para não sobrepor as falas.' : '';
+    syncNote.textContent = together && !ve.muted ? 'Tocando juntos. O áudio do original fica mudo para não sobrepor as falas.' : '';
   };
   ['play', 'pause'].forEach((ev) => { vo.addEventListener(ev, syncState); ve.addEventListener(ev, syncState); });
 
