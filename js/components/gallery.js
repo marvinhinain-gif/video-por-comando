@@ -42,6 +42,10 @@ export function mountGallery(root) {
       const p = createPlayer({ src: ex.src || ex.instagram, poster: ex.poster, captions: ex.captions, aspect: '9 / 16', title: ex.title });
       players.push(p);
       media = p.el;
+    } else if (ex.demos && ex.demos.length > 1) {
+      const v = variants(ex);
+      players.push(v);
+      media = v.el;
     } else {
       const v = createChapterVideo({ ...demo(ex.demo), aspect: '9 / 16', loop: true, autoplay: true, showChapters: false, title: ex.real ? ex.title : `Ilustração: ${ex.title}` });
       players.push(v);
@@ -52,6 +56,27 @@ export function mountGallery(root) {
       h('h3', { class: 'ex-title' }, ex.title),
       h('code', { class: 'cmd' }, `“${ex.command}”`),
       h('p', { class: 'ex-goal' }, real && ex.resultSummary ? ex.resultSummary : ex.goal));
+  }
+
+  /* Várias versões no mesmo card: seletor "Versão 1 · Versão 2";
+     tocam uma depois da outra, sem som, cada uma com a barra de progresso. */
+  function variants(ex) {
+    const stage = h('div', { class: 'var-stage' });
+    let cur = null, idx = 0;
+    const btns = ex.demos.map((d, i) => h('button', { class: 'seg-btn', role: 'tab', type: 'button', onclick: () => show(i, true) }, `Versão ${i + 1}`));
+    const seg = h('div', { class: 'seg var-seg', role: 'tablist', 'aria-label': 'Versões' }, btns);
+    function show(i, autoplay) {
+      idx = i;
+      btns.forEach((b, j) => b.setAttribute('aria-selected', String(j === i)));
+      if (cur) cur.pause();
+      cur = createChapterVideo({ ...demo(ex.demos[i]), aspect: '9 / 16', loop: false, autoplay: true, showChapters: false, title: `${ex.title} · versão ${i + 1}` });
+      cur.video.addEventListener('ended', () => show((idx + 1) % ex.demos.length, true));
+      stage.replaceChildren(cur.el);
+      // a 1ª checagem de visibilidade do vídeo novo pode chegar antes dele entrar na tela
+      if (autoplay) { const v = cur; v.play(); setTimeout(() => { if (v === cur && v.video.paused) v.play(); }, 250); }
+    }
+    show(0, false);
+    return { el: h('div', { class: 'var' }, stage, seg), get video() { return cur.video; }, play: () => cur.play(), pause: () => cur.pause() };
   }
 
   let galleryInView = false;

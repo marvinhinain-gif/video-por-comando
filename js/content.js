@@ -153,7 +153,7 @@ export const GALLERY = [
       { title: 'Variações de abertura', goal: 'Testar começos diferentes no mesmo anúncio.',
         command: 'Cria 3 aberturas diferentes para esse anúncio.',
         mock: { hook: 'Abertura A · B · C', caption: 'qual prende mais?', tone: 'gold' },
-        demo: 'reel-aberturas', src: '', instagram: '', poster: '', captions: '', resultSummary: '' },
+        demo: 'reel-abertura-1', demos: ['reel-abertura-1', 'reel-abertura-2'], real: true, src: '', instagram: '', poster: '', captions: '', resultSummary: '' },
     ],
   },
   {

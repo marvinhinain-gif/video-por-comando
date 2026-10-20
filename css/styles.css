@@ -642,3 +642,9 @@ a { color: inherit; }
 .ba-pause { position: absolute; left: 50%; top: 50%; width: 54px; height: 54px; margin: -27px; border-radius: 50%; display: grid; place-items: center; background: rgba(0, 0, 0, .55); border: 1px solid rgba(255, 255, 255, .2); color: #fff; opacity: 0; transform: scale(.8); transition: opacity .25s, transform .25s; pointer-events: none; }
 .ba-pause svg { width: 22px; height: 22px; margin-left: 3px; }
 .ba-frame.paused .ba-pause { opacity: 1; transform: none; }
+
+/* Galeria · card com várias versões (Versão 1 · Versão 2) */
+.var { display: grid; justify-items: center; gap: 10px; width: 100%; }
+.var-stage { width: 100%; display: grid; justify-items: center; }
+.var-seg { margin: 0 auto; }
+.var-seg .seg-btn { min-height: 34px; padding: 0 14px; font-size: 12.5px; }
