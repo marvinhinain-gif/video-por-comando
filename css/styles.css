@@ -629,3 +629,7 @@ a { color: inherit; }
 .foot { padding-block: 26px calc(26px + env(safe-area-inset-bottom, 0px)); }
 .gallery { gap: 12px; }
 .compare-proc { gap: 10px; }
+
+/* Logo Clique Edite no topo */
+.brand img { width: 150px; height: auto; filter: none; }
+@media (max-width: 520px) { .brand img { width: 124px; } }

@@ -1,5 +1,5 @@
 /* =====================================================================
-   VÍDEO POR COMANDO — CONFIGURAÇÃO CENTRAL
+   CLIQUE EDITE — CONFIGURAÇÃO CENTRAL
    ---------------------------------------------------------------------
    Tudo o que muda com frequência fica aqui: preço, checkout, VSL,
    vídeos de exemplo, comparador e rastreamento.
@@ -9,7 +9,7 @@
 
 export const CONFIG = {
   product: {
-    name: 'Vídeo por Comando',
+    name: 'Clique Edite',
     presenter: 'Lucão Ferraz',
     priceLabel: 'R$ 97,00',      // usado no bloco de oferta e no fechamento
     priceShort: 'R$ 97',         // usado nos botões e na barra mobile
@@ -59,7 +59,7 @@ export const CONFIG = {
     // é um link do Instagram/YouTube/Vimeo. Gerada para a página.
     preview: 'assets/media/demo/hero',
     captions: '',
-    title: 'Vídeo de apresentação do Vídeo por Comando',
+    title: 'Vídeo de apresentação do Clique Edite',
   },
 
   /* ---------------------------------------------------------------

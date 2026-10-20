@@ -1,4 +1,4 @@
-# Vídeo por Comando — Landing page
+# Clique Edite — Landing page
 
 Página estática (HTML + CSS + JavaScript em módulos), sem dependências e sem etapa de build.
 Funciona em qualquer hospedagem estática: GitHub Pages, Netlify, Vercel, Render (static site), Hostinger etc.
