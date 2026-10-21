@@ -648,3 +648,43 @@ a { color: inherit; }
 .var-stage { width: 100%; display: grid; justify-items: center; }
 .var-seg { margin: 0 auto; }
 .var-seg .seg-btn { min-height: 34px; padding: 0 14px; font-size: 12.5px; }
+
+/* =====================================================================
+   Botões verdes (combinam com o preto/grafite e o dourado)
+   ===================================================================== */
+:root {
+  --cta-grad: linear-gradient(100deg, #6EEBA0 0%, #22C55E 50%, #16A34A 100%);
+  --cta-ink: #042713;
+  --cta-glow: 34, 197, 94;
+}
+.btn { background: var(--cta-grad); color: var(--cta-ink); box-shadow: 0 18px 50px -20px rgba(var(--cta-glow), .75); }
+.btn:hover { box-shadow: 0 24px 64px -18px rgba(var(--cta-glow), .9); }
+.btn::after { background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, .45) 50%, transparent 70%); }
+@keyframes softPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 18px 50px -20px rgba(var(--cta-glow), .7), 0 0 0 0 rgba(var(--cta-glow), .35); }
+  50% { transform: scale(1.025); box-shadow: 0 22px 60px -18px rgba(var(--cta-glow), .85), 0 0 0 10px rgba(var(--cta-glow), 0); }
+}
+
+/* Topo sem logo: só o botão (no computador, depois de rolar) */
+.top-in { justify-content: flex-end; }
+.hero { padding-top: calc(28px + env(safe-area-inset-top, 0px)); }
+@media (max-width: 959px) {
+  .top { display: none; }
+  html { scroll-padding-top: 12px; }
+  .hero { padding-top: calc(10px + env(safe-area-inset-top, 0px)); }
+}
+
+/* Subheadline menor no celular */
+@media (max-width: 599px) {
+  .sub.fit-wrap { font-size: 12px; line-height: 1.4; max-width: 30em; }
+}
+
+/* Bloco 07: um vídeo animado e pouco texto */
+.deliver-video { display: grid; justify-items: center; }
+.deliver-video .cv { width: 100%; max-width: 440px; display: grid; justify-items: center; gap: 10px; }
+.deliver-sum { margin: 16px auto 0; max-width: 34em; text-align: center; color: var(--muted); font-size: 14.5px; }
+.deliver-sum span { color: var(--gold); margin: 0 4px; }
+.top.scrolled { background: transparent !important; border-color: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+.top { pointer-events: none; }
+.top .top-cta { pointer-events: auto; }
+.top:not(.cta-on) .top-cta { pointer-events: none; }

@@ -6,27 +6,23 @@ import { $$ } from './core/dom.js';
 import { initCheckout } from './core/checkout.js';
 import { initTracking } from './core/tracking.js';
 import { mountHeroVsl } from './components/hero-vsl.js';
-import { mountCommandDemo } from './components/command-demo.js';
 import { mountProcessCompare } from './components/process-compare.js';
 import { mountGuidedSteps } from './components/guided-steps.js';
 import { mountGallery } from './components/gallery.js';
 import { mountRequestSim } from './components/request-sim.js';
 import { mountBeforeAfter } from './components/before-after.js';
-import { mountFileDemo } from './components/file-demo.js';
-import { mountMindmap } from './components/mindmap.js';
+import { mountDeliverVideo } from './components/deliver-video.js';
 import { mountFaq } from './components/faq.js';
 import { initAutoplayUnlock, initFitText, initHeader, initHeroMotion, initDust, initBuyBar, initOfferView, applyConfigText } from './components/page-chrome.js';
 
 const COMPONENTS = {
   'hero-vsl': mountHeroVsl,
-  'command-demo': mountCommandDemo,
   'process-compare': mountProcessCompare,
   'guided-steps': mountGuidedSteps,
   gallery: mountGallery,
   'request-sim': mountRequestSim,
   'before-after': mountBeforeAfter,
-  'file-demo': mountFileDemo,
-  mindmap: mountMindmap,
+  'deliver-video': mountDeliverVideo,
   faq: mountFaq,
 };
 

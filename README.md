@@ -19,14 +19,12 @@ js/core/
 js/components/
   hero-vsl.js               Vídeo no celular do topo (formato da página Axion)
   video-player.js           Player reutilizável (galeria)
-  command-demo.js           Bloco 02 · demonstração de comando em 5 etapas
+  guided-steps.js           Bloco 02 · como funciona em 3 passos
   process-compare.js        Bloco 03 · tradicional × com IA
-  guided-steps.js           Bloco 04 · demonstração guiada em 3 etapas
   gallery.js                Bloco 05 · galeria por categoria
   request-sim.js            Bloco 06 · simulador de pedidos
   before-after.js           Bloco 06 · comparador antes/depois
-  file-demo.js              Bloco 07 · demonstração do arquivo
-  mindmap.js                Bloco 07 · prévia do mapa mental
+  deliver-video.js          Bloco 07 · vídeo animado do que você recebe
   faq.js                    Bloco 09 · perguntas frequentes
   page-chrome.js            Topo com etapa da jornada, barra de compra mobile, ilustração do hero
 assets/img/                 Logo, capa do vídeo, favicon e imagem de compartilhamento

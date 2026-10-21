@@ -54,8 +54,7 @@ export function mountGallery(root) {
     return h('article', { class: 'ex' },
       h('div', { class: 'ex-media' }, media),
       h('h3', { class: 'ex-title' }, ex.title),
-      h('code', { class: 'cmd' }, `“${ex.command}”`),
-      h('p', { class: 'ex-goal' }, real && ex.resultSummary ? ex.resultSummary : ex.goal));
+      h('code', { class: 'cmd' }, `“${ex.command}”`));
   }
 
   /* Várias versões no mesmo card: seletor "Versão 1 · Versão 2";
