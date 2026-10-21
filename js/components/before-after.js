@@ -25,9 +25,8 @@ export function mountBeforeAfter(root) {
   const edit = ready ? cfg.edited : demo('corte-editado');
 
   const mk = (v, label) => {
-    const video = h('video', { playsinline: true, muted: true, loop: true, preload: 'none', poster: v.poster || null, 'aria-label': label });
-    if (ready) video.append(h('source', { src: v.src }));
-    else { const b = v.src.replace(/\.mp4$/, ''); video.append(h('source', { src: `${b}.mp4`, type: 'video/mp4' }), h('source', { src: `${b}.webm`, type: 'video/webm' })); }
+    const video = h('video', { playsinline: true, 'webkit-playsinline': true, muted: true, loop: true, preload: 'metadata', poster: v.poster || null, 'data-sync-group': 'antes-depois', 'aria-label': label });
+    { const b = v.src.replace(/\.mp4$/, ''); video.append(h('source', { src: `${b}.mp4`, type: 'video/mp4' }), h('source', { src: `${b}.webm`, type: 'video/webm' })); }
     video.muted = true;
     video.dataset.auto = '1';
     registerVideo(video);
@@ -85,24 +84,40 @@ export function mountBeforeAfter(root) {
     v.addEventListener('error', () => { (v === vo ? durO : durE).textContent = 'indisponível'; }, true);
   });
 
-  /* Carrega perto da tela; toca (sem som, em loop) quando aparece; anima a entrada */
-  const near = new IntersectionObserver((es) => {
-    if (!es.some((x) => x.isIntersecting)) return;
-    near.disconnect();
-    [vo, ve].forEach((v) => { v.preload = 'auto'; v.load(); });
-  }, { rootMargin: '300px' });
-  near.observe(root);
-
+  /* Os dois tocam juntos, sozinhos, sem som e em loop, quando aparecem na tela */
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reduce) root.classList.add('ba2-anim');
-  let inView = false;
-  const playVisible = () => [vo, ve].forEach((v) => {
-    if (inView && !v.dataset.userPaused) { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); } else v.pause();
+  let inView = false, started = false;
+  const ready2 = () => vo.readyState >= 3 && ve.readyState >= 3;
+  const playBoth = () => {
+    if (!inView) { [vo, ve].forEach((v) => v.pause()); return; }
+    if (!started) {
+      if (!ready2()) { [vo, ve].forEach((v) => { if (v.preload !== 'auto') { v.preload = 'auto'; v.load(); } }); return; }
+      started = true;
+      [vo, ve].forEach((v) => { v.currentTime = 0; });
+    }
+    [vo, ve].forEach((v) => {
+      if (v.dataset.userPaused) return;
+      v.muted = true;
+      const p = v.play(); if (p && p.catch) p.catch(() => {});
+    });
+  };
+  [vo, ve].forEach((v) => {
+    v.addEventListener('canplay', playBoth);
+    v.addEventListener('canplaythrough', playBoth);
+    // se algo de fora pausar um deles (outro vídeo da página), retoma quando o bloco está na tela
+    v.addEventListener('pause', () => { if (inView && started && !v.dataset.userPaused && !reduce) setTimeout(() => { if (inView && v.paused && !v.dataset.userPaused) v.play().catch(() => {}); }, 120); });
   });
-  [vo, ve].forEach((v) => v.addEventListener('canplay', () => { if (inView && v.paused && !v.dataset.userPaused) v.play().catch(() => {}); }));
   new IntersectionObserver((es) => {
     inView = es[0].isIntersecting;
     if (inView) root.classList.add('ba2-in');
-    if (!reduce) playVisible();
-  }, { threshold: 0.3 }).observe(grid);
+    if (!reduce) playBoth();
+  }, { threshold: 0.25 }).observe(grid);
+  // começa a baixar um pouco antes de chegar no bloco
+  const near = new IntersectionObserver((es) => {
+    if (!es[0].isIntersecting) return;
+    near.disconnect();
+    [vo, ve].forEach((v) => { if (v.preload !== 'auto') { v.preload = 'auto'; v.load(); } });
+  }, { rootMargin: '600px' });
+  near.observe(root);
 }

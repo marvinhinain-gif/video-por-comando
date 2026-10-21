@@ -786,7 +786,7 @@ a { color: inherit; }
 .c3 { position: relative; width: 100%; height: calc(var(--c3w) * 16 / 9 + 60px); --c3w: min(56vw, 230px); perspective: 1100px; perspective-origin: 50% 45%; overflow: hidden; outline: none; }
 @media (min-width: 760px) { .c3 { --c3w: 260px; } }
 .c3-stage { position: absolute; inset: 0; transform-style: preserve-3d; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
-.c3-slide { position: absolute; left: 50%; top: 50%; width: var(--c3w); transform-style: preserve-3d; transition: transform .9s cubic-bezier(.22, .8, .24, 1), opacity .9s ease, filter .9s ease; filter: brightness(.55) saturate(.8); cursor: pointer; will-change: transform; }
+.c3-slide { position: absolute; left: 50%; top: 50%; width: var(--c3w); transform-style: preserve-3d; cursor: pointer; will-change: transform, opacity; }
 .c3-slide.is-active { filter: none; cursor: default; }
 .c3-slide .cv-frame { max-width: none; width: 100%; border-radius: 22px; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .9); }
 .c3-slide.is-active .cv-frame { border-color: rgba(214, 163, 41, .6); box-shadow: 0 40px 90px -40px rgba(214, 163, 41, .7); }
