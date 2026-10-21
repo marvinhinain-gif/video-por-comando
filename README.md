@@ -21,8 +21,7 @@ js/components/
   video-player.js           Player reutilizável (galeria)
   guided-steps.js           Bloco 02 · como funciona em 3 passos
   process-compare.js        Bloco 03 · tradicional × com IA
-  gallery.js                Bloco 05 · galeria por categoria
-  request-sim.js            Bloco 06 · simulador de pedidos
+  gallery.js                Bloco 05 · galeria em carrossel 3D
   before-after.js           Bloco 06 · comparador antes/depois
   deliver-video.js          Bloco 07 · vídeo animado do que você recebe
   faq.js                    Bloco 09 · perguntas frequentes

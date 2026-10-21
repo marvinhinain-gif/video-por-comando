@@ -1,122 +1,127 @@
 /* =====================================================================
-   BLOCO 05 · GALERIA
-   Categorias → exemplos (2 lado a lado no computador, carrossel no
-   celular). Cada exemplo: vídeo real (arquivo ou Instagram) ou uma
-   ilustração marcada, + o comando usado.
+   BLOCO 05 · GALERIA EM CARROSSEL 3D
+   Todos os exemplos (redes sociais, anúncios, empresa) num carrossel
+   em perspectiva que passa sozinho, suavemente. O vídeo do centro toca
+   sem som, com barra de progresso; os laterais ficam parados.
+   Arraste, use as setas ou toque num vídeo lateral para trazê-lo.
    ===================================================================== */
-import { h, $$, arrowNav, id } from '../core/dom.js';
+import { h, $$ } from '../core/dom.js';
 import { GALLERY } from '../content.js';
-import { createPlayer } from './video-player.js';
 import { createChapterVideo, demo } from './chapter-video.js';
 
+const AUTO_MS = 4200;       // tempo de cada vídeo no centro
+const IDLE_MS = 9000;       // pausa do giro automático depois de um toque
+
 export function mountGallery(root) {
-  const base = id('gal');
-  let cat = 0;
-  let players = [];
+  const items = GALLERY.flatMap((c) => c.examples.map((ex) => ({ ...ex, cat: c.label, catId: c.id, icon: c.icon })));
+  const n = items.length;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let active = 0, inView = false, timer = 0, idleUntil = 0;
 
-  const tabs = h('div', { class: 'cat-tabs', role: 'tablist', 'aria-label': 'Tipos de vídeo' },
-    GALLERY.map((c, i) => h('button', { class: 'cat-tab', role: 'tab', type: 'button', id: `${base}-t${i}`, 'aria-controls': `${base}-p`, onclick: () => pick(i) },
-      h('span', { 'aria-hidden': 'true' }, c.icon), ' ', c.label)));
-  const desc = h('p', { class: 'cat-desc', 'aria-live': 'polite' });
-  const track = h('div', { class: 'track', tabindex: '0', 'aria-label': 'Exemplos' });
-  const prev = h('button', { class: 'icon-btn', type: 'button', 'aria-label': 'Exemplo anterior', onclick: () => step(-1) }, '←');
-  const next = h('button', { class: 'icon-btn', type: 'button', 'aria-label': 'Próximo exemplo', onclick: () => step(1) }, '→');
-  const dots = h('div', { class: 'dots', 'aria-hidden': 'true' });
-  const nav = h('div', { class: 'gal-nav' }, prev, dots, next);
-
-  root.append(tabs, desc, h('div', { id: `${base}-p`, role: 'tabpanel' }, track), nav);
-  arrowNav(tabs, pick);
-  track.addEventListener('keydown', (e) => {
-    if (e.target !== track) return;
-    if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+  const slides = items.map((ex, i) => {
+    const p = media(ex);
+    const el = h('div', { class: 'c3-slide', role: 'group', 'aria-roledescription': 'slide', 'aria-label': `${i + 1} de ${n}: ${ex.title}` },
+      h('span', { class: 'c3-cat' }, h('span', { 'aria-hidden': 'true' }, ex.icon), ' ', ({ social: 'Redes sociais', ads: 'Anúncios', company: 'Empresa' })[ex.catId] || ex.cat),
+      p.el);
+    el.addEventListener('click', (e) => { if (i !== active) { e.preventDefault(); e.stopPropagation(); go(i, true); } }, true);
+    return { el, p, ex };
   });
-  let raf = 0;
-  track.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(paintNav); clearTimeout(track._t); track._t = setTimeout(playActive, 180); }, { passive: true });
-  addEventListener('resize', paintNav);
 
-  function card(ex) {
-    let media;
-    const real = ex.src || ex.instagram;
-    if (real) {
-      const p = createPlayer({ src: ex.src || ex.instagram, poster: ex.poster, captions: ex.captions, aspect: '9 / 16', title: ex.title });
-      players.push(p);
-      media = p.el;
-    } else if (ex.demos && ex.demos.length > 1) {
-      const v = variants(ex);
-      players.push(v);
-      media = v.el;
-    } else {
-      const v = createChapterVideo({ ...demo(ex.demo), aspect: '9 / 16', loop: true, autoplay: true, showChapters: false, title: ex.real ? ex.title : `Ilustração: ${ex.title}` });
-      players.push(v);
-      media = v.el;
-    }
-    return h('article', { class: 'ex' },
-      h('div', { class: 'ex-media' }, media),
-      h('h3', { class: 'ex-title' }, ex.title),
-      h('code', { class: 'cmd' }, `“${ex.command}”`));
+  const stage = h('div', { class: 'c3-stage' }, slides.map((s) => s.el));
+  const prev = h('button', { class: 'c3-btn c3-prev', type: 'button', 'aria-label': 'Vídeo anterior', onclick: () => go(active - 1, true), html: '<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>' });
+  const next = h('button', { class: 'c3-btn c3-next', type: 'button', 'aria-label': 'Próximo vídeo', onclick: () => go(active + 1, true), html: '<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>' });
+  const title = h('h3', { class: 'c3-title' });
+  const cmd = h('code', { class: 'cmd c3-cmd' });
+  const info = h('div', { class: 'c3-info', 'aria-live': 'polite' }, title, cmd);
+  const dots = h('div', { class: 'c3-dots' }, items.map((_, i) => h('button', { type: 'button', 'aria-label': `Ir para o vídeo ${i + 1}`, onclick: () => go(i, true) })));
+
+  root.append(h('div', { class: 'c3', tabindex: '0', 'aria-roledescription': 'carrossel', 'aria-label': 'Exemplos de vídeos' }, stage, prev, next), info, dots);
+
+  function media(ex) {
+    if (ex.demos && ex.demos.length > 1) return variants(ex);
+    return createChapterVideo({ ...demo(ex.demo), aspect: '9 / 16', loop: true, autoplay: false, showChapters: false, title: ex.real ? ex.title : `Ilustração: ${ex.title}` });
   }
 
-  /* Várias versões no mesmo card: seletor "Versão 1 · Versão 2";
-     tocam uma depois da outra, sem som, cada uma com a barra de progresso. */
+  /* Várias versões no mesmo card: tocam uma depois da outra, com seletor. */
   function variants(ex) {
-    const stage = h('div', { class: 'var-stage' });
-    let cur = null, idx = 0;
-    const btns = ex.demos.map((d, i) => h('button', { class: 'seg-btn', role: 'tab', type: 'button', onclick: () => show(i, true) }, `Versão ${i + 1}`));
-    const seg = h('div', { class: 'seg var-seg', role: 'tablist', 'aria-label': 'Versões' }, btns);
-    function show(i, autoplay) {
+    const box = h('div', { class: 'var-stage' });
+    let cur = null, idx = 0, on = false;
+    const btns = ex.demos.map((d, i) => h('button', { class: 'seg-btn', type: 'button', onclick: (e) => { e.stopPropagation(); show(i); if (on) cur.play(); } }, `Versão ${i + 1}`));
+    const seg = h('div', { class: 'seg var-seg', 'aria-label': 'Versões' }, btns);
+    function show(i) {
       idx = i;
       btns.forEach((b, j) => b.setAttribute('aria-selected', String(j === i)));
       if (cur) cur.pause();
-      cur = createChapterVideo({ ...demo(ex.demos[i]), aspect: '9 / 16', loop: false, autoplay: true, showChapters: false, title: `${ex.title} · versão ${i + 1}` });
-      cur.video.addEventListener('ended', () => show((idx + 1) % ex.demos.length, true));
-      stage.replaceChildren(cur.el);
-      // a 1ª checagem de visibilidade do vídeo novo pode chegar antes dele entrar na tela
-      if (autoplay) { const v = cur; v.play(); setTimeout(() => { if (v === cur && v.video.paused) v.play(); }, 250); }
+      cur = createChapterVideo({ ...demo(ex.demos[i]), aspect: '9 / 16', loop: false, autoplay: false, showChapters: false, title: `${ex.title} · versão ${i + 1}` });
+      cur.video.addEventListener('ended', () => { show((idx + 1) % ex.demos.length); if (on) cur.play(); });
+      box.replaceChildren(cur.el);
     }
-    show(0, false);
-    return { el: h('div', { class: 'var' }, stage, seg), get video() { return cur.video; }, play: () => cur.play(), pause: () => cur.pause() };
+    show(0);
+    return { el: h('div', { class: 'var' }, box, seg), play: () => { on = true; cur.play(); }, pause: () => { on = false; cur.pause(); } };
   }
 
-  let galleryInView = false;
-  new IntersectionObserver((es) => { galleryInView = es[0].isIntersecting; playActive(); }, { threshold: 0.4 }).observe(track);
-  function playActive() {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const idx = Math.round(track.scrollLeft / cardW());
-    players.forEach((p) => { if (galleryInView && p.play && p.video && p.video.loop) p.play(); });
+  const wrap = (i) => ((i % n) + n) % n;
+
+  function layout() {
+    const w = slides[0].el.offsetWidth || 220;
+    const gap = w * (innerWidth < 600 ? 0.62 : 0.78);
+    slides.forEach((s, i) => {
+      let d = i - active;
+      if (d > n / 2) d -= n;
+      if (d < -n / 2) d += n;
+      const a = Math.abs(d);
+      s.el.style.transform = `translate(-50%, -50%) translateX(${d * gap}px) translateZ(${-a * 170}px) rotateY(${-Math.sign(d) * Math.min(a, 2) * 28}deg)`;
+      s.el.style.opacity = a > 2 ? '0' : a === 2 ? '.35' : a === 1 ? '.7' : '1';
+      s.el.style.zIndex = String(10 - a);
+      s.el.classList.toggle('is-active', d === 0);
+      s.el.style.pointerEvents = a > 1 ? 'none' : '';
+      s.el.setAttribute('aria-hidden', String(d !== 0));
+    });
+    $$('button', dots).forEach((b, i) => b.classList.toggle('on', i === active));
   }
 
-  function pick(i) {
-    players.forEach((p) => p.pause());
-    players = [];
-    cat = i;
-    $$('[role="tab"]', tabs).forEach((t, j) => { t.setAttribute('aria-selected', String(j === i)); t.tabIndex = j === i ? 0 : -1; });
-    desc.textContent = GALLERY[i].description;
-    const items = GALLERY[i].examples.map(card);
-    track.replaceChildren(...items);
-    track.scrollLeft = 0;
-    track.classList.remove('fade-in'); void track.offsetWidth; track.classList.add('fade-in');
-    dots.replaceChildren(...items.map(() => h('span')));
-    requestAnimationFrame(() => { paintNav(); playActive(); });
+  function play() {
+    slides.forEach((s, i) => { if (i === active && inView && !reduce) s.p.play(); else s.p.pause(); });
   }
 
-  function cardW() { const c = track.firstElementChild; return c ? c.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 0) : 1; }
-
-  function step(dir) {
-    players.forEach((p) => p.pause());
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    track.scrollBy({ left: dir * cardW(), behavior: reduce ? 'auto' : 'smooth' });
+  function go(i, user) {
+    active = wrap(i);
+    if (user) idleUntil = Date.now() + IDLE_MS;
+    layout();
+    const ex = items[active];
+    title.textContent = ex.title;
+    cmd.textContent = `“${ex.command}”`;
+    info.classList.remove('fade-in'); void info.offsetWidth; info.classList.add('fade-in');
+    play();
   }
 
-  function paintNav() {
-    const n = track.children.length;
-    const perView = Math.max(1, Math.round(track.clientWidth / cardW()));
-    nav.hidden = n <= perView;
-    const idx = Math.round(track.scrollLeft / cardW());
-    prev.disabled = track.scrollLeft < 4;
-    next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
-    $$('span', dots).forEach((d, j) => d.classList.toggle('on', j === idx));
+  /* Giro automático suave enquanto a galeria está na tela */
+  function loop() {
+    clearTimeout(timer);
+    if (reduce || !inView) return;
+    timer = setTimeout(() => {
+      if (Date.now() >= idleUntil && !root.matches(':hover')) go(active + 1, false);
+      loop();
+    }, AUTO_MS);
   }
+  new IntersectionObserver((es) => { inView = es[0].isIntersecting; play(); loop(); }, { threshold: 0.35 }).observe(stage);
 
-  pick(0);
+  /* Arrastar / deslizar */
+  let x0 = null, moved = false;
+  stage.addEventListener('pointerdown', (e) => { x0 = e.clientX; moved = false; idleUntil = Date.now() + IDLE_MS; });
+  stage.addEventListener('pointermove', (e) => { if (x0 != null && Math.abs(e.clientX - x0) > 12) moved = true; });
+  stage.addEventListener('pointerup', (e) => {
+    if (x0 == null) return;
+    const dx = e.clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) go(active + (dx < 0 ? 1 : -1), true);
+  });
+  stage.addEventListener('pointercancel', () => { x0 = null; });
+  stage.addEventListener('click', (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+  root.querySelector('.c3').addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(active + 1, true); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(active - 1, true); }
+  });
+  addEventListener('resize', layout);
+
+  go(0, false);
 }

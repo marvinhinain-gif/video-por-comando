@@ -9,7 +9,6 @@ import { mountHeroVsl } from './components/hero-vsl.js';
 import { mountProcessCompare } from './components/process-compare.js';
 import { mountGuidedSteps } from './components/guided-steps.js';
 import { mountGallery } from './components/gallery.js';
-import { mountRequestSim } from './components/request-sim.js';
 import { mountBeforeAfter } from './components/before-after.js';
 import { mountDeliverVideo } from './components/deliver-video.js';
 import { mountFaq } from './components/faq.js';
@@ -20,7 +19,6 @@ const COMPONENTS = {
   'process-compare': mountProcessCompare,
   'guided-steps': mountGuidedSteps,
   gallery: mountGallery,
-  'request-sim': mountRequestSim,
   'before-after': mountBeforeAfter,
   'deliver-video': mountDeliverVideo,
   faq: mountFaq,
