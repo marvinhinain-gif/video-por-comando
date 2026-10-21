@@ -332,11 +332,11 @@ export const DEMO_CHAPTERS = {
       label: "Adicione o arquivo"
     },
     {
-      t: 6.5,
+      t: 7,
       label: "Diga o que quer criar"
     },
     {
-      t: 11.5,
+      t: 13.2,
       label: "A IA ajuda a criar"
     }
   ],
