@@ -78,6 +78,15 @@ export const CONFIG = {
   },
 
   /* ---------------------------------------------------------------
+     DEPOIMENTOS (prints reais do WhatsApp)
+     Coloque as imagens em assets/img/depoimentos/ e liste aqui.
+     Use só prints reais, com autorização de quem enviou.
+     Com a lista vazia, o bloco de depoimentos não aparece na página.
+     Ex.: { src: 'assets/img/depoimentos/01.jpg', alt: 'Print de cliente contando que editou o primeiro Reels' }
+     --------------------------------------------------------------- */
+  testimonials: [],
+
+  /* ---------------------------------------------------------------
      RASTREAMENTO
      Nada é carregado sem ID. Com ID, os scripts só carregam depois
      do consentimento do visitante (quando consentRequired = true).

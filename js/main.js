@@ -12,6 +12,7 @@ import { mountGallery } from './components/gallery.js';
 import { mountBeforeAfter } from './components/before-after.js';
 import { mountDeliverVideo } from './components/deliver-video.js';
 import { mountFaq } from './components/faq.js';
+import { mountTestimonials } from './components/testimonials.js';
 import { initAutoplayUnlock, initFitText, initHeader, initHeroMotion, initDust, initBuyBar, initOfferView, applyConfigText } from './components/page-chrome.js';
 
 const COMPONENTS = {
@@ -22,6 +23,7 @@ const COMPONENTS = {
   'before-after': mountBeforeAfter,
   'deliver-video': mountDeliverVideo,
   faq: mountFaq,
+  testimonials: mountTestimonials,
 };
 
 function mount(el) {
