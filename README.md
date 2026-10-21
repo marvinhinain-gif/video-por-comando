@@ -60,6 +60,10 @@ quando o checkout abriu e quando o pagamento foi aprovado. A página nunca regis
 
 Os parâmetros `utm_*`, `fbclid`, `gclid`, `src`, `sck`, `xcod` da visita são repassados ao checkout.
 
+## Endereço do site
+
+**https://cliqueedite.onrender.com** (Render, site estático ligado à branch `main`: cada envio para a `main` publica sozinho).
+
 ## Publicar
 
 Suba a pasta inteira. Para testar no computador: `python3 -m http.server` dentro da pasta
