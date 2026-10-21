@@ -65,24 +65,24 @@ export const PROCESSES = {
   traditional: {
     label: 'Processo tradicional',
     steps: [
-      { t: 'Abrir um programa de edição.', d: 'Escolher e aprender um programa de edição.' },
-      { t: 'Organizar todas as gravações.', d: 'Importar gravações, imagens e áudios no lugar certo.' },
-      { t: 'Cortar erros e pausas.', d: 'Encontrar cada pausa e erro na linha do tempo.' },
-      { t: 'Colocar legendas e textos.', d: 'Criar, posicionar e sincronizar cada texto na tela.' },
-      { t: 'Ajustar efeitos e cenas.', d: 'Cores, transições, áudio e enquadramento, um a um.' },
-      { t: 'Revisar tudo novamente.', d: 'Assistir de novo e voltar aos passos anteriores.' },
-      { t: 'Exportar o vídeo.', d: 'Escolher formato, resolução e esperar a renderização.' },
+      { t: 'Abrir um programa de edição.', short: 'Abrir programa de edição', d: 'Escolher e aprender um programa de edição.' },
+      { t: 'Organizar todas as gravações.', short: 'Organizar gravações', d: 'Importar gravações, imagens e áudios no lugar certo.' },
+      { t: 'Cortar erros e pausas.', short: 'Cortar erros e pausas', d: 'Encontrar cada pausa e erro na linha do tempo.' },
+      { t: 'Colocar legendas e textos.', short: 'Colocar legendas e textos', d: 'Criar, posicionar e sincronizar cada texto na tela.' },
+      { t: 'Ajustar efeitos e cenas.', short: 'Ajustar efeitos e cenas', d: 'Cores, transições, áudio e enquadramento, um a um.' },
+      { t: 'Revisar tudo novamente.', short: 'Revisar tudo de novo', d: 'Assistir de novo e voltar aos passos anteriores.' },
+      { t: 'Exportar o vídeo.', short: 'Exportar e esperar', d: 'Escolher formato, resolução e esperar a renderização.' },
     ],
   },
   assisted: {
     label: 'Processo com IA',
     steps: [
-      { who: 'Você', t: 'Abrir sua IA.', d: 'No computador ou no celular.' },
-      { who: 'Você', t: 'Adicionar o Clique Edite.', d: 'Seguindo o vídeo de instrução.' },
-      { who: 'Você', t: 'Enviar sua gravação ou ideia.', d: 'Gravações, imagens ou só a ideia.' },
-      { who: 'Você', t: 'Dizer o que precisa.', d: 'Escrevendo ou ditando pelo microfone.' },
-      { who: 'IA ajuda', t: 'Deixar a IA ajudar na edição.', d: 'Dentro do que suas ferramentas permitem.' },
-      { who: 'Você + IA', t: 'Conferir e ajustar o resultado.', d: 'Você revisa e pede novos ajustes.' },
+      { who: 'Você', t: 'Abrir sua IA.', short: 'Abrir sua IA', d: 'No computador ou no celular.' },
+      { who: 'Você', t: 'Adicionar o Clique Edite.', short: 'Adicionar o Clique Edite', d: 'Seguindo o vídeo de instrução.' },
+      { who: 'Você', t: 'Enviar sua gravação ou ideia.', short: 'Enviar gravação ou ideia', d: 'Gravações, imagens ou só a ideia.' },
+      { who: 'Você', t: 'Dizer o que precisa.', short: 'Dizer o que precisa', d: 'Escrevendo ou ditando pelo microfone.' },
+      { who: 'IA ajuda', t: 'Deixar a IA ajudar na edição.', short: 'A IA ajuda na edição', d: 'Dentro do que suas ferramentas permitem.' },
+      { who: 'Você + IA', t: 'Conferir e ajustar o resultado.', short: 'Conferir e aprovar', d: 'Você revisa e pede novos ajustes.' },
     ],
   },
 };
@@ -176,6 +176,7 @@ export const GALLERY = [
 export const REQUESTS = [
   {
     id: 'curto',
+    short: 'Encurtar',
     label: 'Quer um vídeo mais curto?',
     ask: 'Remove as pausas e deixa esse vídeo com 30 segundos.',
     action: 'Encontrar pausas, repetições e trechos que não mudam a mensagem, e propor o que sai.',
@@ -184,6 +185,7 @@ export const REQUESTS = [
   },
   {
     id: 'mensagem',
+    short: 'Melhorar',
     label: 'Quer melhorar seu vídeo?',
     ask: 'Coloca uma abertura mais forte e deixa a mensagem mais dinâmica.',
     action: 'Ler o que é dito, apontar onde a ideia se perde e sugerir uma ordem mais clara.',
@@ -192,6 +194,7 @@ export const REQUESTS = [
   },
   {
     id: 'anuncio',
+    short: 'Anúncio',
     label: 'Quer criar um anúncio?',
     ask: 'Transforma essa gravação em um anúncio para o meu produto.',
     action: 'Transformar a ideia em estrutura de venda: atenção, apresentação, objeção e chamada.',

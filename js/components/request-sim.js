@@ -1,23 +1,29 @@
 /* =====================================================================
-   BLOCO 06 · PEDIDOS DO DIA A DIA (vídeo interativo)
-   Cada pedido abre o vídeo da simulação correspondente:
-   pedido → proposta → resultado → novo ajuste.
+   BLOCO 06 · PEÇA DO SEU JEITO
+   Abas curtas (Mais curto · Mais forte · Virar anúncio) → o vídeo da
+   simulação correspondente toca sozinho, sem som, com capítulos.
    ===================================================================== */
 import { h, $$, arrowNav, id } from '../core/dom.js';
 import { REQUESTS, DEMO_CHAPTERS } from '../content.js';
 import { createChapterVideo, demo } from './chapter-video.js';
 
+const ICON = {
+  curto: '<path d="M6 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM6 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM8 8l12 9M8 16l12-9"/>',
+  mensagem: '<path d="M12 3l2.2 5.6L20 9l-4.5 3.8L17 19l-5-3.2L7 19l1.5-6.2L4 9l5.8-.4z"/>',
+  anuncio: '<path d="M4 10v4l3 .5V9.5zM7 9.5l10-4.5v14l-10-4.5M17 9h2a2 2 0 0 1 0 6h-2M8 15l1.5 5"/>',
+};
+
 export function mountRequestSim(root) {
   const base = id('req');
   let player = null;
 
-  const tabs = h('div', { class: 'chips chips-col', role: 'tablist', 'aria-label': 'Pedidos comuns' },
+  const tabs = h('div', { class: 'seg req-tabs', role: 'tablist', 'aria-label': 'Exemplos de pedidos' },
     REQUESTS.map((r, i) => h('button', {
-      class: 'chip chip-cmd', role: 'tab', type: 'button', id: `${base}-t${i}`, 'aria-controls': `${base}-p`,
+      class: 'seg-btn', role: 'tab', type: 'button', id: `${base}-t${i}`, 'aria-controls': `${base}-p`,
       onclick: () => pick(i, true),
-    }, h('span', { class: 'chip-q' }, r.label), h('span', { class: 'chip-v' }, `“${r.ask}”`))));
+    }, h('span', { class: 'req-ic', 'aria-hidden': 'true', html: `<svg viewBox="0 0 24 24">${ICON[r.id] || ''}</svg>` }), r.short || r.label)));
   const stage = h('div', { class: 'cv-stage', id: `${base}-p`, role: 'tabpanel' });
-  root.append(tabs, stage);
+  root.append(h('p', { class: 'req-kicker' }, 'Peça do seu jeito'), tabs, stage);
   arrowNav(tabs, (i) => pick(i, true));
 
   function pick(i, user) {

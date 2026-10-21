@@ -1,49 +1,35 @@
 /* =====================================================================
-   BLOCO 03 · COMPARAÇÃO DE PROCESSOS
-   Computador: as duas colunas lado a lado.
-   Celular: alternância entre as duas (o número de etapas fica visível
-   nas abas, então a comparação se entende mesmo sem tocar).
+   BLOCO 03 · CHECKLIST DE COMPARAÇÃO
+   Duas colunas compactas lado a lado (também no celular):
+   vermelha (editando sozinho, ✕) × verde (com o Clique Edite, ✓).
+   As linhas entram uma de cada vez quando o bloco aparece.
    ===================================================================== */
-import { h, $$, arrowNav, id } from '../core/dom.js';
+import { h } from '../core/dom.js';
 import { PROCESSES } from '../content.js';
 
+const X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>';
+const V = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
 export function mountProcessCompare(root) {
-  const keys = ['traditional', 'assisted'];
-  const base = id('proc');
+  const col = (key, cls, title, icon, foot) => {
+    const p = PROCESSES[key];
+    return h('div', { class: `ck-col ${cls}` },
+      h('p', { class: 'ck-head' }, h('span', { class: 'ck-title' }, title), h('span', { class: 'ck-count' }, `${p.steps.length} etapas`)),
+      h('ul', { class: 'ck-list', 'aria-label': title }, p.steps.map((s, i) => h('li', { style: `--i:${i}` },
+        h('span', { class: 'ck-ic', html: icon }), h('span', { class: 'ck-t' }, s.short || s.t)))),
+      h('p', { class: 'ck-foot' }, foot));
+  };
+  root.append(h('div', { class: 'ck' },
+    col('traditional', 'ck-bad', 'Editando sozinho', X, 'Horas na linha do tempo'),
+    col('assisted', 'ck-good', 'Com o Clique Edite', V, 'Você pede e aprova')));
 
-  const tabs = h('div', { class: 'seg proc-tabs', role: 'tablist', 'aria-label': 'Escolha o processo' },
-    keys.map((k, i) => h('button', {
-      class: 'seg-btn', role: 'tab', type: 'button', id: `${base}-t${i}`, 'aria-controls': `${base}-${k}`,
-      onclick: () => setFocus(k),
-    }, k === 'traditional' ? `Tradicional · ${PROCESSES[k].steps.length}` : `Com IA · ${PROCESSES[k].steps.length}`)));
-
-  const cols = keys.map((k, ci) => {
-    const p = PROCESSES[k];
-    return h('div', { class: `proc-col proc-${k}`, id: `${base}-${k}`, role: 'tabpanel', 'aria-labelledby': `${base}-t${ci}` },
-      h('p', { class: 'proc-head' }, h('span', {}, p.label), h('span', { class: 'proc-count' }, `${p.steps.length} etapas`)),
-      h('ol', { class: 'proc-list' }, p.steps.map((s, i) => h('li', { class: 'proc-step' },
-        h('span', { class: 'proc-n' }, String(i + 1).padStart(2, '0')),
-        h('span', { class: 'proc-t' }, s.t),
-        h('span', { class: `who ${s.who && s.who !== 'Você' ? 'who-ai' : ''}` }, s.who || 'Você')))));
-  });
-
-  root.append(tabs, h('div', { class: 'proc-cols' }, ...cols));
-  // Checklist animado: as etapas entram uma de cada vez quando o bloco aparece.
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    root.classList.add('proc-anim');
-    $$('.proc-col', root).forEach((col) => $$('.proc-step', col).forEach((li, i) => li.style.setProperty('--i', i)));
+    root.classList.add('ck-anim');
     const io = new IntersectionObserver((es) => {
       if (!es.some((e) => e.isIntersecting)) return;
-      root.classList.add('proc-in');
+      root.classList.add('ck-in');
       io.disconnect();
-    }, { threshold: 0.25 });
+    }, { threshold: 0.3 });
     io.observe(root);
   }
-  arrowNav(tabs, (i) => setFocus(keys[i]));
-
-  function setFocus(k) {
-    root.dataset.focus = k;
-    $$('[role="tab"]', tabs).forEach((t, i) => { const on = keys[i] === k; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
-  }
-  setFocus('assisted');
 }

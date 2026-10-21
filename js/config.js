@@ -71,9 +71,9 @@ export const CONFIG = {
     original: { src: 'assets/media/antes-depois-bruto.mp4', poster: 'assets/media/antes-depois-bruto.jpg', captions: '' },
     edited:   { src: 'assets/media/antes-depois-editado.mp4', poster: 'assets/media/antes-depois-editado.jpg', captions: '' },
     changes: [
-      'Cortes nas pausas e trechos sem fala',
-      'Legendas e títulos na tela',
-      'Efeitos visuais: zoom, tela verde e parede de vídeos',
+      'Cortes nas pausas',
+      'Legendas na tela',
+      'Efeitos visuais',
     ],
   },
 
