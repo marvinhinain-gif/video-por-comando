@@ -581,27 +581,23 @@ a { color: inherit; }
 .skc-ico svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .skc h3 { font-size: 21px; font-weight: 600; line-height: 1.2; }
 .skc p { color: var(--muted); font-size: 15px; line-height: 1.45; }
-.skl-dots { display: none; }
 @media (max-width: 759px) {
-  .skl { display: grid; padding-bottom: 40px; touch-action: pan-y; }
-  .skl .skc { grid-area: 1 / 1; padding: 8px 8px 14px; gap: 12px; transform-origin: 50% 100%; transition: transform .75s cubic-bezier(.22,.8,.2,1), opacity .6s ease, filter .6s ease, box-shadow .6s; will-change: transform; }
-  .skl .skc:hover { transform: none; }
-  .skl .skc[data-pos="0"] { z-index: 4; transform: none; opacity: 1; filter: none; box-shadow: 0 30px 60px -30px #000; }
-  .skl .skc[data-pos="1"] { z-index: 3; transform: translateY(16px) scale(.95); opacity: 1; filter: brightness(.55); pointer-events: none; }
-  .skl .skc[data-pos="2"] { z-index: 2; transform: translateY(31px) scale(.9); opacity: 1; filter: brightness(.32); pointer-events: none; }
-  .skl .skc[data-pos="3"] { z-index: 1; transform: translateY(44px) scale(.85); opacity: 0; pointer-events: none; }
-  .skl .skc.leaving { z-index: 5; transform: translateX(-112%) rotate(-7deg); opacity: 0; transition: transform .65s cubic-bezier(.55,0,.4,1), opacity .55s ease; }
-  .skl .skc.no-anim { transition: none; }
+  .skc { padding: 8px 8px 14px; gap: 12px; }
+  .skc:hover { transform: none; }
   .skc h3 { font-size: 19px; }
   .skc p { font-size: 14px; }
-  .skl-dots { display: flex; justify-content: center; align-items: center; gap: 4px; margin-top: 4px; }
-  .skl-dots button { display: grid; place-items: center; width: 26px; height: 32px; padding: 0; border: 0; background: transparent; cursor: pointer; }
-  .skl-dots button i { display: block; width: 7px; height: 7px; border-radius: 999px; background: var(--line-2); transition: width .3s, background .3s; }
-  .skl-dots button.on i { width: 22px; background: var(--gold); }
 }
+.skc-car { touch-action: pan-y; }
+.car-track { position: absolute; inset: 0; display: flex; transition: transform .8s cubic-bezier(.65,0,.25,1); }
+.car-slide { position: relative; flex: 0 0 100%; height: 100%; }
+.car-slide video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #070708; }
+.car-lbl { position: absolute; left: 50%; top: 12px; translate: -50% 0; padding: 5px 11px; border-radius: 999px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.18); color: #fff; font-size: 11.5px; font-weight: 600; white-space: nowrap; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.car-dots { position: absolute; left: 50%; bottom: 10px; translate: -50% 0; z-index: 3; display: flex; gap: 2px; padding: 0 6px; border-radius: 999px; background: rgba(0,0,0,.45); }
+.car-dots button { display: grid; place-items: center; width: 24px; height: 28px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.car-dots i { display: block; width: 6px; height: 6px; border-radius: 999px; background: rgba(255,255,255,.4); transition: width .3s, background .3s; }
+.car-dots .on i { width: 18px; background: var(--gold); }
 .skl-note { margin: 14px auto 0; max-width: 40em; text-align: center; font-size: 12.5px; color: var(--muted); }
-.skl-swipe { display: none; color: var(--gold-hi); }
-@media (max-width: 759px) { .skl-note { margin-top: 8px; } .skl-swipe { display: inline; } }
+@media (max-width: 759px) { .skl-note { margin-top: 8px; } }
 
 /* ---------- Bloco 06 · Antes / depois ---------- */
 .ba { position: relative; max-width: 860px; margin: 0 auto; border-radius: 26px; border: 1px solid var(--line); overflow: hidden; background: var(--graphite); --x: 50%; text-align: left; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
@@ -1059,8 +1055,21 @@ a { color: inherit; }
     </header>
     <div class="skl">
       <article class="skc rv" style="--c: var(--coral)">
-        <div class="skc-media" style="background-image: url(demos/editor-capa.jpg)">
-          <video muted loop playsinline webkit-playsinline preload="none" poster="demos/editor-capa.jpg" aria-label="Demonstração: comando para cortar pausas e legendar, linha do tempo da edição e o vídeo final." data-webm="demos/editor.webm" data-mp4="demos/editor.mp4"></video>
+        <div class="skc-media skc-car" style="background-image: url(demos/editor-capa.jpg)">
+          <div class="car-track">
+            <div class="car-slide">
+            <video class="car-v" data-auto-next="ended" muted playsinline webkit-playsinline preload="none" poster="demos/editor-capa.jpg" aria-label="Demonstração: comando para cortar pausas e legendar, linha do tempo da edição e o vídeo final." data-webm="demos/editor.webm" data-mp4="demos/editor.mp4"></video>
+            </div>
+            <div class="car-slide">
+              <video class="car-v" muted playsinline webkit-playsinline preload="none" poster="vsl-capa.jpg" data-mp4="vsl.mp4" data-hold="8000" aria-label="Exemplo de vídeo editado com legendas e efeitos"></video>
+              <span class="car-lbl">Exemplo de vídeo editado</span>
+            </div>
+            <div class="car-slide">
+              <video class="car-v" muted playsinline webkit-playsinline preload="none" poster="curso-capa.jpg" data-mp4="curso.mp4" data-hold="8000" aria-label="Outro exemplo de vídeo editado com legendas e efeitos"></video>
+              <span class="car-lbl">Exemplo de vídeo editado</span>
+            </div>
+          </div>
+          <div class="car-dots"><button type="button" class="on" aria-label="Ver demonstração"><i></i></button><button type="button" aria-label="Ver exemplo 1"><i></i></button><button type="button" aria-label="Ver exemplo 2"><i></i></button></div>
           <button class="skc-pp" type="button" aria-label="Reproduzir demonstração de Editor de Vídeo"><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></button>
         </div>
         <div class="skc-txt"><span class="skc-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z"/></svg></span><h3>Editor de Vídeo</h3><p>Cortes, legendas e mais ritmo a partir de um pedido simples.</p></div>
@@ -1087,8 +1096,7 @@ a { color: inherit; }
         <div class="skc-txt"><span class="skc-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.6"/><path d="M16.6 7.4h.01"/></svg></span><h3>Social Media</h3><p>Calendário, artes e legendas da semana prontos para aprovar.</p></div>
       </article>
     </div>
-    <div class="skl-dots"><button type="button" class="on" aria-label="Ver Editor de Vídeo"><i></i></button><button type="button" aria-label="Ver Criador de Site"><i></i></button><button type="button" aria-label="Ver Design de Fotos"><i></i></button><button type="button" aria-label="Ver Social Media"><i></i></button></div>
-    <p class="skl-note"><span class="skl-swipe">As habilidades passam sozinhas. Deslize para trocar. </span>Demonstrações ilustrativas, com tempo acelerado.</p>
+    <p class="skl-note">Demonstrações ilustrativas, com tempo acelerado.</p>
   </div>
 </section>
 
@@ -1479,80 +1487,65 @@ a { color: inherit; }
     }, 0.35, false);
   });
 
-  /* ===== Bloco 05: vídeos das habilidades (computador: grade; celular: pilha que passa sozinha) ===== */
+  /* ===== Bloco 05: vídeos das habilidades (carregam só quando aparecem) ===== */
   safe(() => {
-    const row = $('.skl'), cards = $$('.skc', row), dots = $$('.skl-dots button'), n = cards.length;
-    const mq = matchMedia('(max-width: 759px)');
-    let deck = mq.matches, front = 0, inView = false, deckPaused = RM, timer = 0, busy = false;
-    const ctl = cards.map((card) => {
-      const v = $('video', card), btn = $('.skc-pp', card), label = card.querySelector('h3').textContent;
-      const c = { card, v, loaded: false, userPaused: RM };
-      c.ui = (on) => { card.classList.toggle('playing', on); card.classList.toggle('idle', !on && RM && !c.loaded); btn.setAttribute('aria-label', `${on ? 'Pausar' : 'Reproduzir'} demonstração de ${label}`); };
-      c.load = () => {
-        if (c.loaded) return; c.loaded = true;
-        const w = document.createElement('source'); w.src = v.dataset.webm; w.type = 'video/webm';
-        const m = document.createElement('source'); m.src = v.dataset.mp4; m.type = 'video/mp4';
-        v.append(w, m); v.preload = 'auto'; v.load();
+    const loadV = (v) => {
+      if (v.dataset.loaded) return; v.dataset.loaded = '1';
+      if (v.dataset.webm) { const w = document.createElement('source'); w.src = v.dataset.webm; w.type = 'video/webm'; v.append(w); }
+      const m = document.createElement('source'); m.src = v.dataset.mp4; m.type = 'video/mp4'; v.append(m);
+      v.preload = 'auto'; v.load();
+    };
+    const tryPlay = (v, onFail) => { loadV(v); const pr = v.play(); if (pr && pr.catch) pr.catch(() => onFail && onFail()); };
+    $$('.skc').forEach((card) => {
+      const btn = $('.skc-pp', card), label = card.querySelector('h3').textContent;
+      const ui = (on) => { card.classList.toggle('playing', on); btn.setAttribute('aria-label', `${on ? 'Pausar' : 'Reproduzir'} demonstração de ${label}`); };
+      ui(false);
+      const car = $('.skc-car', card);
+      if (!car) {
+        const v = $('video', card); let userPaused = RM;
+        v.addEventListener('playing', () => ui(true)); v.addEventListener('pause', () => ui(false));
+        btn.addEventListener('click', () => { if (!v.paused) { userPaused = true; v.pause(); } else { userPaused = false; tryPlay(v, () => ui(false)); } });
+        onView(card, (vis) => { if (vis && !userPaused) tryPlay(v, () => ui(false)); else if (!vis && !v.paused) v.pause(); }, 0.4, false);
+        return;
+      }
+      /* 1º card: carrossel que passa sozinho para o lado */
+      const track = $('.car-track', car), vids = $$('.car-v', car), dots = $$('.car-dots button', car), n = vids.length;
+      let i = 0, paused = RM, visible = false, timer = 0;
+      const show = (k, restart) => {
+        clearTimeout(timer);
+        i = (k + n) % n;
+        track.style.transform = `translateX(${-100 * i}%)`;
+        dots.forEach((d, j) => d.classList.toggle('on', j === i));
+        vids.forEach((v, j) => { if (j !== i && !v.paused) v.pause(); });
+        if (!visible || paused) return;
+        const v = vids[i];
+        if (restart) { try { v.currentTime = 0; } catch (e) {} }
+        tryPlay(v, () => { timer = setTimeout(() => show(i + 1, true), 6000); });
+        const hold = parseInt(v.dataset.hold || '0', 10);
+        timer = setTimeout(() => show(i + 1, true), hold || 22000);
       };
-      c.play = (restart) => { c.load(); if (restart) { try { v.currentTime = 0; } catch (e) {} } const pr = v.play(); if (pr && pr.catch) pr.catch(() => c.ui(false)); };
-      c.pause = () => { if (!v.paused) v.pause(); };
-      v.addEventListener('playing', () => c.ui(true));
-      v.addEventListener('pause', () => c.ui(false));
-      v.addEventListener('ended', () => { if (deck && cards[front] === card) go(front + 1); });
-      btn.addEventListener('click', () => {
-        if (deck) { deckPaused = !v.paused; if (deckPaused) { c.pause(); clearTimeout(timer); } else { c.play(false); arm(); } return; }
-        if (!v.paused) { c.userPaused = true; c.pause(); } else { c.userPaused = false; c.play(false); }
+      vids.forEach((v, j) => {
+        v.addEventListener('playing', () => { if (j === i) ui(true); });
+        v.addEventListener('pause', () => { if (j === i) ui(false); });
+        v.addEventListener('ended', () => { if (j === i && !paused) show(i + 1, true); });
       });
-      c.ui(false);
+      btn.addEventListener('click', () => {
+        const v = vids[i];
+        if (!v.paused) { paused = true; clearTimeout(timer); v.pause(); }
+        else { paused = false; show(i, false); }
+      });
+      dots.forEach((d, j) => d.addEventListener('click', () => { paused = false; show(j, true); }));
+      let sx = 0, sy = 0;
+      car.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+      car.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) { paused = false; show(i + (dx < 0 ? 1 : -1), true); }
+      }, { passive: true });
       onView(card, (vis) => {
-        if (deck) return;
-        if (vis && !c.userPaused) c.play(false); else if (!vis) c.pause();
+        visible = vis;
+        if (vis) show(i, false); else { clearTimeout(timer); vids.forEach((v) => { if (!v.paused) v.pause(); }); }
       }, 0.4, false);
-      return c;
     });
-    const setPos = () => {
-      cards.forEach((c, j) => { c.dataset.pos = String((j - front + n) % n); c.setAttribute('aria-hidden', String(j !== front)); });
-      dots.forEach((d, j) => d.classList.toggle('on', j === front));
-    };
-    const arm = () => { clearTimeout(timer); if (deck && inView && !deckPaused) timer = setTimeout(() => go(front + 1), 20000); };
-    const playFront = () => {
-      ctl.forEach((c, j) => { if (j !== front) c.pause(); });
-      if (inView && !deckPaused) ctl[front].play(true);
-      arm();
-    };
-    function go(k) {
-      if (!deck || busy) return;
-      k = (k + n) % n; if (k === front) return;
-      busy = true;
-      const old = cards[front], fwd = k === (front + 1) % n;
-      ctl[front].pause();
-      if (fwd && !RM) {
-        old.classList.add('leaving');
-        setTimeout(() => {
-          old.classList.add('no-anim'); old.classList.remove('leaving');
-          front = k; setPos();
-          requestAnimationFrame(() => requestAnimationFrame(() => old.classList.remove('no-anim')));
-          busy = false; playFront();
-        }, 600);
-      } else { front = k; setPos(); busy = false; playFront(); }
-    }
-    const enterDeck = () => { ctl.forEach((c) => { c.v.loop = false; }); setPos(); };
-    const leaveDeck = () => { clearTimeout(timer); cards.forEach((c) => { delete c.dataset.pos; c.removeAttribute('aria-hidden'); c.classList.remove('leaving', 'no-anim'); }); ctl.forEach((c) => { c.v.loop = true; }); };
-    if (deck) enterDeck();
-    mq.addEventListener && mq.addEventListener('change', (e) => { deck = e.matches; if (deck) { enterDeck(); playFront(); } else leaveDeck(); });
-    dots.forEach((d, j) => d.addEventListener('click', () => { deckPaused = false; go(j); }));
-    let sx = 0, sy = 0;
-    row.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
-    row.addEventListener('touchend', (e) => {
-      if (!deck) return;
-      const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
-      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) go(front + (dx < 0 ? 1 : -1));
-    }, { passive: true });
-    onView(row, (vis) => {
-      inView = vis;
-      if (!deck) return;
-      if (vis) playFront(); else { ctl.forEach((c) => c.pause()); clearTimeout(timer); }
-    }, 0.35, false);
   });
 
   /* ===== Bloco 07: animação da biblioteca ===== */
