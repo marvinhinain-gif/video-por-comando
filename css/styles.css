@@ -836,3 +836,8 @@ a { color: inherit; }
 @keyframes gSpin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .g-ring { animation: none; } }
 @media (max-width: 420px) { .guarantee { flex-direction: column; text-align: center; } }
+
+/* Botão da oferta: texto sempre em uma linha */
+.btn-offer { white-space: nowrap; }
+.btn-offer .nowrap { white-space: nowrap; }
+@media (max-width: 420px) { .btn-offer { font-size: clamp(12.5px, 3.6vw, 15px); padding: 0 14px; gap: 6px; letter-spacing: -.005em; } .btn-offer svg { width: 16px; height: 16px; } }

@@ -25,7 +25,7 @@ export const CONFIG = {
      "link de pagamento ainda não configurado".
      --------------------------------------------------------------- */
   checkout: {
-    url: '',
+    url: 'https://pay.cakto.com.br/i7h5j8z_1229524',
     // Repassa utm_*, fbclid, gclid etc. da visita para o checkout.
     forwardParams: ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'gclid', 'src', 'sck', 'xcod'],
     openInNewTab: false,
