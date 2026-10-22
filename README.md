@@ -17,7 +17,6 @@ js/core/
   media.js                  Um vídeo pausa os outros
   dom.js                    Utilitários
 js/components/
-  hero-vsl.js               Vídeo no celular do topo (formato da página Axion)
   video-player.js           Player reutilizável (galeria)
   guided-steps.js           Bloco 02 · como funciona em 3 passos
   process-compare.js        Bloco 03 · tradicional × com IA
@@ -36,7 +35,7 @@ assets/media/               Coloque aqui os vídeos e legendas (.vtt)
 |---|---|---|
 | Link de pagamento (todos os botões) | `checkout.url` | `'https://pay.hotmart.com/XXXX'` |
 | CTAs dos blocos 1 e 2 | `cta.upperMode` | `'offer'` (rola até a oferta) ou `'checkout'` |
-| VSL (celular do topo) | `vsl.src`, `vsl.poster`, `vsl.captions` | `'assets/media/vsl.mp4'` (formato Axion: prévia sem som + "Clique para ouvir") ou link do Instagram/YouTube/Vimeo (player oficial) |
+| VSL (celular do topo) | player ConverteAI direto no `index.html` (bloco 01) — o `vsl` do config não é mais usado | `'assets/media/vsl.mp4'` (formato Axion: prévia sem som + "Clique para ouvir") ou link do Instagram/YouTube/Vimeo (player oficial) |
 | Comparador | `comparison.original.src`, `comparison.edited.src`, `comparison.changes` | durações são lidas dos arquivos |
 | Meta Pixel / GA4 | `tracking.metaPixelId`, `tracking.ga4Id` | só carregam após o visitante aceitar |
 | Preço exibido | `product.priceLabel`, `product.priceShort` | `'R$ 97,00'` |
