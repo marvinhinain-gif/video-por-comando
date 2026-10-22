@@ -583,18 +583,21 @@ a { color: inherit; }
 .skc p { color: var(--muted); font-size: 15px; line-height: 1.45; }
 .skl-dots { display: none; }
 @media (max-width: 759px) {
-  .skl { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
-    margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
-    padding: 4px max(16px, env(safe-area-inset-right, 0px)) 6px max(16px, env(safe-area-inset-left, 0px));
-    scroll-padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
-  .skl::-webkit-scrollbar { display: none; }
-  .skc { flex: 0 0 86%; scroll-snap-align: center; padding: 8px 8px 14px; gap: 12px; }
-  .skc:hover { transform: none; }
+  .skl { display: grid; padding-bottom: 40px; touch-action: pan-y; }
+  .skl .skc { grid-area: 1 / 1; padding: 8px 8px 14px; gap: 12px; transform-origin: 50% 100%; transition: transform .75s cubic-bezier(.22,.8,.2,1), opacity .6s ease, filter .6s ease, box-shadow .6s; will-change: transform; }
+  .skl .skc:hover { transform: none; }
+  .skl .skc[data-pos="0"] { z-index: 4; transform: none; opacity: 1; filter: none; box-shadow: 0 30px 60px -30px #000; }
+  .skl .skc[data-pos="1"] { z-index: 3; transform: translateY(16px) scale(.95); opacity: 1; filter: brightness(.55); pointer-events: none; }
+  .skl .skc[data-pos="2"] { z-index: 2; transform: translateY(31px) scale(.9); opacity: 1; filter: brightness(.32); pointer-events: none; }
+  .skl .skc[data-pos="3"] { z-index: 1; transform: translateY(44px) scale(.85); opacity: 0; pointer-events: none; }
+  .skl .skc.leaving { z-index: 5; transform: translateX(-112%) rotate(-7deg); opacity: 0; transition: transform .65s cubic-bezier(.55,0,.4,1), opacity .55s ease; }
+  .skl .skc.no-anim { transition: none; }
   .skc h3 { font-size: 19px; }
   .skc p { font-size: 14px; }
-  .skl-dots { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 12px; }
-  .skl-dots i { width: 7px; height: 7px; border-radius: 999px; background: var(--line-2); transition: width .3s, background .3s; }
-  .skl-dots i.on { width: 22px; background: var(--gold); }
+  .skl-dots { display: flex; justify-content: center; align-items: center; gap: 4px; margin-top: 4px; }
+  .skl-dots button { display: grid; place-items: center; width: 26px; height: 32px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+  .skl-dots button i { display: block; width: 7px; height: 7px; border-radius: 999px; background: var(--line-2); transition: width .3s, background .3s; }
+  .skl-dots button.on i { width: 22px; background: var(--gold); }
 }
 .skl-note { margin: 14px auto 0; max-width: 40em; text-align: center; font-size: 12.5px; color: var(--muted); }
 .skl-swipe { display: none; color: var(--gold-hi); }
@@ -1081,51 +1084,8 @@ a { color: inherit; }
         <div class="skc-txt"><span class="skc-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.6"/><path d="M16.6 7.4h.01"/></svg></span><h3>Social Media</h3><p>Calendário, artes e legendas da semana prontos para aprovar.</p></div>
       </article>
     </div>
-    <div class="skl-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
-    <p class="skl-note"><span class="skl-swipe">Arraste para o lado para ver as 4 habilidades. </span>Demonstrações ilustrativas, com tempo acelerado.</p>
-  </div>
-</section>
-
-<!-- ============ BLOCO 06 · TRANSFORMAÇÃO ============ -->
-<section class="sec" id="transformacao">
-  <div class="wrap">
-    <header class="sec-head">
-      <p class="eyebrow">Antes e depois</p>
-      <h2 class="h2">Pare de começar tudo do zero.</h2>
-      <p class="lead">Precisa criar posts, montar um anúncio ou organizar sua semana? Comece com uma habilidade pronta.</p>
-    </header>
-    <div class="ba rv" id="ba">
-      <div class="ba-layer ba-before">
-        <div class="ba-inner">
-          <span class="ba-label">Antes</span>
-          <p class="ba-prompt">“Faz uns posts aí.”</p>
-          <p class="ba-desc">Você fica pedindo ajustes e explicando o trabalho várias vezes.</p>
-          <div class="loop" aria-hidden="true">
-            <div><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Explicando de novo…</div>
-            <div><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Pedindo outro ajuste…</div>
-            <div><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Explicando de novo…</div>
-          </div>
-        </div>
-      </div>
-      <div class="ba-layer ba-after">
-        <div class="ba-inner">
-          <span class="ba-label">Com uma skill</span>
-          <p class="ba-prompt">“Crie posts para minha loja.”</p>
-          <p class="ba-desc">A IA pode perguntar sobre seu negócio e seguir um processo para ajudar.</p>
-          <ol class="flow" aria-hidden="true">
-            <li><b>1</b>Pergunta sobre seu negócio</li>
-            <li><b>2</b>Segue o processo da skill</li>
-            <li><b>3</b>Ajuda a montar seus posts</li>
-          </ol>
-        </div>
-      </div>
-      <div class="ba-handle"><button class="ba-knob" id="baKnob" type="button" role="slider" aria-label="Arraste para comparar" aria-valuemin="5" aria-valuemax="95" aria-valuenow="50"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></button></div>
-    </div>
-    <div class="ba-ctrls">
-      <button class="btn-ghost" type="button" data-ba="95">Ver o antes</button>
-      <button class="btn-ghost" type="button" data-ba="5">Ver com uma skill</button>
-    </div>
-    <p class="punch">Menos tempo explicando. <span class="gold">Mais facilidade para fazer.</span></p>
+    <div class="skl-dots"><button type="button" class="on" aria-label="Ver Editor de Vídeo"><i></i></button><button type="button" aria-label="Ver Criador de Site"><i></i></button><button type="button" aria-label="Ver Design de Fotos"><i></i></button><button type="button" aria-label="Ver Social Media"><i></i></button></div>
+    <p class="skl-note"><span class="skl-swipe">As habilidades passam sozinhas. Deslize para trocar. </span>Demonstrações ilustrativas, com tempo acelerado.</p>
   </div>
 </section>
 
@@ -1529,73 +1489,80 @@ a { color: inherit; }
     }, 0.35, false);
   });
 
-  /* ===== Bloco 05: pontos do carrossel no celular ===== */
+  /* ===== Bloco 05: vídeos das habilidades (computador: grade; celular: pilha que passa sozinha) ===== */
   safe(() => {
-    const row = $('.skl'), dots = $$('.skl-dots i'), cards = $$('.skc', row);
-    let t = 0;
-    row.addEventListener('scroll', () => {
-      cancelAnimationFrame(t);
-      t = requestAnimationFrame(() => {
-        const mid = row.scrollLeft + row.clientWidth / 2;
-        let k = 0, best = 1e9;
-        cards.forEach((c, j) => { const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (d < best) { best = d; k = j; } });
-        dots.forEach((d, j) => d.classList.toggle('on', j === k));
-      });
-    }, { passive: true });
-  });
-
-  /* ===== Bloco 05: vídeos das habilidades (carregam só quando aparecem) ===== */
-  safe(() => {
-    $$('.skc').forEach((card) => {
-      const v = $('video', card), btn = $('.skc-pp', card);
-      let loaded = false, userPaused = RM, visible = false;
-      const label = card.querySelector('h3').textContent;
-      const setUi = (on) => {
-        card.classList.toggle('playing', on); card.classList.toggle('idle', !on && RM && !loaded);
-        btn.setAttribute('aria-label', `${on ? 'Pausar' : 'Reproduzir'} demonstração de ${label}`);
-      };
-      const load = () => {
-        if (loaded) return; loaded = true;
+    const row = $('.skl'), cards = $$('.skc', row), dots = $$('.skl-dots button'), n = cards.length;
+    const mq = matchMedia('(max-width: 759px)');
+    let deck = mq.matches, front = 0, inView = false, deckPaused = RM, timer = 0, busy = false;
+    const ctl = cards.map((card) => {
+      const v = $('video', card), btn = $('.skc-pp', card), label = card.querySelector('h3').textContent;
+      const c = { card, v, loaded: false, userPaused: RM };
+      c.ui = (on) => { card.classList.toggle('playing', on); card.classList.toggle('idle', !on && RM && !c.loaded); btn.setAttribute('aria-label', `${on ? 'Pausar' : 'Reproduzir'} demonstração de ${label}`); };
+      c.load = () => {
+        if (c.loaded) return; c.loaded = true;
         const w = document.createElement('source'); w.src = v.dataset.webm; w.type = 'video/webm';
         const m = document.createElement('source'); m.src = v.dataset.mp4; m.type = 'video/mp4';
         v.append(w, m); v.preload = 'auto'; v.load();
       };
-      const play = () => { load(); const pr = v.play(); if (pr && pr.catch) pr.catch(() => setUi(false)); };
-      v.addEventListener('playing', () => setUi(true));
-      v.addEventListener('pause', () => setUi(false));
-      btn.addEventListener('click', () => { if (!v.paused) { userPaused = true; v.pause(); } else { userPaused = false; play(); } });
-      setUi(false);
+      c.play = (restart) => { c.load(); if (restart) { try { v.currentTime = 0; } catch (e) {} } const pr = v.play(); if (pr && pr.catch) pr.catch(() => c.ui(false)); };
+      c.pause = () => { if (!v.paused) v.pause(); };
+      v.addEventListener('playing', () => c.ui(true));
+      v.addEventListener('pause', () => c.ui(false));
+      v.addEventListener('ended', () => { if (deck && cards[front] === card) go(front + 1); });
+      btn.addEventListener('click', () => {
+        if (deck) { deckPaused = !v.paused; if (deckPaused) { c.pause(); clearTimeout(timer); } else { c.play(false); arm(); } return; }
+        if (!v.paused) { c.userPaused = true; c.pause(); } else { c.userPaused = false; c.play(false); }
+      });
+      c.ui(false);
       onView(card, (vis) => {
-        visible = vis;
-        if (vis && !userPaused) play();
-        else if (!vis && !v.paused) v.pause();
+        if (deck) return;
+        if (vis && !c.userPaused) c.play(false); else if (!vis) c.pause();
       }, 0.4, false);
+      return c;
     });
-  });
-
-  /* ===== Bloco 06: antes / depois (arrastar só pelo botão; rolagem nunca trava) ===== */
-  safe(() => {
-    const ba = $('#ba'), knob = $('#baKnob');
-    let val = 50, anim = 0, drag = false;
-    const set = (v) => { val = Math.max(5, Math.min(95, v)); ba.style.setProperty('--x', `${val}%`); knob.setAttribute('aria-valuenow', String(Math.round(val))); };
-    const fromX = (x) => { const r = ba.getBoundingClientRect(); return ((x - r.left) / r.width) * 100; };
-    const tween = (to, ms = 900) => {
-      const from = val, t0 = performance.now(), my = ++anim;
-      if (RM) { set(to); return; }
-      const step = (now) => { if (my !== anim) return; const k = Math.min(1, (now - t0) / ms); set(from + (to - from) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
-      requestAnimationFrame(step);
+    const setPos = () => {
+      cards.forEach((c, j) => { c.dataset.pos = String((j - front + n) % n); c.setAttribute('aria-hidden', String(j !== front)); });
+      dots.forEach((d, j) => d.classList.toggle('on', j === front));
     };
-    knob.addEventListener('pointerdown', (e) => { drag = true; anim++; knob.setPointerCapture(e.pointerId); e.preventDefault(); });
-    knob.addEventListener('pointermove', (e) => { if (drag) set(fromX(e.clientX)); });
-    const end = (e) => { drag = false; try { knob.releasePointerCapture(e.pointerId); } catch (_) {} };
-    knob.addEventListener('pointerup', end); knob.addEventListener('pointercancel', end);
-    ba.addEventListener('click', (e) => { if (e.target.closest('.ba-knob') || innerWidth <= 680) return; tween(fromX(e.clientX), 500); });
-    knob.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') { e.preventDefault(); anim++; set(val - 5); }
-      if (e.key === 'ArrowRight') { e.preventDefault(); anim++; set(val + 5); }
-    });
-    $$('[data-ba]').forEach((b) => b.addEventListener('click', () => tween(+b.dataset.ba)));
-    onView(ba, async (v) => { if (!v || RM || innerWidth <= 680) return; set(85); await sleep(250); tween(22, 1400); await sleep(1600); tween(50, 900); }, 0.5);
+    const arm = () => { clearTimeout(timer); if (deck && inView && !deckPaused) timer = setTimeout(() => go(front + 1), 20000); };
+    const playFront = () => {
+      ctl.forEach((c, j) => { if (j !== front) c.pause(); });
+      if (inView && !deckPaused) ctl[front].play(true);
+      arm();
+    };
+    function go(k) {
+      if (!deck || busy) return;
+      k = (k + n) % n; if (k === front) return;
+      busy = true;
+      const old = cards[front], fwd = k === (front + 1) % n;
+      ctl[front].pause();
+      if (fwd && !RM) {
+        old.classList.add('leaving');
+        setTimeout(() => {
+          old.classList.add('no-anim'); old.classList.remove('leaving');
+          front = k; setPos();
+          requestAnimationFrame(() => requestAnimationFrame(() => old.classList.remove('no-anim')));
+          busy = false; playFront();
+        }, 600);
+      } else { front = k; setPos(); busy = false; playFront(); }
+    }
+    const enterDeck = () => { ctl.forEach((c) => { c.v.loop = false; }); setPos(); };
+    const leaveDeck = () => { clearTimeout(timer); cards.forEach((c) => { delete c.dataset.pos; c.removeAttribute('aria-hidden'); c.classList.remove('leaving', 'no-anim'); }); ctl.forEach((c) => { c.v.loop = true; }); };
+    if (deck) enterDeck();
+    mq.addEventListener && mq.addEventListener('change', (e) => { deck = e.matches; if (deck) { enterDeck(); playFront(); } else leaveDeck(); });
+    dots.forEach((d, j) => d.addEventListener('click', () => { deckPaused = false; go(j); }));
+    let sx = 0, sy = 0;
+    row.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+    row.addEventListener('touchend', (e) => {
+      if (!deck) return;
+      const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) go(front + (dx < 0 ? 1 : -1));
+    }, { passive: true });
+    onView(row, (vis) => {
+      inView = vis;
+      if (!deck) return;
+      if (vis) playFront(); else { ctl.forEach((c) => c.pause()); clearTimeout(timer); }
+    }, 0.35, false);
   });
 
   /* ===== Bloco 07: livros e aulas ===== */
