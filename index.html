@@ -546,8 +546,18 @@ a { color: inherit; }
   .hv-time { display: none; }
   .hv-chap { font-size: 13.5px; gap: 6px; padding: 8px 6px; min-height: 48px; }
   .hv-chap .n { width: 24px; height: 24px; font-size: 11px; }
-  .ck li { font-size: 15px; padding: 9px 10px; }
-  .sheet { padding-top: 26px; }
+  .ck li { font-size: 14.5px; padding: 8px 10px; gap: 10px; }
+  .ck { gap: 7px; }
+  .box { width: 26px; height: 26px; }
+  .sheet { padding: 24px 14px 16px; gap: 12px; }
+  .meter { padding: 10px 12px; }
+  .sheet-ico { width: 38px; height: 38px; }
+  .loop div:nth-child(3) { display: none; }
+  .ba-inner { gap: 12px; }
+  .ba-desc { font-size: 15px; }
+  .big-shelf { height: 136px; }
+  .dl-art { min-height: 0; }
+  .dl > p:not(.dl-n) { font-size: 15px; }
   .sheet-head h3 { font-size: 17px; }
 }
 
@@ -571,7 +581,24 @@ a { color: inherit; }
 .skc-ico svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .skc h3 { font-size: 21px; font-weight: 600; line-height: 1.2; }
 .skc p { color: var(--muted); font-size: 15px; line-height: 1.45; }
+.skl-dots { display: none; }
+@media (max-width: 759px) {
+  .skl { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
+    margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+    padding: 4px max(16px, env(safe-area-inset-right, 0px)) 6px max(16px, env(safe-area-inset-left, 0px));
+    scroll-padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
+  .skl::-webkit-scrollbar { display: none; }
+  .skc { flex: 0 0 86%; scroll-snap-align: center; padding: 8px 8px 14px; gap: 12px; }
+  .skc:hover { transform: none; }
+  .skc h3 { font-size: 19px; }
+  .skc p { font-size: 14px; }
+  .skl-dots { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 12px; }
+  .skl-dots i { width: 7px; height: 7px; border-radius: 999px; background: var(--line-2); transition: width .3s, background .3s; }
+  .skl-dots i.on { width: 22px; background: var(--gold); }
+}
 .skl-note { margin: 14px auto 0; max-width: 40em; text-align: center; font-size: 12.5px; color: var(--muted); }
+.skl-swipe { display: none; color: var(--gold-hi); }
+@media (max-width: 759px) { .skl-note { margin-top: 8px; } .skl-swipe { display: inline; } }
 
 /* ---------- Bloco 06 · Antes / depois ---------- */
 .ba { position: relative; max-width: 860px; margin: 0 auto; border-radius: 26px; border: 1px solid var(--line); overflow: hidden; background: var(--graphite); --x: 50%; text-align: left; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
@@ -650,7 +677,11 @@ a { color: inherit; }
 
 /* ---------- Bloco 02 · vídeo por dentro ---------- */
 .ins { --ang: 0deg; max-width: 980px; margin: 0 auto; padding: 2px; border-radius: 24px; background: conic-gradient(from var(--ang), rgba(214, 163, 41, .25) 0deg, rgba(214, 163, 41, .25) 210deg, #F2D488 290deg, #fff 305deg, #D6A329 325deg, rgba(214, 163, 41, .25) 360deg); box-shadow: 0 50px 120px -60px rgba(214, 163, 41, .55); animation: orbit 6s linear infinite; }
-.ins-frame { aspect-ratio: 16 / 9; max-width: 100%; border-radius: 22px; background: #000; }
+.ins-frame { position: relative; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 22px; overflow: hidden; background: #000; }
+.ins-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.ins-fs { position: absolute; right: 10px; bottom: 10px; z-index: 2; display: none; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.25); background: rgba(0,0,0,.6); color: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.ins-fs svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 760px) { .ins-fs { display: inline-flex; } }
 .ins-frame .snd { bottom: 8%; }
 @media (max-width: 520px) { .ins-frame .snd-btn { width: 46px; } .ins-frame .snd-cap { padding: 6px 11px; } .ins-frame .snd-cap b { font-size: 12px; } .ins-frame .vt-top .vt-badge { font-size: 9.5px; padding: 4px 8px; } .ins, .ins-frame { border-radius: 16px; } }
 
@@ -875,13 +906,9 @@ a { color: inherit; }
     </header>
 
     <div class="ins rv">
-      <div class="ins-frame sv" id="insVid">
-        <video class="sv-video" src="por-dentro.mp4" poster="por-dentro-capa.jpg" muted loop playsinline webkit-playsinline preload="metadata" aria-label="Vídeo mostrando a biblioteca por dentro: pesquisar a skill, copiar e usar na IA"></video>
-        <button class="sv-over" type="button" aria-label="Ouvir o vídeo do início, com som">
-          <span class="vt-top"><span class="vt-badge"><i class="vt-live" aria-hidden="true"></i>Por dentro da biblioteca</span></span>
-          <span class="snd"><span class="snd-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="snd-cap"><b>Toque para ouvir</b><span class="snd-wave" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i></span></span></span>
-        </button>
-        <span class="sv-bar" aria-hidden="true"><i></i></span>
+      <div class="ins-frame" id="insVid">
+        <button class="ins-fs" id="insFs" type="button" aria-label="Ver o vídeo em tela cheia"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Tela cheia</button>
+        <video class="ins-video" src="por-dentro.mp4" poster="por-dentro-capa.jpg" muted loop playsinline webkit-playsinline preload="metadata" aria-label="Vídeo mostrando a biblioteca por dentro: pesquisar a skill, copiar e usar na IA"></video>
       </div>
     </div>
 
@@ -1054,7 +1081,8 @@ a { color: inherit; }
         <div class="skc-txt"><span class="skc-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.6"/><path d="M16.6 7.4h.01"/></svg></span><h3>Social Media</h3><p>Calendário, artes e legendas da semana prontos para aprovar.</p></div>
       </article>
     </div>
-    <p class="skl-note">Demonstrações ilustrativas, com tempo acelerado.</p>
+    <div class="skl-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+    <p class="skl-note"><span class="skl-swipe">Arraste para o lado para ver as 4 habilidades. </span>Demonstrações ilustrativas, com tempo acelerado.</p>
   </div>
 </section>
 
@@ -1423,7 +1451,20 @@ a { color: inherit; }
   });
 
   /* ===== Bloco 02: vídeo da biblioteca por dentro ===== */
-  safe(() => soundVideo($('#insVid'), false));
+  safe(() => {
+    const v = $('#insVid video');
+    v.muted = true; v.defaultMuted = true;
+    const fs = $('#insFs');
+    fs.addEventListener('click', () => {
+      try {
+        if (v.requestFullscreen) { const pr = v.requestFullscreen(); if (pr && pr.catch) pr.catch(() => { if (v.webkitEnterFullscreen) v.webkitEnterFullscreen(); }); }
+        else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+        const pp = v.play(); if (pp && pp.catch) pp.catch(() => {});
+      } catch (e) {}
+    });
+    if (RM) { v.controls = true; return; }
+    onView(v, (vis) => { if (vis) { const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } else if (!v.paused) v.pause(); }, 0.3, false);
+  });
 
   /* ===== Bloco 03: checklist animado ===== */
   safe(() => {
@@ -1486,6 +1527,21 @@ a { color: inherit; }
       if (v) { if (!started && !RM) { started = true; restart(0); } if (!userPaused) play(); }
       else if (playing) pause();
     }, 0.35, false);
+  });
+
+  /* ===== Bloco 05: pontos do carrossel no celular ===== */
+  safe(() => {
+    const row = $('.skl'), dots = $$('.skl-dots i'), cards = $$('.skc', row);
+    let t = 0;
+    row.addEventListener('scroll', () => {
+      cancelAnimationFrame(t);
+      t = requestAnimationFrame(() => {
+        const mid = row.scrollLeft + row.clientWidth / 2;
+        let k = 0, best = 1e9;
+        cards.forEach((c, j) => { const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (d < best) { best = d; k = j; } });
+        dots.forEach((d, j) => d.classList.toggle('on', j === k));
+      });
+    }, { passive: true });
   });
 
   /* ===== Bloco 05: vídeos das habilidades (carregam só quando aparecem) ===== */
