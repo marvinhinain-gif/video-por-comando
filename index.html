@@ -654,6 +654,9 @@ a { color: inherit; }
 .book.dark::before, .book.dark::after { background: rgba(242, 212, 136, .45); }
 .book.g { background: var(--gold-grad); }
 .book:hover, .book.pull { transform: translateY(-14px); }
+.bloop { --ang: 0deg; position: relative; width: min(300px, 78vw); max-width: 100%; aspect-ratio: 9 / 16; margin: 4px auto 0; padding: 2px; border-radius: 24px; background: conic-gradient(from var(--ang), rgba(214, 163, 41, .25) 0deg, rgba(214, 163, 41, .25) 210deg, #F2D488 290deg, #fff 305deg, #D6A329 325deg, rgba(214, 163, 41, .25) 360deg); box-shadow: 0 30px 80px -36px rgba(214, 163, 41, .5); animation: orbit 6s linear infinite; }
+.bloop video { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 22px; background: #000; }
+@media (max-width: 520px) { .bloop { width: min(260px, 72vw); } }
 .course { display: grid; gap: 12px; width: 100%; justify-items: center; margin-top: 4px; }
 .cvid { --ang: 0deg; position: relative; width: min(300px, 78vw); max-width: 100%; aspect-ratio: 9 / 16; padding: 2px; border-radius: 24px; background: conic-gradient(from var(--ang), rgba(214, 163, 41, .25) 0deg, rgba(214, 163, 41, .25) 210deg, #F2D488 290deg, #fff 305deg, #D6A329 325deg, rgba(214, 163, 41, .25) 360deg); box-shadow: 0 30px 80px -36px rgba(214, 163, 41, .5); animation: orbit 6s linear infinite; }
 .cvid video { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 22px; background: #000; }
@@ -1101,20 +1104,7 @@ a { color: inherit; }
         <p class="dl-n">01</p>
         <h3>Biblioteca de Skills™</h3>
         <p>Uma coleção de habilidades prontas para ajudar em diferentes tarefas. Escolha a que precisa, sem criar tudo do zero.</p>
-        <div class="dl-art" aria-hidden="true">
-          <span class="tag">Ilustração</span>
-          <div class="big-shelf" id="bigShelf">
-            <span class="book" style="--h:84%;--c:var(--sky)"><span>Posts</span></span>
-            <span class="book g" style="--h:96%"><span>Legendas</span></span>
-            <span class="book dark" style="--h:76%"><span>Roteiros</span></span>
-            <span class="book" style="--h:90%;--c:var(--coral)"><span>Anúncios</span></span>
-            <span class="book dark" style="--h:80%"><span>Ofertas</span></span>
-            <span class="book" style="--h:88%;--c:var(--violet)"><span>Mensagens</span></span>
-            <span class="book g" style="--h:72%"><span>Planos</span></span>
-            <span class="book" style="--h:86%;--c:var(--green)"><span>Listas</span></span>
-            <span class="book dark" style="--h:78%"><span>Tarefas</span></span>
-          </div>
-        </div>
+        <div class="bloop"><video poster="biblioteca-loop-capa.jpg" muted loop playsinline webkit-playsinline preload="metadata" aria-label="Animação da Biblioteca de Skills: busca, categorias e skills em destaque"><source src="biblioteca-loop.webm" type="video/webm"><source src="biblioteca-loop.mp4" type="video/mp4"></video></div>
       </article>
       <article class="dl rv" style="--d:.12s">
         <p class="dl-n">02</p>
@@ -1565,12 +1555,11 @@ a { color: inherit; }
     }, 0.35, false);
   });
 
-  /* ===== Bloco 07: livros e aulas ===== */
+  /* ===== Bloco 07: animação da biblioteca ===== */
   safe(() => {
-    if (RM) return;
-    const books = $$('#bigShelf .book'), lessons = $$('#lessons li');
-    let b = 0, l = 0;
-    setInterval(() => { books.forEach((x) => x.classList.remove('pull')); books[b].classList.add('pull'); b = (b + 2) % books.length; }, 1600);
+    const v = $('.bloop video'); v.muted = true;
+    if (RM) { v.controls = true; return; }
+    onView(v, (vis) => { if (vis) { const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } else if (!v.paused) v.pause(); }, 0.3, false);
   });
 
   /* ===== Bloco 07: vídeo do Curso Prático ===== */
