@@ -8,9 +8,9 @@ import { h } from '../core/dom.js';
 
 const RESULTS = [
   { src: 'assets/media/resultados/relogio-lince', title: 'Relógio Lince', kind: 'Produto',
-    quote: 'Quando vi o resultado, fiquei voltando o vídeo pra assistir de novo 😂 A iluminação e os movimentos deram o destaque que eu queria pro relógio.' },
+    quote: 'Quando vi o resultado, fiquei voltando o vídeo pra assistir de novo 😂' },
   { src: 'assets/media/resultados/app-avora', title: 'App Avora', kind: 'App',
-    quote: 'O desafio era explicar o app sem ficar naquela apresentação parada. Com a animação, consegui mostrar a ideia de um jeito muito mais interessante.' },
+    quote: 'Com a animação, consegui mostrar a ideia de um jeito muito mais interessante.' },
 ];
 
 const ICON_OFF = '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16 9l5 6M21 9l-5 6"/></svg>';
