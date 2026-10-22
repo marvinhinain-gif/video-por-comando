@@ -648,24 +648,31 @@ a { color: inherit; }
 .lessons li.on b { background: var(--gold-grad); color: var(--btn-ink); border-color: transparent; }
 .lessons small { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
 
+/* ---------- Bloco 02 · vídeo por dentro ---------- */
+.ins { --ang: 0deg; max-width: 980px; margin: 0 auto; padding: 2px; border-radius: 24px; background: conic-gradient(from var(--ang), rgba(214, 163, 41, .25) 0deg, rgba(214, 163, 41, .25) 210deg, #F2D488 290deg, #fff 305deg, #D6A329 325deg, rgba(214, 163, 41, .25) 360deg); box-shadow: 0 50px 120px -60px rgba(214, 163, 41, .55); animation: orbit 6s linear infinite; }
+.ins-frame { aspect-ratio: 16 / 9; max-width: 100%; border-radius: 22px; background: #000; }
+.ins-frame .snd { bottom: 8%; }
+@media (max-width: 520px) { .ins-frame .snd-btn { width: 46px; } .ins-frame .snd-cap { padding: 6px 11px; } .ins-frame .snd-cap b { font-size: 12px; } .ins-frame .vt-top .vt-badge { font-size: 9.5px; padding: 4px 8px; } .ins, .ins-frame { border-radius: 16px; } }
+
 /* ---------- Bloco 08 · Oferta ---------- */
 .offer-sec { background: radial-gradient(70% 50% at 50% 0%, rgba(214, 163, 41, .15), transparent 70%), var(--ink); }
-.offer-card { --ang: 0deg; max-width: 520px; margin: 0 auto; padding: 2px; border-radius: 32px; background: conic-gradient(from var(--ang), rgba(214, 163, 41, .3) 0deg, rgba(214, 163, 41, .3) 220deg, #F2D488 300deg, #D6A329 330deg, rgba(214, 163, 41, .3) 360deg); box-shadow: 0 50px 120px -50px rgba(214, 163, 41, .55); animation: orbit 7s linear infinite; }
-.offer-in { display: grid; justify-items: center; gap: 20px; padding: clamp(24px, 4vw, 36px); border-radius: 30px; background: linear-gradient(180deg, var(--card-2), var(--graphite)); text-align: center; }
-.offer-kicker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--gold-soft); border: 1px solid var(--gold-line); color: var(--gold-hi); font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
-.offer-name { font-size: clamp(22px, 2.6vw, 28px); font-weight: 600; letter-spacing: -.02em; color: var(--white); line-height: 1.2; }
-.offer-get { display: grid; gap: 12px; width: 100%; text-align: left; min-width: 0; }
-.offer-get > p { color: var(--white); font-weight: 600; }
-.check-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-.check-list li { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 12px; padding: 13px 14px; border-radius: 16px; border: 1px solid var(--line); background: var(--ink); color: var(--white); font-weight: 500; font-size: 16px; }
-.check-list i { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--cta-grad); color: var(--cta-ink); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35); }
-.check-list i svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-.price-box { display: grid; justify-items: center; gap: 14px; width: 100%; text-align: center; min-width: 0; }
-.price { width: 100%; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); display: grid; gap: 4px; }
-.price-label { font-size: 14px; color: var(--muted); }
-.price-value { font-size: clamp(48px, 7vw, 64px); font-weight: 700; letter-spacing: -.04em; line-height: 1.05; background: var(--gold-grad); -webkit-background-clip: text; background-clip: text; color: transparent; font-variant-numeric: tabular-nums; }
-.price-model { font-size: 15px; color: var(--white); font-weight: 600; }
-.fine { font-size: 12.5px; line-height: 1.55; color: var(--muted); }
+.offer-card { --ang: 0deg; max-width: 430px; margin: 0 auto; padding: 2px; border-radius: 28px; background: conic-gradient(from var(--ang), rgba(214, 163, 41, .3) 0deg, rgba(214, 163, 41, .3) 220deg, #F2D488 300deg, #D6A329 330deg, rgba(214, 163, 41, .3) 360deg); box-shadow: 0 50px 120px -50px rgba(214, 163, 41, .55); animation: orbit 7s linear infinite; }
+.offer-in { display: grid; gap: 16px; padding: clamp(20px, 3.4vw, 28px); border-radius: 26px; background: radial-gradient(80% 50% at 50% 0%, rgba(214, 163, 41, .12), transparent 70%), linear-gradient(180deg, var(--card-2), var(--graphite)); text-align: left; }
+.offer-brand { display: flex; align-items: center; justify-content: center; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.o-logo { width: 54px; height: 54px; flex: none; filter: drop-shadow(0 0 16px rgba(214, 163, 41, .35)); }
+.offer-brand b { display: block; font-size: 20px; font-weight: 600; letter-spacing: -.01em; color: var(--white); line-height: 1.2; }
+.offer-brand small { display: block; font-size: 13.5px; color: var(--gold-hi); font-weight: 500; }
+.o-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.o-list li { display: flex; align-items: center; gap: 10px; font-size: 15.5px; color: var(--text); }
+.o-list i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--cta-grad); color: var(--cta-ink); flex: none; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35); }
+.o-list i svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.o-price { display: grid; justify-items: center; gap: 2px; padding: 14px 0; border-radius: 18px; background: rgba(0, 0, 0, .35); border: 1px solid var(--line); text-align: center; }
+.o-lbl { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.price-value { font-size: clamp(42px, 6vw, 54px); font-weight: 700; letter-spacing: -.04em; line-height: 1.05; background: var(--gold-grad); -webkit-background-clip: text; background-clip: text; color: transparent; font-variant-numeric: tabular-nums; }
+.o-model { font-size: 14px; color: var(--white); font-weight: 600; }
+.offer-in .btn { width: 100%; max-width: none; }
+.offer-in .cta-status, .offer-in .fine { text-align: center; }
+.fine { font-size: 12px; line-height: 1.5; color: var(--muted); }
 
 /* ---------- Bloco 09 · FAQ ---------- */
 .faq { max-width: 760px; margin: 0 auto; display: grid; gap: 10px; text-align: left; }
@@ -696,12 +703,18 @@ a { color: inherit; }
 .close-mark svg { width: 40px; height: 40px; }
 .close-card .h2 { max-width: 15em; }
 .close-card .lead { margin: 0; }
-.close-price { display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 4px 10px; padding: 10px 18px; border-radius: 14px; background: rgba(0, 0, 0, .35); border: 1px solid var(--line); font-size: clamp(15px, 1.6vw, 17px); color: var(--text); }
-.close-price b { font-size: clamp(20px, 2.2vw, 24px); font-weight: 700; letter-spacing: -.02em; }
-.btn-big { min-height: 70px; font-size: clamp(16px, 1.7vw, 18.5px); max-width: 500px; margin-top: 6px; }
-.close-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 4px; }
-.close-chips .sk { padding: 7px 12px 7px 8px; font-size: 13px; background: rgba(0, 0, 0, .3); }
-.close-chips .sk i { width: 24px; height: 24px; border-radius: 8px; }
+.close-buy { width: min(460px, 100%); margin-top: 8px; display: grid; gap: 14px; padding: 16px; border-radius: 24px; background: rgba(0, 0, 0, .45); border: 1px solid var(--line-2); box-shadow: 0 24px 60px -30px #000; }
+.cb-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 0 4px; }
+.cb-lbl { font-size: 14px; color: var(--muted); white-space: nowrap; }
+@media (max-width: 400px) { .cb-lbl { font-size: 12.5px; } .cb-price b { font-size: 20px; } .close-buy { padding: 14px 12px; } }
+.cb-price { font-size: 14px; color: var(--text); white-space: nowrap; }
+.cb-price b { font-size: 24px; font-weight: 700; letter-spacing: -.02em; margin-right: 2px; }
+.btn-close { width: 100%; max-width: none; min-height: 66px; gap: 14px; font-size: clamp(15.5px, 1.6vw, 17.5px); border-radius: 18px; }
+.cb-arr { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: rgba(4, 23, 12, .14); box-shadow: inset 0 0 0 1px rgba(4, 23, 12, .18); }
+.btn-close .cb-arr svg { width: 17px; height: 17px; }
+.cb-safe { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; font-size: 13px; color: var(--muted); }
+.cb-safe span { display: inline-flex; align-items: center; gap: 6px; }
+.cb-safe svg { width: 14px; height: 14px; fill: none; stroke: #3FD487; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ---------- Rodapé ---------- */
 .foot { border-top: 1px solid var(--line); padding-block: 24px calc(24px + env(safe-area-inset-bottom, 0px)); }
@@ -858,56 +871,17 @@ a { color: inherit; }
     <header class="sec-head">
       <p class="eyebrow">Por dentro da biblioteca</p>
       <h2 class="h2">Veja por dentro.</h2>
-      <p class="lead">Escolha uma habilidade e diga o que precisa. A IA já sabe por onde começar.</p>
+      <p class="lead">Veja como é encontrar uma skill na biblioteca e usar na sua IA.</p>
     </header>
 
-    <div class="app rv" id="demo">
-      <div class="app-top">
-        <span class="app-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span class="app-title">Biblioteca de Skills™</span>
-        <span class="app-search" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span id="appSearch">Buscar habilidade…</span></span>
-        <span class="tag">Simulação</span>
-      </div>
-      <div class="app-body">
-        <aside class="app-side">
-          <p class="side-h">Habilidades prontas</p>
-          <div class="skill-list" role="tablist" aria-label="Escolha uma habilidade" aria-orientation="vertical">
-            <button class="sk-btn" role="tab" type="button" id="demo-t0" aria-controls="demo-p" aria-selected="true" style="--k: var(--sky)">
-              <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 18h3"/></svg></span>
-              <span><span class="sk-name">Criar Posts</span><span class="sk-cat">Conteúdos</span></span>
-              <span class="sk-prog" aria-hidden="true"></span>
-            </button>
-            <button class="sk-btn" role="tab" type="button" id="demo-t1" aria-controls="demo-p" aria-selected="false" tabindex="-1" style="--k: var(--coral)">
-              <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13V9a1 1 0 0 1 1-1h3l8-4v16l-8-4H5a1 1 0 0 1-1-1z"/><path d="M8 16l1.5 4.5"/><path d="M19.5 9.5a3.5 3.5 0 0 1 0 5"/></svg></span>
-              <span><span class="sk-name">Montar Anúncios</span><span class="sk-cat">Anúncios e vendas</span></span>
-              <span class="sk-prog" aria-hidden="true"></span>
-            </button>
-            <button class="sk-btn" role="tab" type="button" id="demo-t2" aria-controls="demo-p" aria-selected="false" tabindex="-1" style="--k: var(--violet)">
-              <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="17" rx="3"/><path d="M8 2.5v3M16 2.5v3M8 11l2 2 4-4M8 17h8"/></svg></span>
-              <span><span class="sk-name">Organizar Tarefas</span><span class="sk-cat">Organização</span></span>
-              <span class="sk-prog" aria-hidden="true"></span>
-            </button>
-          </div>
-          <p class="side-more">+ outras habilidades na biblioteca</p>
-        </aside>
-
-        <div class="app-main" id="demo-p" role="tabpanel" aria-labelledby="demo-t0">
-          <div class="ficha">
-            <span class="ico" id="fIco"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 18h3"/></svg></span>
-            <span class="ficha-txt"><b id="fName">Criar Posts</b><small id="fDesc">Ideias de posts, legendas e roteiros.</small></span>
-            <span class="ficha-pill" id="fCat">Conteúdos</span>
-          </div>
-          <div class="convo" id="convo" aria-live="polite">
-            <span class="sys"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Habilidade “Criar Posts” ativada</span>
-            <div class="bubble b-user"><span class="who">Você</span><p>Quero posts para o Instagram da minha empresa.</p></div>
-            <div class="bubble b-ai"><span class="who">IA</span><p>Claro! O que sua empresa vende e para quem? Vamos montar ideias e legendas para seus posts.</p></div>
-          </div>
-          <div class="composer" aria-hidden="true"><span id="composerText">Responda à IA…</span><span class="send"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-        </div>
-      </div>
-      <div class="app-foot">
-        <span class="tour" id="tourNote"><span class="tour-dots" id="tourDots" aria-hidden="true"><i class="on"></i><i></i><i></i></span><span id="tourTxt">Toque em uma habilidade para ver como ela começa.</span></span>
-        <button class="btn-ghost" type="button" id="replay"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Ver de novo</button>
+    <div class="ins rv">
+      <div class="ins-frame sv" id="insVid">
+        <video class="sv-video" src="por-dentro.mp4" poster="por-dentro-capa.jpg" muted loop playsinline webkit-playsinline preload="metadata" aria-label="Vídeo mostrando a biblioteca por dentro: pesquisar a skill, copiar e usar na IA"></video>
+        <button class="sv-over" type="button" aria-label="Ouvir o vídeo do início, com som">
+          <span class="vt-top"><span class="vt-badge"><i class="vt-live" aria-hidden="true"></i>Por dentro da biblioteca</span></span>
+          <span class="snd"><span class="snd-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5z" fill="currentColor"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="snd-cap"><b>Toque para ouvir</b><span class="snd-wave" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i></span></span></span>
+        </button>
+        <span class="sv-bar" aria-hidden="true"><i></i></span>
       </div>
     </div>
 
@@ -1187,30 +1161,19 @@ a { color: inherit; }
     <header class="sec-head">
       <p class="eyebrow">Oferta</p>
       <h2 class="h2">Mais habilidades para sua IA. <span class="gold">Menos trabalho para você.</span></h2>
-      <p class="lead">Tenha uma coleção pronta e aprenda a usar tudo com aulas simples.</p>
     </header>
     <div class="offer-card rv">
       <div class="offer-in">
-        <p class="offer-kicker">Acesso completo</p>
-        <h3 class="offer-name">Biblioteca de Skills™ + Curso Prático</h3>
-        <div class="offer-get">
-          <p>Você recebe:</p>
-          <ul class="check-list">
-            <li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></i>Biblioteca de habilidades prontas.</li>
-            <li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></i>Curso passo a passo.</li>
-            <li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></i>Pagamento único pelo produto.</li>
-          </ul>
-        </div>
-        <div class="price-box">
-          <div class="price">
-            <p class="price-label">Investimento</p>
-            <p class="price-value">R$ 147,00</p>
-            <p class="price-model">à vista · pagamento único</p>
-          </div>
-          <a class="btn btn-xl btn-block" href="#oferta" data-cta="checkout">QUERO MINHA BIBLIOTECA <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-          <p class="cta-status" role="status" data-cta-status></p>
-          <p class="fine">Os recursos da plataforma de IA e ferramentas externas não estão incluídos.</p>
-        </div>
+        <div class="offer-brand"><svg class="o-logo" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="gMark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F4DB8F"/><stop offset=".55" stop-color="#D6A329"/><stop offset="1" stop-color="#B8871A"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="11" fill="#111113" stroke="rgba(214,163,41,.5)"/><rect x="8.5" y="12" width="5" height="17" rx="1.5" fill="#7DB4FF"/><rect x="15" y="9" width="5" height="20" rx="1.5" fill="url(#gMark)"/><rect x="21.5" y="11" width="5" height="18" rx="1.5" fill="#B793FF"/><rect x="26.5" y="12.5" width="5" height="16" rx="1.5" fill="#FF8A5B" transform="rotate(12 29 20.5)"/><rect x="7.5" y="29.5" width="25" height="2" rx="1" fill="#8A6716"/></svg><span><b>Biblioteca de Skills™</b><small>+ Curso Prático</small></span></div>
+        <ul class="o-list" aria-label="Você recebe">
+          <li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></i>Biblioteca de habilidades prontas</li>
+          <li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></i>Curso passo a passo</li>
+          <li><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></i>Pagamento único pelo produto</li>
+        </ul>
+        <div class="o-price"><span class="o-lbl">Investimento</span><p class="price-value">R$ 147,00</p><span class="o-model">à vista · pagamento único</span></div>
+        <a class="btn btn-xl" href="#oferta" data-cta="checkout">QUERO MINHA BIBLIOTECA <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <p class="cta-status" role="status" data-cta-status></p>
+        <p class="fine">Os recursos da plataforma de IA e ferramentas externas não estão incluídos.</p>
       </div>
     </div>
   </div>
@@ -1240,13 +1203,11 @@ a { color: inherit; }
       <div class="close-card">
         <h2 class="h2">Sua IA pode fazer mais. <span class="gold">Você só precisa dar a habilidade certa.</span></h2>
         <p class="lead">Escolha a skill, diga o que precisa e deixe a IA ajudar.</p>
-        <p class="close-price">Biblioteca + curso por <b class="gold">R$ 147,00</b> à vista</p>
-        <a class="btn btn-xl btn-big" href="#oferta" data-cta="checkout">QUERO ACESSAR AGORA <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        <p class="cta-status" role="status" data-cta-status></p>
-        <div class="close-chips" aria-hidden="true">
-          <span class="sk" style="--c: var(--sky)"><i><svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 18h3"/></svg></i>Conteúdos</span>
-          <span class="sk" style="--c: var(--coral)"><i><svg viewBox="0 0 24 24"><path d="M4 13V9a1 1 0 0 1 1-1h3l8-4v16l-8-4H5a1 1 0 0 1-1-1z"/><path d="M19.5 9.5a3.5 3.5 0 0 1 0 5"/></svg></i>Anúncios e vendas</span>
-          <span class="sk" style="--c: var(--violet)"><i><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="17" rx="3"/><path d="M8 2.5v3M16 2.5v3M8 11l2 2 4-4"/></svg></i>Organização</span>
+        <div class="close-buy">
+          <div class="cb-top"><span class="cb-lbl">Biblioteca + curso</span><span class="cb-price"><b class="gold">R$ 147,00</b> à vista</span></div>
+          <a class="btn btn-xl btn-close" href="#oferta" data-cta="checkout">QUERO ACESSAR AGORA <span class="cb-arr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+          <p class="cb-safe"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Pagamento único</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Aulas passo a passo</span></p>
+          <p class="cta-status" role="status" data-cta-status></p>
         </div>
       </div>
     </div>
@@ -1461,88 +1422,8 @@ a { color: inherit; }
     $('#strip').innerHTML = html + html;
   });
 
-  /* ===== Bloco 02: Veja por dentro (passeio automático pelas habilidades) ===== */
-  safe(() => {
-    const DATA = [
-      { skill: 'Criar Posts', cat: 'Conteúdos', desc: 'Ideias de posts, legendas e roteiros.', color: 'var(--sky)', search: 'posts para o Instagram',
-        user: 'Quero posts para o Instagram da minha empresa.', ai: 'Claro! O que sua empresa vende e para quem? Vamos montar ideias e legendas para seus posts.' },
-      { skill: 'Montar Anúncios', cat: 'Anúncios e vendas', desc: 'Textos, mensagens e ofertas para seus produtos.', color: 'var(--coral)', search: 'anúncio do meu produto',
-        user: 'Quero criar um anúncio para meu produto.', ai: 'Certo! Qual produto você vende e qual benefício quer destacar? Vamos montar seu anúncio.' },
-      { skill: 'Organizar Tarefas', cat: 'Organização', desc: 'Planos, listas e tarefas do trabalho.', color: 'var(--violet)', search: 'organizar minha semana',
-        user: 'Quero organizar minhas tarefas da semana.', ai: 'Vamos lá! Quais tarefas você precisa fazer e quais têm prazo? Vamos montar um plano para sua semana.' },
-    ];
-    const app = $('#demo'), tabs = $$('#demo [role="tab"]'), convo = $('#convo'), panel = $('#demo-p'), composer = $('#composerText');
-    const fName = $('#fName'), fDesc = $('#fDesc'), fCat = $('#fCat'), fIco = $('#fIco'), ficha = $('.ficha', app), search = $('#appSearch');
-    const dots = $$('#tourDots i'), tourTxt = $('#tourTxt');
-    let cur = 0, token = 0, auto = !RM, visible = false, started = false, pending = false;
-    const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
-    const check = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
-    const full = (d) => convo.replaceChildren(
-      el('span', 'sys', `${check}Habilidade “${d.skill}” ativada`),
-      el('div', 'bubble b-user', `<span class="who">Você</span><p>${d.user}</p>`),
-      el('div', 'bubble b-ai', `<span class="who">IA</span><p>${d.ai}</p>`));
-    const typeInto = async (node, txt, speed, my) => { for (const ch of txt) { if (my !== token) return false; node.textContent += ch; await sleep(speed); } return true; };
-    const setFicha = (k) => {
-      const d = DATA[k];
-      app.style.setProperty('--c', d.color);
-      fName.textContent = d.skill; fDesc.textContent = d.desc; fCat.textContent = d.cat;
-      fIco.innerHTML = $('.ico', tabs[k]).innerHTML;
-      ficha.classList.remove('swap'); void ficha.offsetWidth; ficha.classList.add('swap');
-      dots.forEach((x, j) => x.classList.toggle('on', j === k));
-    };
-    const afterPlay = async (my) => {
-      composer.textContent = 'Responda à IA…';
-      if (!auto) { tourTxt.textContent = 'Toque em outra habilidade para comparar.'; return; }
-      tourTxt.textContent = 'Próxima habilidade em instantes…';
-      tabs[cur].classList.add('run');
-      await sleep(2800);
-      if (my !== token || !auto) return;
-      if (!visible) { pending = true; return; }
-      select((cur + 1) % DATA.length, false, true);
-    };
-    const play = async (k) => {
-      const my = ++token; const d = DATA[k];
-      tabs.forEach((t) => t.classList.remove('run'));
-      if (RM) { full(d); composer.textContent = 'Responda à IA…'; search.textContent = d.search; return; }
-      convo.replaceChildren(); composer.textContent = 'Abrindo a habilidade…';
-      tourTxt.textContent = auto ? 'Mostrando as habilidades por dentro…' : 'Veja como a IA começa.';
-      search.textContent = '';
-      if (!await typeInto(search, d.search, 32, my)) return;
-      await sleep(200); if (my !== token) return;
-      convo.append(el('span', 'sys fade-in', `${check}Habilidade “${d.skill}” ativada`));
-      await sleep(550); if (my !== token) return;
-      composer.textContent = '';
-      const ub = el('div', 'bubble b-user fade-in', '<span class="who">Você</span><p></p>'); convo.append(ub);
-      if (!await typeInto(ub.querySelector('p'), d.user, 28, my)) return;
-      await sleep(300); if (my !== token) return;
-      const tb = el('div', 'bubble b-ai fade-in', '<span class="who">IA</span><span class="typing" aria-label="IA digitando"><i></i><i></i><i></i></span>'); convo.append(tb);
-      await sleep(950); if (my !== token) return;
-      tb.querySelector('.typing').replaceWith(el('p'));
-      if (!await typeInto(tb.querySelector('p'), d.ai, 16, my)) return;
-      afterPlay(my);
-    };
-    function select(k, focus, fromTour) {
-      if (!fromTour) auto = false;
-      cur = k;
-      tabs.forEach((t, j) => { t.setAttribute('aria-selected', String(j === k)); t.tabIndex = j === k ? 0 : -1; });
-      panel.setAttribute('aria-labelledby', tabs[k].id);
-      if (focus) tabs[k].focus();
-      setFicha(k); play(k);
-    }
-    tabs.forEach((t, j) => {
-      t.addEventListener('click', () => select(j));
-      t.addEventListener('keydown', (e) => {
-        const nx = ['ArrowRight', 'ArrowDown'].includes(e.key) ? 1 : ['ArrowLeft', 'ArrowUp'].includes(e.key) ? -1 : 0;
-        if (nx) { e.preventDefault(); select((cur + nx + tabs.length) % tabs.length, true); }
-      });
-    });
-    $('#replay').addEventListener('click', () => { auto = false; play(cur); });
-    onView(app, (v) => {
-      visible = v;
-      if (v && !started) { started = true; play(cur); }
-      else if (v && pending) { pending = false; select((cur + 1) % DATA.length, false, true); }
-    }, 0.35, false);
-  });
+  /* ===== Bloco 02: vídeo da biblioteca por dentro ===== */
+  safe(() => soundVideo($('#insVid'), false));
 
   /* ===== Bloco 03: checklist animado ===== */
   safe(() => {
