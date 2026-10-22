@@ -870,3 +870,6 @@ a { color: inherit; }
 .results:not(.sr-in) .sr-item { opacity: 0; transform: translateY(18px); }
 .results.sr-in .sr-item { animation: ckFoot .6s var(--ease) both; }
 .results.sr-in .sr-item + .sr-item { animation-delay: .15s; }
+.sr-item { align-content: start; }
+.sr-quote { position: relative; margin: 2px 0 0; padding: 12px 12px 12px 14px; border-radius: 14px; background: rgba(255, 255, 255, .04); border: 1px solid var(--line); border-left: 3px solid var(--gold); font-size: 13px; line-height: 1.5; color: var(--text); font-style: italic; text-align: left; }
+@media (min-width: 760px) { .sr-quote { font-size: 14px; padding: 14px 16px; } }
