@@ -588,6 +588,27 @@ a { color: inherit; }
   .skc p { font-size: 14px; }
 }
 .skc-car { touch-action: pan-y; }
+@media (min-width: 760px) { .skc-wide { grid-column: 1 / -1; } }
+.skc-media.cf { aspect-ratio: auto; height: clamp(440px, 46vw, 560px); background: radial-gradient(55% 70% at 50% 55%, rgba(214,163,41,.16), transparent 70%), radial-gradient(40% 50% at 20% 40%, rgba(255,138,91,.08), transparent 70%), #070708; }
+.cf .car-track { inset: 18px 0 22px; display: block; transform: none !important; transition: none; perspective: 1400px; }
+.cf .car-slide { position: absolute; top: 0; bottom: 0; left: 50%; height: auto; width: auto; aspect-ratio: 9 / 16; margin-left: 0; translate: -50% 0; border-radius: 22px; overflow: hidden; border: 1px solid var(--line-2); background: #0b0b0d; box-shadow: 0 30px 60px -30px #000; cursor: pointer; transition: transform .8s cubic-bezier(.65,0,.25,1), filter .8s ease, border-color .6s, box-shadow .6s; }
+.cf .car-slide[data-pos="0"] { z-index: 3; transform: none; filter: none; cursor: default; border-color: rgba(214,163,41,.65); box-shadow: 0 30px 70px -26px rgba(214,163,41,.45), 0 30px 60px -30px #000; }
+.cf .car-slide[data-pos="-1"] { z-index: 2; transform: translateX(-80%) translateZ(-170px) rotateY(28deg) scale(.92); filter: brightness(.42) saturate(.75); }
+.cf .car-slide[data-pos="1"] { z-index: 2; transform: translateX(80%) translateZ(-170px) rotateY(-28deg) scale(.92); filter: brightness(.42) saturate(.75); }
+.cf .car-slide.fit video { object-fit: contain; background: #0c0c0f; }
+.cf .car-lbl { z-index: 2; top: 10px; font-size: 11px; }
+.cf-arr { position: absolute; top: 50%; translate: 0 -50%; z-index: 6; display: grid; place-items: center; width: 52px; height: 52px; padding: 0; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); background: rgba(0,0,0,.6); color: #fff; cursor: pointer; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: border-color .2s, transform .2s; }
+.cf-arr:hover { border-color: var(--gold); transform: scale(1.06); }
+.cf-arr svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.cf-arr.prev { left: 14px; } .cf-arr.next { right: 14px; }
+.cf .skc-pp { z-index: 7; }
+@media (max-width: 759px) {
+  .skc-media.cf { height: 440px; }
+  .cf .car-track { inset: 14px 0 18px; }
+  .cf .car-slide[data-pos="-1"] { transform: translateX(-74%) translateZ(-150px) rotateY(30deg) scale(.88); }
+  .cf .car-slide[data-pos="1"] { transform: translateX(74%) translateZ(-150px) rotateY(-30deg) scale(.88); }
+  .cf-arr { width: 42px; height: 42px; } .cf-arr.prev { left: 8px; } .cf-arr.next { right: 8px; }
+}
 .car-track { position: absolute; inset: 0; display: flex; transition: transform .8s cubic-bezier(.65,0,.25,1); }
 .car-slide { position: relative; flex: 0 0 100%; height: 100%; }
 .car-slide video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #070708; }
@@ -1054,10 +1075,11 @@ a { color: inherit; }
       <h2 class="h2">Habilidades para ajudar no seu dia a dia.</h2>
     </header>
     <div class="skl">
-      <article class="skc rv" style="--c: var(--coral)">
-        <div class="skc-media skc-car" style="background-image: url(demos/editor-capa.jpg)">
+      <article class="skc skc-wide rv" style="--c: var(--coral)">
+        <div class="skc-media skc-car cf">
           <div class="car-track">
-            <div class="car-slide">
+            <div class="car-slide fit">
+              <span class="car-lbl">Demonstração</span>
             <video class="car-v" data-auto-next="ended" muted playsinline webkit-playsinline preload="none" poster="demos/editor-capa.jpg" aria-label="Demonstração: comando para cortar pausas e legendar, linha do tempo da edição e o vídeo final." data-webm="demos/editor.webm" data-mp4="demos/editor.mp4"></video>
             </div>
             <div class="car-slide">
@@ -1069,7 +1091,8 @@ a { color: inherit; }
               <span class="car-lbl">Exemplo de vídeo editado</span>
             </div>
           </div>
-          <div class="car-dots"><button type="button" class="on" aria-label="Ver demonstração"><i></i></button><button type="button" aria-label="Ver exemplo 1"><i></i></button><button type="button" aria-label="Ver exemplo 2"><i></i></button></div>
+          <button class="cf-arr prev" type="button" aria-label="Vídeo anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <button class="cf-arr next" type="button" aria-label="Próximo vídeo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
           <button class="skc-pp" type="button" aria-label="Reproduzir demonstração de Editor de Vídeo"><svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></button>
         </div>
         <div class="skc-txt"><span class="skc-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z"/></svg></span><h3>Editor de Vídeo</h3><p>Cortes, legendas e mais ritmo a partir de um pedido simples.</p></div>
@@ -1509,12 +1532,12 @@ a { color: inherit; }
         return;
       }
       /* 1º card: carrossel que passa sozinho para o lado */
-      const track = $('.car-track', car), vids = $$('.car-v', car), dots = $$('.car-dots button', car), n = vids.length;
+      const slides = $$('.car-slide', car), vids = $$('.car-v', car), dots = [], n = vids.length;
       let i = 0, paused = RM, visible = false, timer = 0;
       const show = (k, restart) => {
         clearTimeout(timer);
         i = (k + n) % n;
-        track.style.transform = `translateX(${-100 * i}%)`;
+        slides.forEach((sl, j) => { sl.dataset.pos = String(((j - i + n + 1) % n) - 1); });
         dots.forEach((d, j) => d.classList.toggle('on', j === i));
         vids.forEach((v, j) => { if (j !== i && !v.paused) v.pause(); });
         if (!visible || paused) return;
@@ -1534,7 +1557,10 @@ a { color: inherit; }
         if (!v.paused) { paused = true; clearTimeout(timer); v.pause(); }
         else { paused = false; show(i, false); }
       });
-      dots.forEach((d, j) => d.addEventListener('click', () => { paused = false; show(j, true); }));
+      slides.forEach((sl, j) => sl.addEventListener('click', () => { if (j !== i) { paused = false; show(j, true); } }));
+      $('.cf-arr.prev', car).addEventListener('click', () => { paused = false; show(i - 1, true); });
+      $('.cf-arr.next', car).addEventListener('click', () => { paused = false; show(i + 1, true); });
+      slides.forEach((sl, j) => { sl.dataset.pos = String(((j + 1) % n) - 1); });
       let sx = 0, sy = 0;
       car.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
       car.addEventListener('touchend', (e) => {
