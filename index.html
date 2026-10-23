@@ -106,9 +106,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .pbar img{height:24px;width:auto;justify-self:center}
 .back{justify-self:start;background:none;border:0;color:var(--muted);font:500 13px var(--f);padding:8px 4px;cursor:pointer}
 .back:hover{color:var(--text)}
-.pcount{justify-self:end;font:500 12px var(--mono);color:var(--muted)}
-.pcount b{color:var(--gold-hi);font-weight:500}
-.track{display:flex;gap:4px;margin-top:8px}
+.track{margin-top:8px;height:6px;border-radius:3px;background:var(--card-3);overflow:hidden}
+.track b{display:block;height:100%;width:0;border-radius:3px;background:var(--gold-grad);transition:width .6s var(--ease)}
 .clip{flex:1;height:6px;border-radius:3px;background:var(--card-3);overflow:hidden;position:relative}
 .clip.on{background:var(--gold-grad)}
 .clip.now::after{content:"";position:absolute;inset:0;width:40%;background:var(--gold-grad);opacity:.8;animation:fill 1.4s ease-in-out infinite alternate}
@@ -143,7 +142,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .clock{display:flex;flex-direction:column;align-items:center;gap:2px}
 .clock strong{font-size:clamp(64px,19vw,92px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
 .clock span{color:var(--muted);font-size:14px}
-.cuts{width:100%;max-width:270px;max-width:clamp(190px,calc(22svh * 1.125 + 10px),270px);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cuts{width:100%;max-width:360px;max-width:clamp(250px,calc(32svh * 1.125 + 10px),360px);display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .cuts figure{margin:0;display:flex;flex-direction:column;gap:6px}
 .cuts .sound{font-size:10px;padding:6px 9px;bottom:6px}
 .cuts .scr{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:9/16;background:#0b0b0c;border:1px solid var(--line)}
@@ -301,9 +300,9 @@ details p{margin:0 0 15px;color:var(--muted);font-size:14px}
     <div class="pbar">
       <span aria-hidden="true"></span>
       <img src="m/logo-simbolo.webp" alt="Clique Edite" width="19" height="24">
-      <span class="pcount" id="pcount"></span>
+      <span aria-hidden="true"></span>
     </div>
-    <div class="track" id="track"></div>
+    <div class="track" id="track" role="progressbar" aria-label="Progresso do quiz" aria-valuemin="0" aria-valuemax="100"><b id="tfill"></b></div>
   </div>
 </div>
 
@@ -445,7 +444,7 @@ const FAQ=[
 
 let step=-1,answers={},nome="",whats="",cleanups=[];
 const app=document.getElementById("app"),prog=document.getElementById("prog"),track=document.getElementById("track"),
-      pcount=document.getElementById("pcount"),buybar=document.getElementById("buybar");
+      buybar=document.getElementById("buybar");
 const coverHTML=app.innerHTML;
 const NAME_STEP=QUESTIONS.length,LOAD_STEP=NAME_STEP+1,RES_STEP=NAME_STEP+2;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -456,7 +455,6 @@ const val=id=>rq(QUESTIONS.find(x=>x.id===id)).opts[answers[id]];
 const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const tryPlay=v=>{const p=v.play();if(p&&p.catch)p.catch(()=>{})};
 
-for(let i=0;i<QN;i++){const d=document.createElement("div");d.className="clip";track.appendChild(d)}
 
 /* Carrossel coverflow que passa sozinho */
 function makeFlow(el,items){
@@ -521,9 +519,8 @@ function updateChrome(){
   prog.hidden=!inFlow;
   const isPause=QUESTIONS[step]?.pause;
   const done=step>=QUESTIONS.length?QN:(isPause?qIndex(step):qIndex(step)-1);
-  const now=step>=0&&step<QUESTIONS.length&&!isPause?qIndex(step)-1:-1;
-  [...track.children].forEach((c,i)=>{c.className="clip"+(i<done?" on":"")+(i===now?" now":"")});
-  pcount.innerHTML=step>=QUESTIONS.length?"<b>✓</b>":isPause?"<b>prévia</b>":`<b>${qIndex(step)}</b>/${QN}`;
+  const pct=step<0?0:step>=QUESTIONS.length?100:Math.round((done+(isPause?0:.5))/QN*100);
+  document.getElementById("tfill").style.width=Math.max(4,pct)+"%";track.setAttribute("aria-valuenow",pct);
   const res=step===RES_STEP;
   buybar.setAttribute("aria-hidden",String(!res));
   buybar.querySelector("a").tabIndex=res?0:-1;
@@ -558,7 +555,6 @@ function countUp(el,to,fmt){
 function renderPause(){
   const {semana,mes}=hours();
   app.innerHTML=`<section class="col"><div class="q">
-    <span class="eyebrow">Pausa · sua prévia</span>
     <h2 id="qt">Você está entregando para a edição</h2>
     <div class="clock"><strong class="gold" id="cnt">0h</strong><span>por semana · ${Math.round(mes)}h por mês</span></div>
     <p class="insight">Horas que poderiam virar conteúdo, clientes e vendas. Olha o que um único pedido faz:</p>
@@ -590,7 +586,6 @@ function sendLead(){
 }
 function renderName(){
   app.innerHTML=`<section class="col"><div class="q">
-    <span class="eyebrow">Diagnóstico pronto</span>
     <h2 id="qt">Digite seu nome e seu número para receber o arquivo de edição</h2>
     <p class="insight">Seu resultado personalizado aparece logo em seguida.</p>
     <form class="namebox" id="leadForm" novalidate>
@@ -624,8 +619,8 @@ function renderName(){
 function renderLoading(){
   app.innerHTML=`<section class="col"><div class="loading">
     <div class="ring"><svg viewBox="0 0 110 110"><circle class="bgc" cx="55" cy="55" r="48"/><circle class="fgc" cx="55" cy="55" r="48"/></svg><b id="pct">0%</b></div>
-    <h2 id="qt" style="margin:0;font-size:22px;letter-spacing:-.02em">Analisando suas respostas, ${esc(nome)}…</h2>
-    <ul class="checks"><li><i>✓</i>Calculando as horas perdidas</li><li><i>✓</i>Encontrando o seu gargalo</li><li><i>✓</i>Montando o seu plano</li></ul>
+    <h2 id="qt" style="margin:0;font-size:22px;letter-spacing:-.02em">Ajustando sua ferramenta, ${esc(nome)}…</h2>
+    <ul class="checks"><li><i>✓</i>Ajustando o comando ao seu objetivo</li><li><i>✓</i>Configurando a edição para o seu ritmo</li><li><i>✓</i>Preparando sua Skill de Edição</li></ul>
   </div></section>`;
   const pct=document.getElementById("pct"),lis=app.querySelectorAll(".checks li"),t0=performance.now();
   (function f(t){const p=Math.min(1,(t-t0)/3000);pct.textContent=Math.round(p*100)+"%";if(p<1&&step===LOAD_STEP)requestAnimationFrame(f)})(t0);
@@ -645,27 +640,13 @@ function renderResult(){
   const galTxt=gal.v>0?` E tem ${gal.v>=25?"dezenas de":gal.v} vídeo${gal.v===1?"":"s"} morrendo na sua galeria.`:"";
 
   app.innerHTML=`<section class="col"><div class="sales">
-    <span class="eyebrow">Diagnóstico de ${N}</span>
     <h2 class="hero" id="qt">${N}, você está jogando fora <span class="gold">${H} horas por mês</span> editando vídeo.</h2>
 
-    <div class="stat">
-      <div><div class="num gold" id="cnt">0h</div><span class="tiny" style="font-size:13px;color:var(--muted)">por semana editando</span></div>
-      <div class="bars">
-        <div class="row"><em>Na mão</em><div class="bar"><b data-w="100"></b></div><code>${H}h/mês</code></div>
-        <div class="row"><em>Com IA</em><div class="bar g"><b data-w="${Math.max(4,Math.round(comIA/mes*100))}"></b></div><code>~${Math.max(1,Math.round(comIA))}h/mês</code></div>
-      </div>
-      <p class="tiny">Com base nas suas respostas.${tempo.desiste?" Sem contar os vídeos abandonados.":""}${galTxt} “Com IA” é uma estimativa.</p>
-    </div>
+    <div class="vsl" id="vslBox"></div>
 
     <span class="badge">Seu perfil · ${prof.tag}</span>
     <p class="punch">${prof.line}</p>
     <p class="muted">Enquanto isso, ${custo.c}. Cada semana assim custa mais ${fmtH(semana)}.</p>
-
-    <span class="eyebrow" style="margin-top:6px">Um pedido. Esse é o resultado.</span>
-    <div class="duo">
-      <div class="phone"><div class="scr"><span class="chip raw">Antes</span><video data-src="m/antes.mp4" poster="m/antes.webp" muted loop playsinline preload="none"></video><button class="sound" type="button" aria-pressed="false">🔇 Ouvir</button></div></div>
-      <div class="phone after"><div class="scr"><span class="chip ok">Depois</span><video data-src="m/depois.mp4" poster="m/depois.webp" muted loop playsinline preload="none"></video><button class="sound" type="button" aria-pressed="false">🔇 Ouvir</button></div></div>
-    </div>
 
     <div class="how">
       <span class="eyebrow">Como funciona</span>
@@ -694,13 +675,10 @@ function renderResult(){
     <div class="faq">${FAQ.map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join("")}</div>
 
     <div class="final">
-      <div class="vsl" id="vslBox"></div>
       <a class="cta pulse" href="${CHECKOUT}" target="_blank" rel="noopener">Garantir por R$ 97 <span class="arr">→</span></a>
       <div class="seals"><span>Acesso imediato</span><span>Pagamento único</span><span>7 dias de garantia</span></div>
     </div>
   </div></section>`;
-  countUp(document.getElementById("cnt"),semana,v=>fmtH(v));
-  setTimeout(()=>app.querySelectorAll(".bar b").forEach(b=>b.style.width=b.dataset.w+"%"),120);
   wireSound(app);autoplayVisible(app);
   cleanups.push(makeFlow(document.getElementById("resFlow"),reels));
   // passos sincronizados com o vídeo guiado
