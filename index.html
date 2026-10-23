@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Quiz Clique Edite · Seus vídeos prontos sem saber editar</title>
+<title>Quiz Clique Edite · Vídeos prontos em um clique</title>
 <meta name="description" content="Quiz grátis de 60 segundos: descubra quantas horas você perde editando e como deixar seus vídeos prontos só pedindo para a IA.">
 <meta name="theme-color" content="#000000">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Seus vídeos prontos em minutos. Sem saber editar.">
+<meta property="og:title" content="Seus vídeos prontos em um clique. Sem saber editar.">
 <meta property="og:description" content="Quiz grátis de 60 segundos. Descubra quantas horas a edição está roubando de você.">
 <meta property="og:image" content="https://quiz-cliqueedite.onrender.com/m/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -72,7 +72,8 @@ main,header,.progress{position:relative;z-index:1}
 .cover .logo{height:26px;width:auto}
 .cover h1{margin:0;font-size:clamp(30px,8.6vw,52px);line-height:1.06;letter-spacing:-.035em;font-weight:700;text-wrap:balance;max-width:16ch}
 .cover .cta-box{width:100%;max-width:420px;display:flex;flex-direction:column;gap:10px}
-.legal{font-size:10.5px;color:var(--dim);padding-block:18px 26px;max-width:46ch;margin:0 auto}
+.cover .sub{margin:-6px 0 0;font-size:clamp(14px,3.8vw,16px);line-height:1.45;color:var(--muted);max-width:34ch;text-wrap:balance}
+.cover .sub b{color:var(--text)}
 
 /* Carrossel coverflow */
 .flow{position:relative;width:100vw;max-width:900px;height:clamp(240px,42vh,420px);height:clamp(240px,42svh,420px);overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none;
@@ -261,14 +262,13 @@ details p{margin:0 0 15px;color:var(--muted);font-size:14px}
 <main id="app">
   <section class="col cover" id="cover">
     <img class="logo" src="m/logo.webp" alt="Clique Edite" width="98" height="26">
-    <h1>Seus vídeos prontos em minutos. <span class="gold">Sem saber editar.</span></h1>
+    <h1>Seus vídeos prontos em um clique. <span class="gold">Sem saber editar.</span></h1>
+    <p class="sub">Coloque um comando no Claude, diga “EDITE” e crie ou edite vídeos apenas com texto ou voz!</p>
     <div class="flow" id="coverFlow" aria-label="Exemplos de vídeos criados com um pedido"></div>
     <div class="cta-box">
       <button class="cta pulse" id="start" type="button">Começar o quiz grátis <span class="arr">→</span></button>
-      <div class="seals"><span>Grátis</span><span>60 segundos</span><span>Resultado na hora</span></div>
     </div>
   </section>
-  <p class="legal col">Claude é marca da Anthropic, ChatGPT é marca da OpenAI e Gemini é marca do Google. O Clique Edite é um produto independente, sem ligação com essas empresas.</p>
 </main>
 
 <div class="buybar" id="buybar" aria-hidden="true">
@@ -290,6 +290,17 @@ const REELS=[
   {v:"m/app.mp4",p:"m/app.webp",t:"Lançamento de app",c:"ads"},
   {v:"m/reel-bastidores.mp4",p:"m/reel-bastidores.webp",t:"Bastidores do negócio",c:"social"},
   {v:"m/reel-servico.mp4",p:"m/reel-servico.webp",t:"Vídeo de serviço",c:"company"}
+];
+
+const COVER_REELS=[
+  {v:"m/reel-dica.mp4",p:"m/reel-dica.webp",t:"Reels de dica"},
+  {v:"m/reel-apostilas.mp4",p:"m/reel-apostilas.webp",t:"Vitrine de produtos"},
+  {v:"m/relogio.mp4",p:"m/relogio.webp",t:"Lançamento de produto"},
+  {v:"m/reel-ia-gratis.mp4",p:"m/reel-ia-gratis.webp",t:"Conteúdo animado"},
+  {v:"m/reel-empresa.mp4",p:"m/reel-empresa.webp",t:"Apresentação da empresa"},
+  {v:"m/depois.mp4",p:"m/depois.webp",t:"Efeitos e legendas"},
+  {v:"m/app.mp4",p:"m/app.webp",t:"Lançamento de app"},
+  {v:"m/reel-bastidores.mp4",p:"m/reel-bastidores.webp",t:"Bastidores do negócio"}
 ];
 
 const QUESTIONS=[
@@ -427,7 +438,7 @@ function wireSound(root){
 }
 
 function setupCover(){
-  cleanups.push(makeFlow(document.getElementById("coverFlow"),REELS));
+  cleanups.push(makeFlow(document.getElementById("coverFlow"),COVER_REELS));
   document.getElementById("start").addEventListener("click",()=>go(0));
 }
 
@@ -586,7 +597,6 @@ function renderResult(){
       <div class="seals"><span>Acesso imediato</span><span>Pagamento único</span><span>7 dias de garantia</span></div>
     </div>
     <button class="redo" id="redo" type="button">Refazer o quiz</button>
-    <p class="legal">Claude é marca da Anthropic, ChatGPT é marca da OpenAI e Gemini é marca do Google. O Clique Edite é um produto independente, sem ligação com essas empresas.</p>
   </div></section>`;
   countUp(document.getElementById("cnt"),semana,v=>fmtH(v));
   setTimeout(()=>app.querySelectorAll(".bar b").forEach(b=>b.style.width=b.dataset.w+"%"),120);
