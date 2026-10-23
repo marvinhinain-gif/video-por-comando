@@ -56,13 +56,16 @@ main,header,.progress{position:relative;z-index:1}
 /* Botões */
 .cta{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:58px;border:0;border-radius:16px;padding:16px 20px;background:var(--cta-grad);color:var(--cta-ink);font:700 16px/1.2 var(--f);letter-spacing:.02em;text-transform:uppercase;text-decoration:none;cursor:pointer;
   box-shadow:0 0 0 1px rgba(255,255,255,.14) inset,0 14px 36px -12px rgba(var(--cta-glow),.8);transition:transform .2s var(--ease),opacity .2s}
-.cta:hover{transform:translateY(-2px)}
-.cta:active{transform:scale(.98)}
+.cta{animation:breathe 2.8s ease-in-out infinite}
+.cta:active{animation:none;transform:scale(.98)}
+@keyframes breathe{0%,100%{transform:scale(1);box-shadow:0 0 0 1px rgba(255,255,255,.14) inset,0 12px 30px -14px rgba(var(--cta-glow),.6)}50%{transform:scale(1.025);box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 16px 42px -10px rgba(var(--cta-glow),.95)}}
 .cta .arr{transition:transform .2s var(--ease)}
 .cta:hover .arr{transform:translateX(4px)}
-.cta.pulse::after{content:"";position:absolute;inset:-4px;border-radius:20px;border:2px solid rgba(var(--cta-glow),.6);animation:ring 2.2s var(--ease) infinite;pointer-events:none}
-@keyframes ring{0%{opacity:.9;transform:scale(.98)}70%,100%{opacity:0;transform:scale(1.06)}}
-.cta[aria-disabled="true"]{opacity:.45}
+.cta.pulse::after{content:"";position:absolute;inset:-3px;border-radius:19px;border:1.5px solid rgba(var(--cta-glow),.35);animation:ring 2.8s ease-out infinite;pointer-events:none}
+@keyframes ring{0%{opacity:.7;transform:scale(1)}80%,100%{opacity:0;transform:scale(1.05)}}
+.cta[aria-disabled="true"]{opacity:.45;animation:none}
+.cta[aria-disabled="true"]::after{display:none}
+.unlock{margin:2px 0 0;font-size:13px;line-height:1.4;color:var(--muted);text-wrap:balance}
 .seals{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;font-size:13px;color:var(--muted)}
 .seals span{display:inline-flex;align-items:center;gap:6px}
 .seals span::before{content:"✓";color:var(--gold);font-weight:700;font-size:12px}
@@ -263,10 +266,11 @@ details p{margin:0 0 15px;color:var(--muted);font-size:14px}
   <section class="col cover" id="cover">
     <img class="logo" src="m/logo.webp" alt="Clique Edite" width="98" height="26">
     <h1>Seus vídeos prontos em um clique. <span class="gold">Sem saber editar.</span></h1>
-    <p class="sub">Coloque um comando no Claude, diga “EDITE” e crie ou edite vídeos apenas com texto ou voz!</p>
+    <p class="sub">Basta colar o arquivo na IA, dizer “EDITE” e ter seus vídeos profissionais</p>
     <div class="flow" id="coverFlow" aria-label="Exemplos de vídeos criados com um pedido"></div>
     <div class="cta-box">
-      <button class="cta pulse" id="start" type="button">Começar o quiz grátis <span class="arr">→</span></button>
+      <button class="cta pulse" id="start" type="button">Pegar comando agora <span class="arr">→</span></button>
+      <p class="unlock"><span aria-hidden="true">🔓</span> Responda um quiz rápido de 60 segundos para liberar o acesso à ferramenta.</p>
     </div>
   </section>
 </main>
