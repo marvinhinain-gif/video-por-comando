@@ -640,7 +640,7 @@ function renderResult(){
   const galTxt=gal.v>0?` E tem ${gal.v>=25?"dezenas de":gal.v} vídeo${gal.v===1?"":"s"} morrendo na sua galeria.`:"";
 
   app.innerHTML=`<section class="col"><div class="sales">
-    <h2 class="hero" id="qt">${N}, você está jogando fora <span class="gold">${H} horas por mês</span> editando vídeo.</h2>
+    <h2 class="hero" id="qt">${N}, edite seus vídeos com <span class="gold">apenas um clique.</span></h2>
 
     <div class="vsl" id="vslBox"></div>
 
@@ -675,7 +675,7 @@ function renderResult(){
     <div class="faq">${FAQ.map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join("")}</div>
 
     <div class="final">
-      <a class="cta pulse" href="${CHECKOUT}" target="_blank" rel="noopener">Garantir por R$ 97 <span class="arr">→</span></a>
+      <a class="cta pulse" href="${CHECKOUT}" target="_blank" rel="noopener">Garantir Agora <span class="arr">→</span></a>
       <div class="seals"><span>Acesso imediato</span><span>Pagamento único</span><span>7 dias de garantia</span></div>
     </div>
   </div></section>`;
