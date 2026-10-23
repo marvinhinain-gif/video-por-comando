@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Quiz Clique Edite · Quantas horas a edição rouba de você?</title>
+<meta name="description" content="Responda 7 perguntas e descubra quantas horas você perde editando vídeos e como editar só escrevendo ou falando o que quer.">
+<meta name="theme-color" content="#000000">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Quantas horas a edição está roubando de você?">
+<meta property="og:description" content="Quiz grátis de 1 minuto. Descubra seu perfil de criador e quanto tempo você perde editando.">
+<meta property="og:image" content="m/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="m/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: funil de uma coluna (capa → perguntas → diagnóstico), com a trilha de edição como barra de progresso e o cursor laranja do logo como gesto de "um clique" */
+:root{
+  --bg:#000;
+  --card:#111113;
+  --card-2:#17171A;
+  --card-3:#1f1f23;
+  --line:rgba(255,255,255,.10);
+  --line-2:rgba(255,255,255,.16);
+  --text:#ECE9E2;
+  --muted:#AAA59B;
+  --dim:#6f6b63;
+  --gold:#D6A329;
+  --gold-hi:#F2D488;
+  --gold-deep:#8A6716;
+  --gold-grad:linear-gradient(100deg,#F4DB8F 0%,#D6A329 52%,#B8871A 100%);
+  --gold-soft:rgba(214,163,41,.12);
+  --orange:#FF6A13;
+  --red:#FF4A3D;
+  --cta-grad:linear-gradient(100deg,#6EEBA0 0%,#22C55E 50%,#16A34A 100%);
+  --cta-ink:#042713;
+  --cta-glow:34,197,94;
+  --f:"Poppins",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--text)}
+body{font-family:var(--f);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,video{max-width:100%;display:block}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px}
+h1:focus,h2:focus{outline:none}
+.gold{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.narrow{max-width:600px}
+.eyebrow{font:600 11.5px/1 var(--f);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.mono{font-family:var(--mono)}
+
+/* Glow de fundo */
+.glow{position:fixed;inset:-20% -10% auto;height:70vh;pointer-events:none;z-index:0;
+  background:radial-gradient(50% 60% at 70% 20%,rgba(214,163,41,.16),transparent 70%),radial-gradient(40% 50% at 10% 0%,rgba(255,106,19,.08),transparent 70%)}
+main,header{position:relative;z-index:1}
+
+/* Header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:14px 6px}
+.logo{height:26px;width:auto}
+.top .simbolo{height:28px;width:auto}
+.back{background:none;border:1px solid var(--line-2);color:var(--muted);font:500 13px var(--f);padding:7px 14px;border-radius:999px;cursor:pointer;transition:color .2s,border-color .2s}
+.back:hover{color:var(--text);border-color:var(--muted)}
+
+/* Botões */
+.cta{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:16px;padding:18px 22px;background:var(--cta-grad);color:var(--cta-ink);font:700 16px/1.2 var(--f);letter-spacing:.02em;text-transform:uppercase;text-decoration:none;cursor:pointer;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 14px 36px -12px rgba(var(--cta-glow),.75);transition:transform .2s var(--ease),box-shadow .2s}
+.cta:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(255,255,255,.16) inset,0 18px 44px -12px rgba(var(--cta-glow),.9)}
+.cta .arr{transition:transform .2s var(--ease)}
+.cta:hover .arr{transform:translateX(4px)}
+.cta.pulse::after{content:"";position:absolute;inset:-4px;border-radius:20px;border:2px solid rgba(var(--cta-glow),.6);animation:ring 2.4s var(--ease) infinite}
+@keyframes ring{0%{opacity:.9;transform:scale(.98)}70%,100%{opacity:0;transform:scale(1.06)}}
+.ghost{background:none;border:1px solid var(--line-2);color:var(--text);border-radius:14px;padding:14px 18px;font:600 14px var(--f);cursor:pointer}
+.ghost:hover{border-color:var(--gold)}
+.seals{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;font-size:13px;color:var(--muted)}
+.seals span{display:inline-flex;align-items:center;gap:6px}
+.seals span::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold)}
+
+/* ===== CAPA ===== */
+.cover{display:grid;gap:28px;padding-block:14px 40px;align-items:center}
+.cover-text{display:flex;flex-direction:column;gap:16px}
+.pill{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:7px 12px 7px 8px;border-radius:999px;background:var(--gold-soft);border:1px solid rgba(214,163,41,.28);font:600 12px var(--f);color:var(--gold-hi)}
+.pill .rec{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 0 rgba(255,74,61,.6);animation:rec 1.6s infinite}
+@keyframes rec{0%{box-shadow:0 0 0 0 rgba(255,74,61,.6)}70%,100%{box-shadow:0 0 0 8px rgba(255,74,61,0)}}
+.cover h1{margin:0;font-size:clamp(29px,7.6vw,54px);line-height:1.06;letter-spacing:-.035em;font-weight:700;text-wrap:balance}
+.cover h1 .strike{position:relative;white-space:nowrap}
+.cover h1 .strike::after{content:"";position:absolute;left:-2%;right:-2%;top:54%;height:.09em;background:var(--red);border-radius:2px;transform-origin:left;animation:cut 1s .5s var(--ease) both}
+@keyframes cut{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.lead{margin:0;color:var(--muted);font-size:clamp(15px,3.9vw,17.5px);max-width:46ch}
+.lead b{color:var(--text);font-weight:600}
+.cover-cta{display:flex;flex-direction:column;gap:12px;margin-top:4px;max-width:460px}
+
+/* Antes e depois */
+.duo{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:470px;margin-inline:auto;width:100%}
+.phone{position:relative;border-radius:26px;padding:6px;background:linear-gradient(160deg,#2a2a2f,#121214);box-shadow:0 30px 60px -30px rgba(0,0,0,.9),0 0 0 1px var(--line)}
+.phone .screen{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:9/16;background:#0b0b0c}
+.phone video,.phone img{width:100%;height:100%;object-fit:cover}
+.phone.after{box-shadow:0 30px 70px -28px rgba(214,163,41,.55),0 0 0 1px rgba(214,163,41,.4)}
+.tag{position:absolute;top:10px;left:10px;z-index:2;font:600 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:6px 8px;border-radius:6px;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.tag.raw{color:#ffb4ad}
+.tag.raw::before{content:"● ";color:var(--red)}
+.tag.ok{color:var(--gold-hi)}
+.tag.ok::before{content:"✦ ";color:var(--gold)}
+.sound{position:absolute;bottom:10px;right:10px;z-index:2;border:0;border-radius:999px;background:rgba(0,0,0,.65);color:var(--text);font:600 11px var(--f);padding:7px 10px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.sound[aria-pressed="true"]{background:var(--gold-grad);color:#1a1406}
+.cmd{position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);z-index:3;display:flex;align-items:center;gap:8px;white-space:nowrap;padding:10px 14px;border-radius:14px;background:rgba(17,17,19,.92);border:1px solid var(--line-2);box-shadow:0 18px 40px -16px #000;font:500 12.5px var(--f);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.cmd .mic{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;background:var(--gold-grad);color:#1a1406;font-size:11px;font-weight:800}
+.cmd .typed{overflow:hidden;border-right:2px solid var(--gold);white-space:nowrap;max-width:0;animation:type 5s steps(32) infinite}
+@keyframes type{0%{max-width:0}40%,85%{max-width:240px}100%{max-width:0}}
+.cursor{position:absolute;right:-18px;bottom:-22px;width:30px;height:30px;animation:tap 5s var(--ease) infinite;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))}
+@keyframes tap{0%,38%{transform:translate(14px,14px)}46%{transform:translate(0,0) scale(1)}50%{transform:translate(0,0) scale(.82)}56%,100%{transform:translate(0,0) scale(1)}}
+.duo-caption{text-align:center;font-size:12.5px;color:var(--muted);margin-top:12px}
+
+/* Faixa de exemplos */
+.strip-wrap{position:relative;margin-top:8px;padding-block:22px 6px;border-top:1px solid var(--line)}
+.strip-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
+.strip-head h2{margin:0;font-size:15px;font-weight:600}
+.strip-head span{font-size:12px;color:var(--dim)}
+.strip{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.strip-track{display:flex;gap:12px;width:max-content;animation:marq 38s linear infinite}
+.strip:hover .strip-track{animation-play-state:paused}
+@keyframes marq{to{transform:translateX(-50%)}}
+.reel{flex:none;width:118px;border-radius:14px;overflow:hidden;aspect-ratio:9/16;background:var(--card);border:1px solid var(--line);position:relative}
+.reel img{width:100%;height:100%;object-fit:cover}
+.reel span{position:absolute;inset:auto 0 0;padding:18px 8px 8px;font:600 10.5px/1.25 var(--f);background:linear-gradient(transparent,rgba(0,0,0,.85))}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+.facts div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 12px}
+.facts b{display:block;font-size:17px;font-weight:700;letter-spacing:-.01em}
+.facts small{color:var(--muted);font-size:12px;line-height:1.35;display:block;margin-top:2px}
+
+/* ===== QUIZ ===== */
+.progress{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding-block:10px;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:#000}
+.track{display:flex;gap:4px;margin-top:10px}
+.clip{flex:1;height:9px;border-radius:3px;background:var(--card-3);overflow:hidden;position:relative;transition:flex .4s var(--ease)}
+.clip.on{background:var(--gold-grad)}
+.clip.now{background:var(--card-3)}
+.clip.now::after{content:"";position:absolute;inset:0;width:45%;background:var(--gold-grad);opacity:.75;animation:fill 1.6s ease-in-out infinite alternate}
+@keyframes fill{to{width:100%}}
+.clip.cut{background:repeating-linear-gradient(135deg,#3a1d1a 0 4px,#24110f 4px 8px)}
+.tc{display:flex;justify-content:space-between;margin-top:7px;font:500 11.5px var(--mono);color:var(--muted)}
+.tc b{color:var(--gold-hi);font-weight:500}
+
+.q{padding-block:28px 48px;display:flex;flex-direction:column;gap:22px;animation:rise .45s var(--ease) both}
+@keyframes rise{from{opacity:.001;transform:translateY(14px)}to{opacity:1;transform:none}}
+.q .num{font:500 12px var(--mono);color:var(--gold)}
+.q h2{margin:-12px 0 0;font-size:clamp(23px,6vw,32px);line-height:1.18;letter-spacing:-.025em;font-weight:600;text-wrap:balance}
+.q .hint{margin:-10px 0 0;color:var(--muted);font-size:14.5px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 16px;color:var(--text);font:500 15.5px/1.35 var(--f);cursor:pointer;transition:border-color .2s,background .2s,transform .15s}
+.opt:hover{border-color:rgba(214,163,41,.55);background:var(--card-2)}
+.opt:active{transform:scale(.99)}
+.opt .k{flex:none;width:30px;height:30px;border-radius:9px;border:1px solid var(--line-2);display:grid;place-items:center;font:500 12px var(--mono);color:var(--muted);transition:all .2s}
+.opt .sub{display:block;font-size:12.5px;color:var(--muted);font-weight:400;margin-top:2px}
+.opt.sel{border-color:var(--gold);background:linear-gradient(100deg,rgba(214,163,41,.14),rgba(214,163,41,.04))}
+.opt.sel .k{background:var(--gold-grad);color:#1a1406;border-color:transparent}
+
+/* Opções com imagem */
+.grid-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.img-opt{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--card);padding:0;color:var(--text);cursor:pointer;text-align:left;transition:border-color .2s,transform .2s var(--ease)}
+.img-opt:hover{border-color:rgba(214,163,41,.6);transform:translateY(-2px)}
+.img-opt .ph{aspect-ratio:4/4.4;overflow:hidden;position:relative}
+.img-opt .ph img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .5s var(--ease)}
+.img-opt:hover .ph img{transform:scale(1.04)}
+.img-opt .lb{padding:11px 12px 13px;font:600 14px/1.25 var(--f)}
+.img-opt .lb small{display:block;font:400 12px/1.35 var(--f);color:var(--muted);margin-top:3px}
+.img-opt .chk{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.6);border:1px solid var(--line-2);display:grid;place-items:center;font-size:13px;color:transparent;transition:all .2s}
+.img-opt.sel{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.img-opt.sel .chk{background:var(--gold-grad);color:#1a1406;border-color:transparent}
+
+/* Pausa (interstício) */
+.pause{padding-block:28px 48px;display:flex;flex-direction:column;gap:20px;animation:rise .45s var(--ease) both}
+.pause h2{margin:0;font-size:clamp(24px,6.4vw,34px);line-height:1.15;letter-spacing:-.03em;font-weight:700;text-wrap:balance}
+.pause p{margin:0;color:var(--muted)}
+.clock{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.clock strong{font-size:clamp(54px,15vw,76px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.clock span{color:var(--muted)}
+.cuts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cuts figure{margin:0;display:flex;flex-direction:column;gap:8px}
+.cuts .screen{border-radius:16px;overflow:hidden;aspect-ratio:9/16;max-height:340px;background:#0b0b0c;border:1px solid var(--line);position:relative}
+.cuts figure:last-child .screen{border-color:rgba(214,163,41,.45)}
+.cuts video{width:100%;height:100%;object-fit:cover}
+.cuts figcaption{font-size:12.5px;color:var(--muted);text-align:center}
+.say{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.say .av{flex:none;width:30px;height:30px;border-radius:50%;background:var(--card-3);display:grid;place-items:center;font:600 11px var(--f);color:var(--muted)}
+.say p{color:var(--text);font-size:14.5px}
+.say p small{display:block;color:var(--muted);font-size:12px;margin-bottom:2px}
+
+/* Nome */
+.namebox{display:flex;flex-direction:column;gap:8px}
+.namebox input{width:100%;background:var(--card);border:1px solid var(--line-2);border-radius:14px;padding:16px;color:var(--text);font:500 17px var(--f)}
+.namebox input::placeholder{color:var(--dim)}
+.namebox input:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 3px var(--gold-soft)}
+.skip{background:none;border:0;color:var(--muted);font:500 14px var(--f);text-decoration:underline;cursor:pointer;padding:6px;align-self:center}
+
+/* Carregando */
+.loading{padding-block:60px;display:flex;flex-direction:column;align-items:center;gap:26px;text-align:center;animation:rise .4s var(--ease) both}
+.ring{width:110px;height:110px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:6}
+.ring .bgc{stroke:var(--card-3)}
+.ring .fgc{stroke:url(#gg);stroke-linecap:round;stroke-dasharray:302;stroke-dashoffset:302;animation:load 3s var(--ease) forwards}
+@keyframes load{to{stroke-dashoffset:0}}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:600 22px var(--mono)}
+.checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;text-align:left}
+.checks li{display:flex;gap:10px;align-items:center;color:var(--dim);font-size:15px;transition:color .3s}
+.checks li i{width:22px;height:22px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;font-style:normal;font-size:11px;color:transparent;transition:all .3s}
+.checks li.done{color:var(--text)}
+.checks li.done i{background:var(--gold-grad);color:#1a1406;border-color:transparent}
+
+/* ===== RESULTADO ===== */
+.res{padding-block:26px 140px;display:flex;flex-direction:column;gap:20px;animation:rise .5s var(--ease) both}
+.res h2.big{margin:0;font-size:clamp(28px,7.4vw,42px);line-height:1.08;letter-spacing:-.035em;font-weight:700;text-wrap:balance}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.panel h3{margin:0;font-size:19px;line-height:1.3;letter-spacing:-.015em;font-weight:600;text-wrap:balance}
+.panel p{margin:0;color:var(--muted)}
+.panel p b{color:var(--text);font-weight:600}
+.bigstat{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.bigstat strong{font-size:58px;line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.bigstat span{color:var(--muted);font-size:15px}
+.bars{display:flex;flex-direction:column;gap:12px}
+.bars .row{display:grid;grid-template-columns:76px 1fr 70px;gap:10px;align-items:center;font-size:13px}
+.bars em{font-style:normal;color:var(--muted)}
+.bars code{font:500 12px var(--mono);text-align:right}
+.bar{height:14px;border-radius:5px;background:var(--card-3);overflow:hidden}
+.bar b{display:block;height:100%;width:0;background:repeating-linear-gradient(135deg,#ff5a4d 0 6px,#d63a2f 6px 12px);transition:width 1.1s var(--ease)}
+.bar.g b{background:var(--gold-grad)}
+.note{font-size:12px!important;color:var(--dim)!important}
+.prof{border-color:rgba(214,163,41,.35);background:linear-gradient(170deg,rgba(214,163,41,.10),var(--card) 55%)}
+.prof .badge{align-self:flex-start;display:flex;align-items:center;gap:8px;font:600 11.5px var(--f);letter-spacing:.12em;text-transform:uppercase;color:var(--gold-hi);padding:7px 12px;border:1px solid rgba(214,163,41,.4);border-radius:999px}
+.sec-h{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.sec-h h3{margin:0;font-size:clamp(21px,5.4vw,26px);letter-spacing:-.025em;line-height:1.2;font-weight:600;text-wrap:balance}
+.sec-h p{margin:0;color:var(--muted);font-size:14.5px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.steps div{background:var(--card-2);border:1px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center;font-weight:600;font-size:13.5px}
+.steps small{display:block;font:500 11px var(--mono);color:var(--gold);margin-bottom:4px}
+.demo-video{border-radius:16px;overflow:hidden;border:1px solid var(--line);aspect-ratio:4/5;background:#0b0b0c}
+.demo-video video{width:100%;height:100%;object-fit:cover}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.gallery figure{margin:0;display:flex;flex-direction:column;gap:6px}
+.gallery .screen{border-radius:14px;overflow:hidden;aspect-ratio:9/16;background:#0b0b0c;border:1px solid var(--line)}
+.gallery video{width:100%;height:100%;object-fit:cover}
+.gallery figcaption{font-size:12px;color:var(--muted);line-height:1.3}
+.gallery figure.match .screen{border-color:var(--gold)}
+.offer{border-color:rgba(214,163,41,.45);background:radial-gradient(120% 60% at 50% 0%,rgba(214,163,41,.16),var(--card) 60%);gap:18px;align-items:stretch}
+.offer .logo{height:30px;align-self:center}
+.offer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.offer li{display:flex;gap:12px;align-items:center;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-weight:500;font-size:14.5px}
+.offer li i{flex:none;width:24px;height:24px;border-radius:50%;background:var(--gold-grad);color:#1a1406;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800}
+.price{text-align:center;display:flex;flex-direction:column;gap:2px}
+.price s{color:var(--dim);font-size:14px}
+.price strong{font-size:46px;line-height:1.05;font-weight:800;letter-spacing:-.04em}
+.price span{color:var(--muted);font-size:14px}
+.guar{display:flex;gap:14px;align-items:center;padding-top:14px;border-top:1px solid var(--line)}
+.seal{flex:none;width:58px;height:58px;border-radius:50%;border:1.5px dashed var(--gold);display:grid;place-items:center;text-align:center;line-height:1;color:var(--gold-hi)}
+.seal b{font-size:20px;font-weight:800;display:block}
+.seal small{font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.guar p{font-size:13px}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 16px}
+details+details{margin-top:8px}
+summary{list-style:none;cursor:pointer;padding:15px 0;font-weight:600;font-size:14.5px;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--gold);font-weight:500;font-size:18px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin:0 0 15px;color:var(--muted);font-size:14px}
+.redo{background:none;border:0;color:var(--dim);font:500 13px var(--f);text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.legal{font-size:11px;color:var(--dim);text-align:center;padding-block:10px 24px}
+
+/* Barra fixa de compra */
+.buybar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(10,10,11,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line-2);
+  padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));transform:translateY(110%);transition:transform .4s var(--ease)}
+.buybar.show{transform:none}
+.buybar .in{max-width:600px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.buybar .pr{flex:none;line-height:1.15}
+.buybar .pr b{display:block;font-size:17px}
+.buybar .pr small{color:var(--muted);font-size:11.5px}
+.buybar .cta{padding:14px 16px;font-size:13.5px;border-radius:13px}
+
+@media (min-width:880px){
+  .cover{grid-template-columns:1.05fr .95fr;gap:48px;padding-block:40px 48px}
+  .cover-cta .seals{justify-content:flex-start}
+  .duo{max-width:480px}
+  .strip-wrap{margin-top:0}
+}
+@media (max-width:420px){
+  .facts{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .facts b{font-size:15px}
+  .gallery{grid-template-columns:repeat(2,1fr)}
+  .bars .row{grid-template-columns:62px 1fr 64px}
+  .cmd{font-size:11.5px;padding:8px 11px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .cmd .typed{max-width:240px}
+}
+</style>
+</head>
+<body>
+<div class="glow" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#F4DB8F"/><stop offset=".52" stop-color="#D6A329"/><stop offset="1" stop-color="#B8871A"/></linearGradient></defs></svg>
+
+<header id="hdr" class="wrap">
+  <div class="top">
+    <img class="logo" src="m/logo.webp" alt="Clique Edite" width="98" height="26">
+  </div>
+</header>
+
+<div id="prog" class="progress" hidden>
+  <div class="wrap narrow">
+    <div class="top" style="padding:0">
+      <img class="simbolo" src="m/logo-simbolo.webp" alt="Clique Edite" width="22" height="28">
+      <button class="back" id="back" type="button">← Voltar</button>
+    </div>
+    <div class="track" id="track"></div>
+    <div class="tc"><span id="tcL">00:00</span><span id="tcR"></span></div>
+  </div>
+</div>
+
+<main id="app">
+  <!-- CAPA -->
+  <section class="wrap" id="cover">
+    <div class="cover">
+      <div class="cover-text">
+        <span class="pill"><span class="rec"></span>Quiz grátis · 1 minuto</span>
+        <h1>Você grava 1 minuto e perde <span class="gold">horas editando?</span></h1>
+        <p class="lead">Faça o quiz e descubra <b>quanto tempo a edição está roubando de você</b>, o que mais te trava e como editar seus vídeos só escrevendo ou falando o que quer.</p>
+        <div class="cover-cta">
+          <button class="cta pulse" id="start" type="button">Descobrir meu resultado <span class="arr">→</span></button>
+          <div class="seals"><span>7 perguntas</span><span>Resultado na hora</span><span>Sem cadastro</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="duo" id="duoCover">
+          <div class="phone">
+            <div class="screen">
+              <span class="tag raw">Gravação bruta</span>
+              <video src="m/antes.mp4" poster="m/antes.webp" muted loop playsinline autoplay preload="metadata"></video>
+              <button class="sound" type="button" aria-pressed="false">🔇 Som</button>
+            </div>
+          </div>
+          <div class="phone after">
+            <div class="screen">
+              <span class="tag ok">Editado com IA</span>
+              <video src="m/depois.mp4" poster="m/depois.webp" muted loop playsinline autoplay preload="metadata"></video>
+              <button class="sound" type="button" aria-pressed="false">🔇 Som</button>
+            </div>
+          </div>
+          <div class="cmd" aria-hidden="true">
+            <span class="mic">▶</span><span class="typed">Corta os erros e coloca legendas</span>
+            <svg class="cursor" viewBox="0 0 30 30"><path d="M5 3 L25 15 L16 17 L21 27 L17 28.5 L12 19 L6 24 Z" fill="#FF6A13" stroke="#000" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <p class="duo-caption">O mesmo vídeo, antes e depois de um pedido para a IA.</p>
+      </div>
+    </div>
+
+    <div class="strip-wrap">
+      <div class="strip-head"><h2>O que dá para criar com um comando</h2><span>exemplos da página</span></div>
+      <div class="strip"><div class="strip-track" id="strip"></div></div>
+      <div class="facts">
+        <div><b>3 passos</b><small>Você pede, a IA ajuda, você aprova</small></div>
+        <div><b>Por voz</b><small>Escreva ou mande um áudio</small></div>
+        <div><b>7 dias</b><small>de garantia incondicional</small></div>
+      </div>
+    </div>
+    <p class="legal">Claude é marca da Anthropic, ChatGPT é marca da OpenAI e Gemini é marca do Google. O Clique Edite é um produto independente, sem ligação com essas empresas.</p>
+  </section>
+</main>
+
+<div class="buybar" id="buybar" aria-hidden="true">
+  <div class="in">
+    <div class="pr"><b>R$ 97,00</b><small>ou 12x de R$ 10</small></div>
+    <a class="cta" href="https://pay.cakto.com.br/i7h5j8z_1229524" target="_blank" rel="noopener" tabindex="-1">Quero o Clique Edite</a>
+  </div>
+</div>
+
+<script>
+const CHECKOUT="https://pay.cakto.com.br/i7h5j8z_1229524";
+
+const QUESTIONS=[
+  {id:"objetivo",type:"img",title:"Que tipo de vídeo você mais quer criar?",hint:"Escolha o que mais combina com você agora.",
+   opts:[
+    {t:"Reels e TikTok",s:"Conteúdo curto para crescer",img:"m/reel-dica.webp",v:"social"},
+    {t:"Anúncios para vender",s:"Divulgar produto ou serviço",img:"m/reel-anuncio.webp",v:"ads"},
+    {t:"Vídeos da empresa",s:"Mostrar seu negócio",img:"m/reel-empresa.webp",v:"company"},
+    {t:"Ainda não sei",s:"Quero aprender do zero",img:"m/guiado.webp",v:"zero"}]},
+  {id:"tempo",title:"Quanto tempo você leva para editar um vídeo de 1 minuto?",hint:"Contando cortes, legendas, textos e efeitos.",
+   opts:[
+    {t:"Menos de 30 minutos",v:.4},
+    {t:"Entre 30 minutos e 1 hora",v:.75},
+    {t:"De 1 a 3 horas",v:2},
+    {t:"Mais de 3 horas",v:3.5},
+    {t:"Nem termino",s:"Desisto no meio do caminho",v:3,desiste:true}]},
+  {id:"freq",title:"Quantos vídeos você gostaria de postar por semana?",
+   opts:[
+    {t:"1 a 2 vídeos",v:1.5},
+    {t:"3 a 4 vídeos",v:3.5},
+    {t:"5 a 6 vídeos",v:5.5},
+    {t:"Um por dia, ou mais",v:7}]},
+  {pause:true},
+  {id:"trava",title:"Qual parte da edição mais te trava hoje?",
+   opts:[
+    {t:"Cortar erros, pausas e repetições",v:"cortes"},
+    {t:"Colocar e ajustar legendas",v:"legendas"},
+    {t:"Textos, cenas e efeitos que prendem atenção",v:"efeitos"},
+    {t:"Não sei nem por onde começar",v:"comeco"}]},
+  {id:"galeria",title:"Quantos vídeos estão parados na sua galeria agora?",hint:"Gravados, mas nunca editados nem postados.",
+   opts:[
+    {t:"Nenhum, posto tudo",v:0},
+    {t:"De 1 a 5",v:3},
+    {t:"De 6 a 20",v:12},
+    {t:"Perdi a conta",v:25}]},
+  {id:"ia",title:"Qual é a sua relação com IA hoje?",
+   opts:[
+    {t:"Já uso o Claude",v:"claude"},
+    {t:"Uso outra IA",s:"ChatGPT, Gemini…",v:"outra"},
+    {t:"Já testei, mas nunca para vídeo",v:"testou"},
+    {t:"Nunca usei",v:"nunca"}]},
+  {id:"sonho",title:"O que você faria com as horas que hoje vão para a edição?",
+   opts:[
+    {t:"Gravar e postar muito mais",v:"postar"},
+    {t:"Vender mais e atender clientes",v:"vender"},
+    {t:"Descansar e dormir mais cedo",v:"descansar"},
+    {t:"Ficar com a família e os amigos",v:"familia"}]}
+];
+const QN=QUESTIONS.filter(q=>!q.pause).length;
+
+const PROFILES={
+  cortes:{tag:"O Perfeccionista do Corte",h:"Você perde mais tempo caçando erro do que criando.",p:"Pausas, gaguejadas e repetições são o trabalho chato que você pode <b>pedir para a IA resolver com uma frase</b>. Errou? É só pedir para cortar."},
+  legendas:{tag:"O Refém da Legenda",h:"A legenda está comendo o tempo que era do seu conteúdo.",p:"Digitar, sincronizar e ajustar legenda linha por linha rouba horas de quem grava vídeo curto. Com o Clique Edite, <b>você escreve ou fala o que quer</b> e só aprova."},
+  efeitos:{tag:"O Criador Exigente",h:"Você sabe o que quer. Só falta quem execute.",p:"Ideia você tem. O que trava é transformar a gravação em <b>roteiro, cenas e textos que prendem atenção</b>. Você descreve, a IA organiza, você aprova."},
+  comeco:{tag:"O Criador da Galeria",h:"Seus vídeos existem. Só não saem do celular.",p:"Você não precisa virar editor. Precisa saber o que quer criar. O <b>vídeo de instrução e o mapa mental</b> mostram do primeiro pedido ao vídeo pronto."}
+};
+const SONHO={postar:"gravar e postar muito mais",vender:"vender mais e atender clientes",descansar:"descansar e dormir mais cedo",familia:"ficar com a família e os amigos"};
+const IA_TXT={
+  claude:"Como você já usa o Claude, é só adicionar o arquivo do Clique Edite e começar a pedir.",
+  outra:"Você pode usar o Clique Edite em plataformas compatíveis, como Claude, ChatGPT ou Gemini, dentro dos recursos de cada uma.",
+  testou:"Você já deu o primeiro passo com IA. Agora é colocar ela para trabalhar nos seus vídeos.",
+  nunca:"Nunca usou IA? Sem problema: o vídeo de instrução mostra tudo do zero, sem programação."
+};
+const GALLERY=[
+  {v:"m/reel-dica.mp4",p:"m/reel-dica.webp",t:"Reels de dica rápida",c:"social"},
+  {v:"m/reel-bastidores.mp4",p:"m/reel-bastidores.webp",t:"Bastidores do negócio",c:"social"},
+  {v:"m/reel-anuncio.mp4",p:"m/reel-anuncio.webp",t:"Anúncio de produto",c:"ads"},
+  {v:"m/relogio.mp4",p:"m/relogio.webp",t:"Lançamento de produto",c:"ads"},
+  {v:"m/app.mp4",p:"m/app.webp",t:"Lançamento de app",c:"ads"},
+  {v:"m/reel-empresa.mp4",p:"m/reel-empresa.webp",t:"Apresentação da empresa",c:"company"},
+  {v:"m/reel-servico.mp4",p:"m/reel-servico.webp",t:"Vídeo de serviço",c:"company"}
+];
+const STRIP=[["reel-dica","Reels de dica"],["reel-anuncio","Anúncio"],["relogio","Lançamento"],["reel-empresa","Empresa"],["app","App"],["reel-bastidores","Bastidores"],["reel-servico","Serviço"],["depois","Efeitos"]];
+const FAQ=[
+  ["Preciso saber editar vídeos?","Não. Você só diz o que quer criar ou mudar. A IA ajuda na edição e você acompanha o resultado."],
+  ["Posso mandar comandos por áudio?","Sim. Se o seu celular ou computador tiver digitação por voz, é só falar o que deseja e enviar."],
+  ["O Claude faz tudo sozinho?","A IA ajuda a criar, organizar e editar. Algumas tarefas podem depender de outras ferramentas ou da sua aprovação."],
+  ["Tem garantia?","Sim. Você tem 7 dias para testar. Se não funcionar ou não gostar, pede 100% do dinheiro de volta."]
+];
+
+let step=-1, answers={}, nome="";
+const app=document.getElementById("app"), hdr=document.getElementById("hdr"), prog=document.getElementById("prog"),
+      track=document.getElementById("track"), tcL=document.getElementById("tcL"), tcR=document.getElementById("tcR"),
+      back=document.getElementById("back"), buybar=document.getElementById("buybar");
+const coverHTML=app.innerHTML;
+const NAME_STEP=QUESTIONS.length, LOAD_STEP=QUESTIONS.length+1, RES_STEP=QUESTIONS.length+2;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const qIndex=i=>QUESTIONS.slice(0,i+1).filter(q=>!q.pause).length; // número da pergunta
+const val=id=>{const q=QUESTIONS.find(x=>x.id===id);return q.opts[answers[id]]};
+
+for(let i=0;i<QN;i++){const d=document.createElement("div");d.className="clip";track.appendChild(d)}
+
+function setupCover(){
+  const s=document.getElementById("strip");
+  const items=STRIP.map(([k,t])=>`<div class="reel"><img src="m/${k}.webp" alt="" loading="lazy"><span>${t}</span></div>`).join("");
+  s.innerHTML=items+items;
+  document.getElementById("start").addEventListener("click",()=>go(0));
+  wireSound(app);
+}
+function wireSound(root){
+  root.querySelectorAll(".sound").forEach(b=>b.addEventListener("click",()=>{
+    const v=b.parentElement.querySelector("video");
+    const on=b.getAttribute("aria-pressed")!=="true";
+    root.querySelectorAll(".sound").forEach(o=>{if(o!==b){o.setAttribute("aria-pressed","false");o.textContent="🔇 Som";o.parentElement.querySelector("video").muted=true}});
+    v.muted=!on; if(on){v.currentTime=0;v.play().catch(()=>{})}
+    b.setAttribute("aria-pressed",String(on)); b.textContent=on?"🔊 Som":"🔇 Som";
+  }));
+}
+function autoplayVisible(root){
+  const vids=root.querySelectorAll("video[data-lazy]");
+  if(!("IntersectionObserver" in window)){vids.forEach(v=>{v.src=v.dataset.lazy;v.play().catch(()=>{})});return}
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    const v=e.target;
+    if(e.isIntersecting){if(!v.src)v.src=v.dataset.lazy;v.play().catch(()=>{})}else v.pause();
+  }),{threshold:.35});
+  vids.forEach(v=>io.observe(v));
+}
+
+function updateChrome(){
+  const inQ=step>=0&&step<QUESTIONS.length;
+  const inFlow=step>=0&&step<RES_STEP;
+  hdr.hidden=step>=0; prog.hidden=!inFlow;
+  back.hidden=!(inQ||step===NAME_STEP);
+  const done=step>=QUESTIONS.length?QN:(QUESTIONS[step]?.pause?qIndex(step):qIndex(step)-1);
+  const now=inQ&&!QUESTIONS[step].pause?qIndex(step)-1:-1;
+  [...track.children].forEach((c,i)=>{c.className="clip"+(i<done?" on":"")+(i===now?" now":"")});
+  const secs=done*8;
+  tcL.textContent="00:"+String(secs).padStart(2,"0");
+  tcR.innerHTML=step>=QUESTIONS.length?"<b>Renderizando diagnóstico</b>":QUESTIONS[step]?.pause?"<b>Prévia do seu resultado</b>":`Pergunta <b>${qIndex(step)}</b> de ${QN}`;
+  buybar.classList.toggle("show",step===RES_STEP);
+  buybar.setAttribute("aria-hidden",String(step!==RES_STEP));
+  buybar.querySelector("a").tabIndex=step===RES_STEP?0:-1;
+}
+
+function renderQuestion(){
+  const q=QUESTIONS[step], chosen=answers[q.id], n=qIndex(step);
+  const optsHTML=q.type==="img"
+    ?`<div class="grid-opts">${q.opts.map((o,i)=>`<button type="button" class="img-opt${chosen===i?" sel":""}" data-i="${i}" id="${q.id}-${i}"><span class="ph"><img src="${o.img}" alt=""></span><span class="lb">${o.t}<small>${o.s}</small></span><span class="chk">✓</span></button>`).join("")}</div>`
+    :`<div class="opts">${q.opts.map((o,i)=>`<button type="button" class="opt${chosen===i?" sel":""}" data-i="${i}" id="${q.id}-${i}"><span class="k">${String.fromCharCode(65+i)}</span><span>${o.t}${o.s?`<span class="sub">${o.s}</span>`:""}</span></button>`).join("")}</div>`;
+  app.innerHTML=`<section class="wrap narrow"><div class="q">
+    <span class="num">CENA ${String(n).padStart(2,"0")}</span>
+    <h2 id="qt">${q.title}</h2>${q.hint?`<p class="hint">${q.hint}</p>`:""}
+    <div role="group" aria-labelledby="qt">${optsHTML}</div></div></section>`;
+  app.querySelectorAll("[data-i]").forEach(b=>b.addEventListener("click",()=>{
+    answers[q.id]=+b.dataset.i;
+    app.querySelectorAll("[data-i]").forEach(x=>x.classList.toggle("sel",x===b));
+    setTimeout(()=>go(step+1),260);
+  }));
+}
+
+function hours(){const t=val("tempo"),f=val("freq");return{semana:t.v*f.v,mes:t.v*f.v*4.3}}
+function fmtH(h){if(h<1)return Math.round(h*60)+" min";const r=Math.round(h*2)/2;return(r%1?r.toFixed(1).replace(".",","):r)+"h"}
+
+function renderPause(){
+  const {semana,mes}=hours();
+  app.innerHTML=`<section class="wrap narrow"><div class="pause">
+    <span class="eyebrow">Pausa rápida · prévia</span>
+    <h2>No seu ritmo, a edição leva cerca de</h2>
+    <div class="clock"><strong class="gold" id="cnt">0h</strong><span>por semana, ou ${Math.round(mes)}h por mês.</span></div>
+    <p>É mais do que muita gente passa gravando. Veja o que acontece quando a parte chata vai para a IA:</p>
+    <div class="cuts">
+      <figure><div class="screen"><video src="m/corte-bruto.mp4" poster="m/corte-bruto.webp" muted loop playsinline autoplay></video></div><figcaption>Gravação com erros e pausas</figcaption></figure>
+      <figure><div class="screen"><video src="m/corte-editado.mp4" poster="m/corte-editado.webp" muted loop playsinline autoplay></video></div><figcaption>Depois de um pedido</figcaption></figure>
+    </div>
+    <div class="say"><span class="av">Você</span><p><small>O pedido</small>“Remove as pausas e deixa esse vídeo com 30 segundos.”</p></div>
+    <button class="cta" id="cont" type="button">Continuar o quiz <span class="arr">→</span></button>
+  </div></section>`;
+  countUp(document.getElementById("cnt"),semana,v=>fmtH(v));
+  document.getElementById("cont").addEventListener("click",()=>go(step+1));
+}
+function countUp(el,to,fmt){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){el.textContent=fmt(to);return}
+  const t0=performance.now(),d=1100;
+  (function f(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);el.textContent=fmt(to*e);if(p<1)requestAnimationFrame(f);else el.textContent=fmt(to)})(t0);
+}
+
+function renderName(){
+  app.innerHTML=`<section class="wrap narrow"><div class="q">
+    <span class="eyebrow">Última etapa</span>
+    <h2 id="qt">Seu diagnóstico está pronto. Como podemos te chamar?</h2>
+    <p class="hint">Só para personalizar o seu resultado. Não fica salvo em lugar nenhum.</p>
+    <div class="namebox"><label for="nome" class="hint" style="margin:0">Primeiro nome</label>
+      <input id="nome" type="text" autocomplete="given-name" maxlength="24" placeholder="Ex.: Ana" value="${esc(nome)}"></div>
+    <button class="cta" id="see" type="button">Ver meu resultado <span class="arr">→</span></button>
+    <button class="skip" id="skip" type="button">Pular e ver o resultado</button>
+  </div></section>`;
+  const i=document.getElementById("nome");
+  const next=()=>{nome=(i.value.trim().split(/\s+/)[0]||"").slice(0,24);go(LOAD_STEP)};
+  document.getElementById("see").addEventListener("click",next);
+  i.addEventListener("keydown",e=>{if(e.key==="Enter")next()});
+  document.getElementById("skip").addEventListener("click",()=>{nome="";go(LOAD_STEP)});
+}
+
+let loadTimer=[];
+function renderLoading(){
+  app.innerHTML=`<section class="wrap narrow"><div class="loading">
+    <div class="ring"><svg viewBox="0 0 110 110"><circle class="bgc" cx="55" cy="55" r="48"/><circle class="fgc" cx="55" cy="55" r="48"/></svg><b id="pct">0%</b></div>
+    <h2 style="margin:0;font-size:22px;letter-spacing:-.02em" id="qt">Montando seu diagnóstico${nome?", "+esc(nome):""}…</h2>
+    <ul class="checks">
+      <li><i>✓</i>Calculando suas horas na edição</li>
+      <li><i>✓</i>Identificando o que mais te trava</li>
+      <li><i>✓</i>Separando exemplos para o seu objetivo</li>
+    </ul></div></section>`;
+  const pct=document.getElementById("pct"),lis=app.querySelectorAll(".checks li");
+  const t0=performance.now();
+  (function f(t){const p=Math.min(1,(t-t0)/3000);pct.textContent=Math.round(p*100)+"%";if(p<1&&step===LOAD_STEP)requestAnimationFrame(f)})(t0);
+  loadTimer=[700,1600,2500].map((ms,i)=>setTimeout(()=>lis[i].classList.add("done"),ms));
+  loadTimer.push(setTimeout(()=>{if(step===LOAD_STEP)go(RES_STEP)},3300));
+}
+
+function renderResult(){
+  const obj=val("objetivo"),tempo=val("tempo"),freq=val("freq"),trava=val("trava"),gal=val("galeria"),ia=val("ia"),sonho=val("sonho");
+  const {semana,mes}=hours();
+  const comIA=Math.max(.25,tempo.v*.15)*freq.v*4.3; // estimativa ilustrativa
+  const prof=PROFILES[trava.v];
+  const quem=nome?esc(nome)+", você":"Você";
+  const H=Math.round(mes);
+  const head=mes<6?`${quem} já é rápido, mas ainda gasta <span class="gold">${H} horas por mês</span> editando.`
+                  :`${quem} perde cerca de <span class="gold">${H} horas por mês</span> editando vídeos.`;
+  const galTxt=gal.v===0?"":` E ainda tem ${gal.v>=25?"muitos vídeos":"cerca de "+gal.v+" vídeo"+(gal.v===1?"":"s")} parado${gal.v===1?"":"s"} na galeria.`;
+  const desis=tempo.desiste?" Sem contar os vídeos que você começa e abandona.":"";
+  const cat=obj.v==="zero"?"social":obj.v;
+  const gal6=[...GALLERY.filter(g=>g.c===cat),...GALLERY.filter(g=>g.c!==cat)].slice(0,6);
+
+  app.innerHTML=`<section class="wrap narrow"><div class="res">
+    <span class="eyebrow">Seu diagnóstico</span>
+    <h2 class="big" id="qt">${head}</h2>
+
+    <div class="panel">
+      <div class="bigstat"><strong class="gold" id="cnt">0h</strong><span>por semana na edição</span></div>
+      <div class="bars">
+        <div class="row"><em>Na mão</em><div class="bar"><b data-w="100"></b></div><code>${H}h/mês</code></div>
+        <div class="row"><em>Com IA</em><div class="bar g"><b data-w="${Math.max(4,Math.round(comIA/mes*100))}"></b></div><code>~${Math.max(1,Math.round(comIA))}h/mês</code></div>
+      </div>
+      <p class="note">Cálculo: ${tempo.t.toLowerCase()} por vídeo × ${freq.t.toLowerCase()} por semana.${desis}${galTxt} A linha “Com IA” é uma estimativa ilustrativa.</p>
+    </div>
+
+    <div class="panel prof">
+      <span class="badge">Seu perfil · ${prof.tag}</span>
+      <h3>${prof.h}</h3>
+      <p>${prof.p}</p>
+      <p>${IA_TXT[ia.v]}</p>
+    </div>
+
+    <div class="sec-h"><span class="eyebrow">A diferença na prática</span><h3>Mesma gravação. Um pedido. Outro vídeo.</h3><p>Toque em “Som” para ouvir.</p></div>
+    <div class="duo">
+      <div class="phone"><div class="screen"><span class="tag raw">Antes</span><video data-lazy="m/antes.mp4" poster="m/antes.webp" muted loop playsinline preload="none"></video><button class="sound" type="button" aria-pressed="false">🔇 Som</button></div></div>
+      <div class="phone after"><div class="screen"><span class="tag ok">Depois</span><video data-lazy="m/depois.mp4" poster="m/depois.webp" muted loop playsinline preload="none"></video><button class="sound" type="button" aria-pressed="false">🔇 Som</button></div></div>
+    </div>
+
+    <div class="sec-h"><span class="eyebrow">Como funciona</span><h3>Imagine usar essas ${H} horas para ${SONHO[sonho.v]}.</h3><p>Com o Clique Edite, editar vira uma conversa:</p></div>
+    <div class="steps"><div><small>01</small>Você pede</div><div><small>02</small>A IA ajuda</div><div><small>03</small>Você aprova</div></div>
+    <div class="demo-video"><video data-lazy="m/guiado.mp4" poster="m/guiado.webp" muted loop playsinline preload="none"></video></div>
+
+    <div class="sec-h"><span class="eyebrow">Para o seu objetivo</span><h3>O que você pode criar</h3><p>Exemplos de vídeos da página do Clique Edite${obj.v!=="zero"?", começando pelo tipo que você escolheu":""}.</p></div>
+    <div class="gallery">${gal6.map(g=>`<figure class="${g.c===cat?"match":""}"><div class="screen"><video data-lazy="${g.v}" poster="${g.p}" muted loop playsinline preload="none"></video></div><figcaption>${g.t}</figcaption></figure>`).join("")}</div>
+
+    <div class="panel offer" id="oferta">
+      <img class="logo" src="m/logo.webp" alt="Clique Edite" width="113" height="30">
+      <ul>
+        <li><i>✓</i>Arquivo Clique Edite + vídeo de instrução</li>
+        <li><i>✓</i>Mapa Mental de Criação de Vídeos</li>
+      </ul>
+      <div class="price"><span>Pagamento único</span><strong>R$ 97,00</strong><span>ou 12x de R$ 10 no cartão</span></div>
+      <a class="cta pulse" href="${CHECKOUT}" target="_blank" rel="noopener">Quero editar com IA <span class="arr">→</span></a>
+      <div class="guar"><div class="seal"><span><b>7</b><small>dias</small></span></div><p>Garantia incondicional de 7 dias. Se o Clique Edite não funcionar na sua IA ou você achar complicado, devolvemos 100% do seu dinheiro.</p></div>
+    </div>
+
+    <div class="sec-h"><h3>Ainda tem dúvida?</h3></div>
+    <div>${FAQ.map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join("")}</div>
+
+    <button class="redo" id="redo" type="button">Refazer o quiz</button>
+    <p class="legal">Claude é marca da Anthropic, ChatGPT é marca da OpenAI e Gemini é marca do Google. O Clique Edite é um produto independente, sem ligação com essas empresas.</p>
+  </div></section>`;
+  countUp(document.getElementById("cnt"),semana,v=>fmtH(v));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>app.querySelectorAll(".bar b").forEach(b=>b.style.width=b.dataset.w+"%")));
+  wireSound(app); autoplayVisible(app);
+  document.getElementById("redo").addEventListener("click",()=>{answers={};nome="";go(-1)});
+}
+
+function go(n){
+  loadTimer.forEach(clearTimeout);loadTimer=[];
+  step=n; updateChrome();
+  if(step<0){app.innerHTML=coverHTML;setupCover()}
+  else if(step<QUESTIONS.length){QUESTIONS[step].pause?renderPause():renderQuestion()}
+  else if(step===NAME_STEP)renderName();
+  else if(step===LOAD_STEP)renderLoading();
+  else renderResult();
+  window.scrollTo(0,0);
+  const h=app.querySelector("#qt,h1,h2");
+  if(h&&step>=0){h.setAttribute("tabindex","-1");h.focus({preventScroll:true})}
+}
+back.addEventListener("click",()=>{if(step===NAME_STEP)go(QUESTIONS.length-1);else go(step-1)});
+document.addEventListener("keydown",e=>{
+  if(step<0||step>=QUESTIONS.length||QUESTIONS[step].pause||e.target.tagName==="INPUT"||e.key.length!==1)return;
+  const b=app.querySelector(`[data-i="${e.key.toUpperCase().charCodeAt(0)-65}"]`); if(b)b.click();
+});
+setupCover();
+</script>
+
+<script>
+(function(){
+  var q=location.search; if(!q) return;
+  var p=new URLSearchParams(q), keep=new URLSearchParams();
+  p.forEach(function(v,k){ if(/^(utm_|src|sck|fbclid|gclid)/i.test(k)) keep.set(k,v); });
+  if(![...keep.keys()].length) return;
+  var fix=function(){ document.querySelectorAll('a[href*="pay.cakto.com.br"]').forEach(function(a){
+    try{var u=new URL(a.href); keep.forEach(function(v,k){u.searchParams.set(k,v)}); a.href=u.toString();}catch(e){} }); };
+  new MutationObserver(fix).observe(document.body,{childList:true,subtree:true}); fix();
+})();
+</script>
+</body>
+</html>
