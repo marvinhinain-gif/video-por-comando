@@ -75,7 +75,7 @@ main,header,.progress{position:relative;z-index:1}
 .legal{font-size:10.5px;color:var(--dim);padding-block:18px 26px;max-width:46ch;margin:0 auto}
 
 /* Carrossel coverflow */
-.flow{position:relative;width:100vw;max-width:900px;height:clamp(230px,38vh,400px);height:clamp(230px,38svh,400px);overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none;
+.flow{position:relative;width:100vw;max-width:900px;height:clamp(240px,42vh,420px);height:clamp(240px,42svh,420px);overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent)}
 .fcard{position:absolute;left:50%;top:0;height:100%;aspect-ratio:9/16;border-radius:20px;overflow:hidden;background:#0b0b0c;border:1px solid var(--line);
   transition:transform .7s var(--ease),opacity .7s var(--ease),filter .7s var(--ease);will-change:transform}
@@ -116,7 +116,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .opt.sel::after{content:"✓";position:absolute;right:14px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:var(--gold-grad);color:#1a1406;display:grid;place-items:center;font-size:12px;font-weight:800}
 
 /* Pergunta com vídeos */
-.vgrid{width:100%;max-width:330px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vgrid{width:100%;max-width:330px;max-width:clamp(240px,calc((100svh - 250px) * .5625 + 10px),330px);display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .vopt{position:relative;aspect-ratio:9/16;border-radius:16px;overflow:hidden;border:1.5px solid var(--line);background:#0b0b0c;padding:0;cursor:pointer;color:var(--text);transition:border-color .2s,transform .2s var(--ease)}
 .vopt video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .vopt .lb{position:absolute;left:0;right:0;bottom:0;padding:34px 8px 10px;background:linear-gradient(transparent,rgba(0,0,0,.9) 55%);font:700 13.5px/1.2 var(--f);z-index:2}
@@ -131,7 +131,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .clock{display:flex;flex-direction:column;align-items:center;gap:2px}
 .clock strong{font-size:clamp(64px,19vw,92px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
 .clock span{color:var(--muted);font-size:14px}
-.cuts{width:100%;max-width:360px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cuts{width:100%;max-width:270px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .cuts figure{margin:0;display:flex;flex-direction:column;gap:6px}
 .cuts .scr{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:9/16;background:#0b0b0c;border:1px solid var(--line)}
 .cuts figure:last-child .scr{border-color:rgba(214,163,41,.55)}
@@ -381,7 +381,7 @@ function makeFlow(el,items){
   const cards=[...el.children],n=cards.length;let cur=0,timer=null,visible=true;
   function layout(){
     const w=el.clientWidth,ch=cards[0].offsetWidth||1;
-    const gap=Math.min(ch*.62,w*.24);
+    const gap=Math.min(ch*.68,w*.27);
     cards.forEach((c,i)=>{
       let o=i-cur;if(o>n/2)o-=n;if(o<-n/2)o+=n;
       const a=Math.abs(o);
@@ -479,8 +479,8 @@ function renderPause(){
     <div class="clock"><strong class="gold" id="cnt">0h</strong><span>por semana · ${Math.round(mes)}h por mês</span></div>
     <p class="insight">Horas que poderiam virar conteúdo, clientes e vendas. Olha o que um único pedido faz:</p>
     <div class="cuts">
-      <figure><div class="scr"><span class="chip raw">Gravação</span><video data-src="m/corte-bruto.mp4" poster="m/corte-bruto.webp" muted loop playsinline preload="none"></video></div><figcaption>Erros e pausas</figcaption></figure>
-      <figure><div class="scr"><span class="chip ok">1 pedido</span><video data-src="m/corte-editado.mp4" poster="m/corte-editado.webp" muted loop playsinline preload="none"></video></div><figcaption>Pronto para postar</figcaption></figure>
+      <figure><div class="scr"><video data-src="m/corte-bruto.mp4" poster="m/corte-bruto.webp" muted loop playsinline preload="none"></video></div><figcaption>Erros e pausas</figcaption></figure>
+      <figure><div class="scr"><video data-src="m/corte-editado.mp4" poster="m/corte-editado.webp" muted loop playsinline preload="none"></video></div><figcaption>Pronto para postar</figcaption></figure>
     </div>
     <p class="ask"><small>O pedido</small>“Remove as pausas e deixa esse vídeo com 30 segundos.”</p>
     <button class="cta" id="cont" type="button" style="max-width:420px">Continuar <span class="arr">→</span></button>
@@ -543,12 +543,12 @@ function renderResult(){
     <h2 class="hero" id="qt">${N}, você está jogando fora <span class="gold">${H} horas por mês</span> editando vídeo.</h2>
 
     <div class="stat">
-      <div class="num gold" id="cnt">0h</div>
+      <div><div class="num gold" id="cnt">0h</div><span class="tiny" style="font-size:13px;color:var(--muted)">por semana editando</span></div>
       <div class="bars">
         <div class="row"><em>Na mão</em><div class="bar"><b data-w="100"></b></div><code>${H}h/mês</code></div>
         <div class="row"><em>Com IA</em><div class="bar g"><b data-w="${Math.max(4,Math.round(comIA/mes*100))}"></b></div><code>~${Math.max(1,Math.round(comIA))}h/mês</code></div>
       </div>
-      <p class="tiny">Por semana, com base nas suas respostas.${tempo.desiste?" Sem contar os vídeos abandonados.":""}${galTxt} “Com IA” é uma estimativa.</p>
+      <p class="tiny">Com base nas suas respostas.${tempo.desiste?" Sem contar os vídeos abandonados.":""}${galTxt} “Com IA” é uma estimativa.</p>
     </div>
 
     <span class="badge">Seu perfil · ${prof.tag}</span>
@@ -570,8 +570,8 @@ function renderResult(){
         <li><i>✓</i>Mapa Mental de Criação de Vídeos</li>
       </ul>
       <div class="price"><span>Pagamento único</span><strong>R$ 97</strong><span>ou 12x de R$ 10 no cartão</span></div>
-      ${H>=4?`<p class="perhour">Menos de R$ ${porHora} por hora que você recupera só no primeiro mês.</p>`:""}
-      <a class="cta pulse" href="${CHECKOUT}" target="_blank" rel="noopener">Quero editar com IA agora <span class="arr">→</span></a>
+      ${H>=4?`<p class="perhour">R$ 97 ÷ ${H}h de edição por mês = R$ ${porHora} por hora.</p>`:""}
+      <a class="cta pulse" href="${CHECKOUT}" target="_blank" rel="noopener">Quero editar com IA <span class="arr">→</span></a>
       <div class="guar"><div class="seal"><span><b>7</b><small>dias</small></span></div><p><b style="color:var(--text)">Risco zero.</b> Não funcionou na sua IA ou achou complicado? Devolvemos 100% do seu dinheiro.</p></div>
     </div>
 
@@ -582,7 +582,7 @@ function renderResult(){
 
     <div class="final">
       <p class="punch">${N}, você pode passar o próximo mês editando, ou usar essas ${H} horas para ${SONHO[sonho.v]}.</p>
-      <a class="cta pulse" href="${CHECKOUT}" target="_blank" rel="noopener">Garantir o Clique Edite por R$ 97 <span class="arr">→</span></a>
+      <a class="cta pulse" href="${CHECKOUT}" target="_blank" rel="noopener">Garantir por R$ 97 <span class="arr">→</span></a>
       <div class="seals"><span>Acesso imediato</span><span>Pagamento único</span><span>7 dias de garantia</span></div>
     </div>
     <button class="redo" id="redo" type="button">Refazer o quiz</button>
