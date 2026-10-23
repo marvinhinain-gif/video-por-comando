@@ -12,6 +12,14 @@
 <meta property="og:image" content="https://quiz-cliqueedite.onrender.com/m/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="m/favicon.png">
+<script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
+<link rel="preload" href="https://scripts.converteai.net/f343e8e2-4cf6-4a8e-9218-b209b36aeeca/players/6adb740834309aec6fe675ae/v4/player.js" as="script">
+<link rel="preload" href="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js" as="script">
+<link rel="preload" href="https://cdn.converteai.net/f343e8e2-4cf6-4a8e-9218-b209b36aeeca/6adacfcbfa73d07c08ade1cd/main.m3u8" as="fetch">
+<link rel="dns-prefetch" href="https://cdn.converteai.net">
+<link rel="dns-prefetch" href="https://scripts.converteai.net">
+<link rel="dns-prefetch" href="https://images.converteai.net">
+<link rel="dns-prefetch" href="https://license.vturb.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
 <style>
@@ -243,6 +251,8 @@ details p{margin:0 0 15px;color:var(--muted);font-size:14px}
 .hstep.on .n{background:var(--gold-grad);color:#1a1406;border-color:transparent}
 
 /* VSL compacta + modal */
+.vsl{width:100%;max-width:400px;margin:0 auto;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 0 0 1px rgba(214,163,41,.4),0 30px 70px -30px rgba(214,163,41,.5)}
+.vsl video{width:100%;aspect-ratio:9/16;display:block;background:#000}
 .vslcard{width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:var(--card);border:1px solid rgba(214,163,41,.4);border-radius:18px;padding:10px 14px 10px 10px;color:var(--text);cursor:pointer;transition:border-color .2s,transform .2s var(--ease)}
 .vslcard:hover{border-color:var(--gold);transform:translateY(-1px)}
 .vslcard .th{position:relative;flex:none;width:64px;aspect-ratio:9/16;border-radius:10px;overflow:hidden;background:#000}
@@ -289,7 +299,7 @@ details p{margin:0 0 15px;color:var(--muted);font-size:14px}
 <div id="prog" class="progress" hidden>
   <div class="col">
     <div class="pbar">
-      <button class="back" id="back" type="button">← Voltar</button>
+      <span aria-hidden="true"></span>
       <img src="m/logo-simbolo.webp" alt="Clique Edite" width="19" height="24">
       <span class="pcount" id="pcount"></span>
     </div>
@@ -309,10 +319,6 @@ details p{margin:0 0 15px;color:var(--muted);font-size:14px}
     </div>
   </section>
 </main>
-
-<div class="modal" id="vslModal" role="dialog" aria-modal="true" aria-label="Vídeo do Clique Edite" hidden>
-  <div class="mbox"><button class="mclose" type="button" aria-label="Fechar vídeo">✕</button><div class="mplayer" id="vslPlayer"></div></div>
-</div>
 
 <div class="buybar" id="buybar" aria-hidden="true">
   <div class="in">
@@ -424,7 +430,7 @@ const PROFILES={
   comeco:{tag:"Criador da Galeria",line:"Seus vídeos existem. Só não saem do celular. O passo a passo te leva do primeiro pedido ao vídeo pronto."}
 };
 const SONHO={postar:"produzir muito mais vídeos",vender:"vender mais",negocio:"crescer o seu negócio",familia:"ficar com quem você ama"};
-const VSL={vturb:true,src:"m/vsl.mp4",poster:"m/capa-vsl.webp",vturbId:"6adad00bedaf8c43218cfd75",vturbJs:"https://scripts.converteai.net/f343e8e2-4cf6-4a8e-9218-b209b36aeeca/players/6adad00bedaf8c43218cfd75/v4/player.js"};
+const VSL={vturb:true,src:"m/vsl.mp4",poster:"m/capa-vsl.webp",vturbId:"6adb740834309aec6fe675ae",vturbJs:"https://scripts.converteai.net/f343e8e2-4cf6-4a8e-9218-b209b36aeeca/players/6adb740834309aec6fe675ae/v4/player.js"};
 const LEAD_WEBHOOK=""; // cole aqui a URL que recebe os leads (planilha, CRM ou automação)
 const HOW=[
   {t:0,h:"Cole o arquivo na IA",d:"Adicione o Clique Edite ao Claude seguindo o vídeo de instrução."},
@@ -439,7 +445,7 @@ const FAQ=[
 
 let step=-1,answers={},nome="",whats="",cleanups=[];
 const app=document.getElementById("app"),prog=document.getElementById("prog"),track=document.getElementById("track"),
-      pcount=document.getElementById("pcount"),back=document.getElementById("back"),buybar=document.getElementById("buybar");
+      pcount=document.getElementById("pcount"),buybar=document.getElementById("buybar");
 const coverHTML=app.innerHTML;
 const NAME_STEP=QUESTIONS.length,LOAD_STEP=NAME_STEP+1,RES_STEP=NAME_STEP+2;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -513,7 +519,6 @@ function setupCover(){
 function updateChrome(){
   const inFlow=step>=0&&step<RES_STEP;
   prog.hidden=!inFlow;
-  back.style.visibility=(step>=0&&step<=NAME_STEP)?"visible":"hidden";
   const isPause=QUESTIONS[step]?.pause;
   const done=step>=QUESTIONS.length?QN:(isPause?qIndex(step):qIndex(step)-1);
   const now=step>=0&&step<QUESTIONS.length&&!isPause?qIndex(step)-1:-1;
@@ -689,15 +694,10 @@ function renderResult(){
     <div class="faq">${FAQ.map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join("")}</div>
 
     <div class="final">
-      <button type="button" class="vslcard" id="vslOpen" aria-haspopup="dialog">
-        <span class="th"><img src="${VSL.poster}" alt=""><i>▶</i></span>
-        <span class="tx"><b>Veja funcionando em 1 minuto</b><small>O Clique Edite na prática, do pedido ao vídeo pronto</small></span>
-      </button>
-      <p class="punch">${N}, você pode passar o próximo mês editando, ou usar essas ${H} horas para ${SONHO[sonho.v]}.</p>
+      <div class="vsl" id="vslBox"></div>
       <a class="cta pulse" href="${CHECKOUT}" target="_blank" rel="noopener">Garantir por R$ 97 <span class="arr">→</span></a>
       <div class="seals"><span>Acesso imediato</span><span>Pagamento único</span><span>7 dias de garantia</span></div>
     </div>
-    <button class="redo" id="redo" type="button">Refazer o quiz</button>
   </div></section>`;
   countUp(document.getElementById("cnt"),semana,v=>fmtH(v));
   setTimeout(()=>app.querySelectorAll(".bar b").forEach(b=>b.style.width=b.dataset.w+"%"),120);
@@ -707,7 +707,7 @@ function renderResult(){
   const hv=document.getElementById("howVid"),hb=document.getElementById("howBar"),hs=[...app.querySelectorAll(".hstep")];
   hv.addEventListener("timeupdate",()=>{const t=hv.currentTime;let k=0;HOW.forEach((s,i)=>{if(t>=s.t)k=i});hs.forEach((b,i)=>b.classList.toggle("on",i===k));if(hv.duration)hb.style.width=(t/hv.duration*100)+"%"});
   hs.forEach(b=>b.addEventListener("click",()=>{if(!hv.src)hv.src=hv.dataset.src;hv.currentTime=+b.dataset.t;tryPlay(hv)}));
-  document.getElementById("vslOpen").addEventListener("click",openVsl);
+  mountVsl(document.getElementById("vslBox"));
   // barra fixa aparece quando a oferta sai da tela
   if("IntersectionObserver" in window){
     const offer=document.getElementById("oferta"),ctas=[...app.querySelectorAll(".cta")];
@@ -718,32 +718,19 @@ function renderResult(){
     addEventListener("scroll",onS,{passive:true});
     cleanups.push(()=>{io.disconnect();removeEventListener("scroll",onS)});
   }else buybar.classList.add("show");
-  document.getElementById("redo").addEventListener("click",()=>{answers={};nome="";go(-1)});
 }
 
-const modal=document.getElementById("vslModal"),mplayer=document.getElementById("vslPlayer");
-let lastFocus=null;
-function openVsl(){
-  lastFocus=document.activeElement;
-  app.querySelectorAll("video").forEach(v=>v.pause());
+let vturbLoaded=false;
+function mountVsl(box){
   if(VSL.vturb){
-    mplayer.innerHTML=`<vturb-smartplayer id="vid-${VSL.vturbId}" style="display:block;margin:0 auto;width:100%"><div style="position:relative;width:100%;padding:177.78% 0 0;background:#000"></div></vturb-smartplayer>`;
-    const sc=document.createElement("script");sc.src=VSL.vturbJs+"?t="+Date.now();sc.async=true;document.head.appendChild(sc);
+    box.innerHTML=`<vturb-smartplayer id="vid-${VSL.vturbId}" style="display:block;margin:0 auto;width:100%;max-width:400px"><div class="vturb-player-placeholder" style="position:relative;width:100%;padding:177.77777777777777% 0 0;z-index:0;background-color:black"></div></vturb-smartplayer>`;
+    if(!vturbLoaded){vturbLoaded=true;const sc=document.createElement("script");sc.src=VSL.vturbJs;sc.async=true;document.head.appendChild(sc)}
   }else{
-    mplayer.innerHTML=`<video src="${VSL.src}" poster="${VSL.poster}" controls autoplay playsinline></video>`;
+    box.innerHTML=`<video src="${VSL.src}" poster="${VSL.poster}" controls playsinline preload="none"></video>`;
   }
-  modal.hidden=false;document.body.style.overflow="hidden";
-  modal.querySelector(".mclose").focus();
 }
-function closeVsl(){
-  modal.hidden=true;mplayer.innerHTML="";document.body.style.overflow="";
-  if(lastFocus)lastFocus.focus({preventScroll:true});
-}
-modal.addEventListener("click",e=>{if(e.target===modal||e.target.closest(".mclose"))closeVsl()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!modal.hidden)closeVsl()});
 
 function go(n){
-  if(!modal.hidden)closeVsl();
   cleanups.forEach(f=>{try{f&&f()}catch(e){}});cleanups=[];
   document.querySelectorAll(".dots").forEach(d=>d.remove());
   step=n;updateChrome();
@@ -756,7 +743,6 @@ function go(n){
   const h=app.querySelector("#qt");
   if(h&&step!==NAME_STEP){h.setAttribute("tabindex","-1");h.focus({preventScroll:true})}
 }
-back.addEventListener("click",()=>go(step===NAME_STEP?QUESTIONS.length-1:step-1));
 document.addEventListener("keydown",e=>{
   if(step<0||step>=QUESTIONS.length||QUESTIONS[step].pause||e.target.tagName==="INPUT"||e.key.length!==1)return;
   const k=e.key.toUpperCase().charCodeAt(0)-65,b=app.querySelector(`[data-i="${k}"]`);if(b)b.click();
