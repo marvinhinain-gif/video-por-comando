@@ -48,6 +48,7 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
 html,body{background:var(--bg);color:var(--text)}
 html{overflow-x:clip}
 body{font-family:var(--f);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;text-align:center}
@@ -267,6 +268,10 @@ details p{margin:0 0 15px;color:var(--muted);font-size:14px}
 .mplayer video{width:100%;aspect-ratio:9/16;display:block;background:#000}
 .mclose{position:absolute;top:-46px;right:0;width:38px;height:38px;border-radius:50%;border:1px solid var(--line-2);background:rgba(20,20,22,.9);color:var(--text);font-size:16px;cursor:pointer}
 
+/* Conteúdo liberado após a VSL */
+.after{width:100%;display:flex;flex-direction:column;align-items:center;gap:22px}
+.after.show{animation:rise .7s var(--ease) both}
+
 /* Barra fixa */
 .buybar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(8,8,9,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line-2);
   padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));transform:translateY(110%);transition:transform .4s var(--ease)}
@@ -430,6 +435,7 @@ const PROFILES={
 };
 const SONHO={postar:"produzir muito mais vídeos",vender:"vender mais",negocio:"crescer o seu negócio",familia:"ficar com quem você ama"};
 const VSL={vturb:true,src:"m/vsl.mp4",poster:"m/capa-vsl.webp",vturbId:"6adb740834309aec6fe675ae",vturbJs:"https://scripts.converteai.net/f343e8e2-4cf6-4a8e-9218-b209b36aeeca/players/6adb740834309aec6fe675ae/v4/player.js"};
+const VSL_DELAY=90; // segundos até liberar o conteúdo abaixo da VSL
 const LEAD_WEBHOOK=""; // cole aqui a URL que recebe os leads (planilha, CRM ou automação)
 const HOW=[
   {t:0,h:"Cole o arquivo na IA",d:"Adicione o Clique Edite ao Claude seguindo o vídeo de instrução."},
@@ -644,6 +650,8 @@ function renderResult(){
 
     <div class="vsl" id="vslBox"></div>
 
+    <div class="after" id="afterVsl" hidden>
+
     <span class="badge">Seu perfil · ${prof.tag}</span>
     <p class="punch">${prof.line}</p>
     <p class="muted">Enquanto isso, ${custo.c}. Cada semana assim custa mais ${fmtH(semana)}.</p>
@@ -678,24 +686,30 @@ function renderResult(){
       <a class="cta pulse" href="${CHECKOUT}" target="_blank" rel="noopener">Garantir Agora <span class="arr">→</span></a>
       <div class="seals"><span>Acesso imediato</span><span>Pagamento único</span><span>7 dias de garantia</span></div>
     </div>
+    </div>
   </div></section>`;
-  wireSound(app);autoplayVisible(app);
-  cleanups.push(makeFlow(document.getElementById("resFlow"),reels));
-  // passos sincronizados com o vídeo guiado
-  const hv=document.getElementById("howVid"),hb=document.getElementById("howBar"),hs=[...app.querySelectorAll(".hstep")];
-  hv.addEventListener("timeupdate",()=>{const t=hv.currentTime;let k=0;HOW.forEach((s,i)=>{if(t>=s.t)k=i});hs.forEach((b,i)=>b.classList.toggle("on",i===k));if(hv.duration)hb.style.width=(t/hv.duration*100)+"%"});
-  hs.forEach(b=>b.addEventListener("click",()=>{if(!hv.src)hv.src=hv.dataset.src;hv.currentTime=+b.dataset.t;tryPlay(hv)}));
   mountVsl(document.getElementById("vslBox"));
-  // barra fixa aparece quando a oferta sai da tela
-  if("IntersectionObserver" in window){
-    const offer=document.getElementById("oferta"),ctas=[...app.querySelectorAll(".cta")];
-    const seen=new Set();
-    const io=new IntersectionObserver(es=>{es.forEach(e=>e.isIntersecting?seen.add(e.target):seen.delete(e.target));buybar.classList.toggle("show",step===RES_STEP&&seen.size===0&&scrollY>200)},{threshold:.15});
-    ctas.forEach(c=>io.observe(c));io.observe(offer);
-    const onS=()=>buybar.classList.toggle("show",step===RES_STEP&&seen.size===0&&scrollY>200);
-    addEventListener("scroll",onS,{passive:true});
-    cleanups.push(()=>{io.disconnect();removeEventListener("scroll",onS)});
-  }else buybar.classList.add("show");
+  // tudo abaixo da VSL aparece depois de VSL_DELAY segundos
+  const after=document.getElementById("afterVsl");let revealed=false;
+  const reveal=()=>{
+    if(revealed||step!==RES_STEP)return;revealed=true;
+    after.hidden=false;after.classList.add("show");
+    wireSound(after);autoplayVisible(after);
+    cleanups.push(makeFlow(document.getElementById("resFlow"),reels));
+    const hv=document.getElementById("howVid"),hb=document.getElementById("howBar"),hs=[...after.querySelectorAll(".hstep")];
+    hv.addEventListener("timeupdate",()=>{const t=hv.currentTime;let k=0;HOW.forEach((s,i)=>{if(t>=s.t)k=i});hs.forEach((b,i)=>b.classList.toggle("on",i===k));if(hv.duration)hb.style.width=(t/hv.duration*100)+"%"});
+    hs.forEach(b=>b.addEventListener("click",()=>{if(!hv.src)hv.src=hv.dataset.src;hv.currentTime=+b.dataset.t;tryPlay(hv)}));
+    // barra fixa aparece quando nenhum botão de compra está à vista
+    if("IntersectionObserver" in window){
+      const ctas=[...after.querySelectorAll(".cta"),document.getElementById("oferta")],seen=new Set();
+      const upd=()=>buybar.classList.toggle("show",step===RES_STEP&&seen.size===0&&scrollY>200);
+      const io=new IntersectionObserver(es=>{es.forEach(e=>e.isIntersecting?seen.add(e.target):seen.delete(e.target));upd()},{threshold:.15});
+      ctas.forEach(c=>io.observe(c));addEventListener("scroll",upd,{passive:true});
+      cleanups.push(()=>{io.disconnect();removeEventListener("scroll",upd)});
+    }else buybar.classList.add("show");
+  };
+  const dt=setTimeout(reveal,VSL_DELAY*1000);
+  cleanups.push(()=>clearTimeout(dt));
 }
 
 let vturbLoaded=false;
