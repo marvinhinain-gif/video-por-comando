@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Quiz Clique Edite · Vídeos prontos em um clique</title>
-<meta name="description" content="Quiz grátis de 60 segundos: descubra quantas horas você perde editando e como deixar seus vídeos prontos só pedindo para a IA.">
+<title>Quiz Clique Edite · Criativos prontos em um clique</title>
+<meta name="description" content="Quiz grátis de 60 segundos: descubra quanto tempo você perde editando criativos e como deixá-los prontos só pedindo para a IA.">
 <meta name="theme-color" content="#000000">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Seus vídeos prontos em um clique. Sem saber editar.">
-<meta property="og:description" content="Quiz grátis de 60 segundos. Descubra quantas horas a edição está roubando de você.">
+<meta property="og:title" content="Seus criativos prontos em um clique. Sem saber editar.">
+<meta property="og:description" content="Quiz grátis de 60 segundos. Descubra quantas horas a edição dos seus criativos está custando.">
 <meta property="og:image" content="https://quiz-cliqueedite.onrender.com/m/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="m/favicon.png">
@@ -105,8 +105,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .progress{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding-block:10px 9px;border-bottom:1px solid var(--line)}
 .pbar{display:grid;grid-template-columns:72px 1fr 72px;align-items:center}
 .pbar img{height:24px;width:auto;justify-self:center}
-.back{justify-self:start;background:none;border:0;color:var(--muted);font:500 13px var(--f);padding:8px 4px;cursor:pointer}
-.back:hover{color:var(--text)}
 .track{margin-top:8px;height:6px;border-radius:3px;background:var(--card-3);overflow:hidden}
 .track b{display:block;height:100%;width:0;border-radius:3px;background:var(--gold-grad);transition:width .6s var(--ease)}
 .clip{flex:1;height:6px;border-radius:3px;background:var(--card-3);overflow:hidden;position:relative}
@@ -155,7 +153,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .ask{max-width:380px;font-size:14px;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
 .ask small{display:block;font-size:11px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:2px}
 
-/* Nome */
+/* Captura (WhatsApp) */
 .namebox{width:100%;max-width:420px;display:flex;flex-direction:column;gap:8px}
 .namebox input{width:100%;text-align:center;background:var(--card);border:1.5px solid var(--line-2);border-radius:16px;padding:17px;color:var(--text);font:600 18px var(--f)}
 .namebox input::placeholder{color:var(--dim);font-weight:500}
@@ -185,22 +183,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .stat{width:100%;max-width:440px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px 18px;display:flex;flex-direction:column;gap:14px}
 .stat .num{font-size:clamp(60px,18vw,84px);line-height:.95;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
 .stat .num small{font-size:.32em;letter-spacing:-.01em;font-weight:600;color:var(--muted);margin-left:4px}
-.bars{display:flex;flex-direction:column;gap:9px;text-align:left}
-.bars .row{display:grid;grid-template-columns:64px 1fr 66px;gap:10px;align-items:center;font-size:12.5px}
-.bars em{font-style:normal;color:var(--muted)}
-.bars code{font:500 12px var(--mono);text-align:right}
-.bar{height:12px;border-radius:5px;background:var(--card-3);overflow:hidden}
-.bar b{display:block;height:100%;width:0;background:repeating-linear-gradient(135deg,#ff5a4d 0 6px,#d63a2f 6px 12px);transition:width 1.1s var(--ease)}
-.bar.g b{background:var(--gold-grad)}
 .tiny{font-size:11.5px;color:var(--dim);margin:0}
 .badge{display:inline-flex;align-items:center;gap:8px;font:600 11.5px/1.2 var(--f);letter-spacing:.1em;text-transform:uppercase;color:var(--gold-hi);padding:8px 14px;border:1px solid rgba(214,163,41,.45);border-radius:999px;background:var(--gold-soft)}
 .punch{margin:0;font-size:clamp(19px,5.2vw,24px);line-height:1.3;font-weight:600;letter-spacing:-.015em;max-width:24ch;text-wrap:balance}
 .muted{margin:0;color:var(--muted);font-size:15px;max-width:36ch;text-wrap:balance}
 .duo{width:100%;max-width:400px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.phone{position:relative;border-radius:22px;padding:5px;background:linear-gradient(160deg,#2a2a2f,#121214);box-shadow:0 0 0 1px var(--line)}
-.phone.after{box-shadow:0 24px 60px -26px rgba(214,163,41,.6),0 0 0 1px rgba(214,163,41,.45)}
-.phone .scr{position:relative;border-radius:17px;overflow:hidden;aspect-ratio:9/16;background:#0b0b0c}
-.phone video{width:100%;height:100%;object-fit:cover}
 .sound{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:2;border:0;border-radius:999px;background:rgba(0,0,0,.7);color:var(--text);font:600 11px var(--f);padding:7px 11px;cursor:pointer;white-space:nowrap}
 .sound[aria-pressed="true"]{background:var(--gold-grad);color:#1a1406}
 .steps3{width:100%;max-width:440px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -289,7 +276,6 @@ details p{margin:0 0 15px;color:var(--muted);font-size:14px}
 @media (max-width:360px){
   .cover h1{font-size:28px}
   .opt{padding:12px 34px;font-size:15px}
-  .bars .row{grid-template-columns:56px 1fr 60px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -314,9 +300,9 @@ details p{margin:0 0 15px;color:var(--muted);font-size:14px}
 <main id="app">
   <section class="col cover" id="cover">
     <img class="logo" src="m/logo.webp" alt="Clique Edite" width="98" height="26">
-    <h1>Seus vídeos prontos em um clique. <span class="gold">Sem saber editar.</span></h1>
-    <p class="sub">Basta colar o arquivo na IA, dizer “EDITE” e ter seus vídeos profissionais</p>
-    <div class="flow" id="coverFlow" aria-label="Exemplos de vídeos criados com um pedido"></div>
+    <h1>Seus criativos prontos em um clique. <span class="gold">Sem saber editar.</span></h1>
+    <p class="sub">Basta colar o arquivo na IA, dizer “EDITE” e ter criativos profissionais para seus anúncios</p>
+    <div class="flow" id="coverFlow" aria-label="Exemplos de criativos feitos com um pedido"></div>
     <div class="cta-box">
       <button class="cta pulse" id="start" type="button">Pegar comando agora <span class="arr">→</span></button>
       <p class="unlock"><span aria-hidden="true">🔓</span> Responda um quiz rápido de 60 segundos para liberar o acesso à ferramenta.</p>
@@ -346,118 +332,63 @@ const REELS=[
 ];
 
 const COVER_REELS=[
-  {v:"m/reel-dica.mp4",p:"m/reel-dica.webp",t:"Reels de dica"},
-  {v:"m/reel-apostilas.mp4",p:"m/reel-apostilas.webp",t:"Vitrine de produtos"},
   {v:"m/relogio.mp4",p:"m/relogio.webp",t:"Lançamento de produto"},
-  {v:"m/reel-ia-gratis.mp4",p:"m/reel-ia-gratis.webp",t:"Conteúdo animado"},
-  {v:"m/reel-empresa.mp4",p:"m/reel-empresa.webp",t:"Apresentação da empresa"},
-  {v:"m/depois.mp4",p:"m/depois.webp",t:"Efeitos e legendas"},
+  {v:"m/reel-apostilas.mp4",p:"m/reel-apostilas.webp",t:"Vitrine de produtos"},
   {v:"m/app.mp4",p:"m/app.webp",t:"Lançamento de app"},
+  {v:"m/reel-ia-gratis.mp4",p:"m/reel-ia-gratis.webp",t:"Conteúdo animado"},
+  {v:"m/reel-dica.mp4",p:"m/reel-dica.webp",t:"Reels de dica"},
+  {v:"m/depois.mp4",p:"m/depois.webp",t:"Efeitos e legendas"},
+  {v:"m/reel-empresa.mp4",p:"m/reel-empresa.webp",t:"Apresentação da empresa"},
   {v:"m/reel-bastidores.mp4",p:"m/reel-bastidores.webp",t:"Bastidores do negócio"}
 ];
 
 const QUESTIONS=[
-  {id:"objetivo",type:"video",title:"O que você mais precisa criar em vídeo hoje?",insight:"Conteúdo, anúncio ou apresentação: quem não está em vídeo fica para trás.",
+  {id:"tipo",type:"video",title:"Que tipo de criativo você mais precisa hoje?",insight:"Quem testa mais criativos encontra o anúncio campeão mais rápido.",
    opts:[
-    {t:"Conteúdo para redes",s:"Reels, TikTok e Shorts",v:"social",vid:"m/reel-dica.mp4",p:"m/reel-dica.webp"},
-    {t:"Anúncios que vendem",s:"Criativos para tráfego pago",v:"ads",vid:"m/q-anuncio.mp4",p:"m/q-anuncio.webp"},
-    {t:"Apresentação da empresa",s:"Institucional, pitch e serviços",v:"company",vid:"m/q-empresa.mp4",p:"m/q-empresa.webp"},
-    {t:"Ainda não sei",s:"Quero aprender do zero",v:"zero",vid:"m/q-zero.mp4",p:"m/q-zero.webp"}]},
-  {id:"tempo",title:"Seja sincero: quanto tempo você leva para editar 1 minuto de vídeo?",insight:"Cortar, legendar, colocar texto e efeito. Tudo isso conta.",
+    {t:"Criativo de produto",s:"Mostrar e vender o produto",v:"produto",vid:"m/q-anuncio.mp4",p:"m/q-anuncio.webp"},
+    {t:"Você falando (UGC)",s:"Gancho, fala e CTA",v:"ugc",vid:"m/reel-dica.mp4",p:"m/reel-dica.webp"},
+    {t:"Criativo animado",s:"Motion e texto na tela",v:"motion",vid:"m/q-empresa.mp4",p:"m/q-empresa.webp"},
+    {t:"Ainda não sei",s:"Quero descobrir o que converte",v:"zero",vid:"m/q-zero.mp4",p:"m/q-zero.webp"}]},
+  {id:"freq",title:"Quantos criativos novos por semana você colocaria no ar se editar fosse fácil?",insight:"Criativo cansado é verba de tráfego indo embora.",
+   opts:[{t:"1 a 2 criativos",v:1.5},{t:"3 a 5 criativos",v:4},{t:"6 a 10 criativos",v:8},{t:"Mais de 10",v:12}]},
+  {id:"tempo",title:"Seja sincero: quanto tempo você leva para editar 1 criativo?",insight:"Cortar, legendar, colocar gancho, texto e CTA. Tudo isso conta.",
    opts:[
     {t:"Menos de 30 minutos",v:.4},
     {t:"De 30 minutos a 1 hora",v:.75},
     {t:"De 1 a 3 horas",v:2},
     {t:"Mais de 3 horas",v:3.5},
-    {t:"Nem termino",s:"Desisto no meio do caminho",v:3,desiste:true}]},
-  {id:"freq",title:"Quantos vídeos por semana você faria se editar não fosse problema?",insight:"Quem produz mais, testa mais e aparece mais.",
-   opts:[{t:"1 a 2 vídeos",v:1.5},{t:"3 a 4 vídeos",v:3.5},{t:"5 a 6 vídeos",v:5.5},{t:"Um por dia, ou mais",v:7}],
-   by:{
-    social:{title:"Quantos vídeos por semana você postaria se editar não fosse problema?",insight:"O algoritmo recompensa frequência, não perfeição."},
-    ads:{title:"Quantos criativos novos por semana você colocaria no ar se editar fosse fácil?",insight:"Quem testa mais criativos encontra o anúncio campeão mais rápido.",
-      opts:[{t:"1 a 2 criativos",v:1.5},{t:"3 a 4 criativos",v:3.5},{t:"5 a 6 criativos",v:5.5},{t:"7 ou mais",v:7}]},
-    company:{title:"Quantos vídeos por semana sua empresa precisaria para se apresentar bem?",insight:"Apresentação, serviço, bastidor, depoimento: cada vídeo é um vendedor trabalhando 24 horas."}
-   }},
+    {t:"Nem termino",s:"Desisto no meio do caminho",v:3}]},
   {pause:true},
-  {id:"trava",title:"Em que parte da edição você trava toda vez?",insight:"Descobrir o gargalo é o primeiro passo para acabar com ele.",
+  {id:"trava",title:"O que mais trava seus criativos hoje?",insight:"Descobrir o gargalo é o primeiro passo para acabar com ele.",
    opts:[
-    {t:"Cortar erros, pausas e repetições",v:"cortes"},
-    {t:"Legendas e textos na tela",v:"legendas"},
-    {t:"Deixar com cara profissional",s:"Cenas, efeitos e ritmo",v:"efeitos"},
-    {t:"Não sei nem por onde começar",v:"comeco"}]},
-  {id:"custo",title:"O que acontece quando você passa dias sem postar?",insight:"Silêncio no perfil também tem custo. Ele só não aparece na fatura.",
-   opts:[
-    {t:"Meu alcance despenca",v:"alcance",c:"seu alcance cai"},
-    {t:"Perco clientes para o concorrente",v:"clientes",c:"seus clientes vão para o concorrente"},
-    {t:"Meu perfil parece abandonado",v:"perfil",c:"seu perfil parece abandonado"},
-    {t:"Nunca tinha pensado nisso",v:"nunca",c:"você perde espaço sem perceber"}],
-   by:{
-    ads:{title:"O que acontece quando seus anúncios ficam sem criativo novo?",insight:"Criativo cansado é verba de tráfego indo embora.",
-      opts:[
-       {t:"O custo por venda sobe",v:"cpa",c:"seu custo por venda sobe"},
-       {t:"O público cansa e para de clicar",v:"fadiga",c:"seu público para de clicar"},
-       {t:"Paro de anunciar",v:"para",c:"suas vendas param"},
-       {t:"Pago caro para alguém editar",v:"caro",c:"você paga caro por cada criativo"}]},
-    company:{title:"O que acontece quando sua empresa não tem bons vídeos?",insight:"O cliente decide em segundos se confia em você.",
-      opts:[
-       {t:"Passa menos confiança",v:"confianca",c:"sua empresa passa menos confiança"},
-       {t:"O cliente escolhe o concorrente",v:"concorrente",c:"o cliente escolhe o concorrente"},
-       {t:"A apresentação fica amadora",v:"amador",c:"sua apresentação parece amadora"},
-       {t:"Dependo de agência cara",v:"agencia",c:"você depende de agência cara"}]}
-   }},
-  {id:"galeria",title:"Quantos vídeos gravados estão parados na sua galeria agora?",insight:"Cada vídeo parado é uma venda ou um seguidor que ninguém viu.",
-   opts:[{t:"Nenhum, uso tudo",v:0},{t:"De 1 a 5",v:3},{t:"De 6 a 20",v:12},{t:"Perdi a conta",v:25}],
-   by:{
-    social:{insight:"Cada vídeo parado é um seguidor que você não conquistou."},
-    ads:{insight:"Cada vídeo parado é um anúncio que nunca rodou."},
-    company:{insight:"Cada vídeo parado é um cliente que não conheceu sua empresa."}
-   }},
-  {id:"ia",title:"Você já usa IA para trabalhar por você?",insight:"Quem aprende a pedir para a IA ganha horas toda semana.",
-   opts:[
-    {t:"Sim, uso o Claude",v:"claude"},
-    {t:"Uso outra IA",s:"ChatGPT, Gemini…",v:"outra"},
-    {t:"Já testei, mas não para vídeo",v:"testou"},
-    {t:"Nunca usei",v:"nunca"}]},
-  {id:"sonho",title:"Se a edição sumisse da sua rotina amanhã, o que você faria com esse tempo?",
-   opts:[
-    {t:"Produziria muito mais vídeos",v:"postar"},
-    {t:"Venderia mais e atenderia clientes",v:"vender"},
-    {t:"Focaria em crescer o negócio",v:"negocio"},
-    {t:"Ficaria com a família e os amigos",v:"familia"}]}
+    {t:"Não sei que gancho usar",v:"gancho",tag:"Caçador de Gancho",line:"Você grava, mas o começo não prende. A IA cria ganchos diferentes para você testar em segundos.",c:"seus anúncios perdem o público nos primeiros segundos"},
+    {t:"Meus criativos cansam rápido",v:"fadiga",tag:"Refém da Fadiga",line:"Seus anúncios morrem rápido porque falta volume. Com um pedido você gera variações novas toda semana.",c:"seu custo por venda sobe"},
+    {t:"Demoro muito para editar",v:"tempo",tag:"Editor Sobrecarregado",line:"A edição está engolindo o tempo que era para testar. Você pede, a IA edita, você aprova.",c:"você testa menos e aprende mais devagar"},
+    {t:"Pago caro para alguém editar",v:"caro",tag:"Dependente de Editor",line:"Cada criativo custa caro e demora para voltar. Com o Clique Edite você faz na hora, sem esperar ninguém.",c:"cada criativo novo custa caro"}]}
 ];
-const QN=QUESTIONS.filter(q=>!q.pause).length;
 
-const PROFILES={
-  cortes:{tag:"Perfeccionista do Corte",line:"Você gasta mais tempo caçando erro do que criando. Isso se resolve com uma frase para a IA."},
-  legendas:{tag:"Refém da Legenda",line:"Legenda e texto na tela estão comendo o seu tempo. Você pede, a IA faz, você aprova."},
-  efeitos:{tag:"Criador Exigente",line:"Você sabe o padrão que quer. Falta quem execute. Você descreve, a IA monta com cara profissional."},
-  comeco:{tag:"Criador da Galeria",line:"Seus vídeos existem. Só não saem do celular. O passo a passo te leva do primeiro pedido ao vídeo pronto."}
-};
-const SONHO={postar:"produzir muito mais vídeos",vender:"vender mais",negocio:"crescer o seu negócio",familia:"ficar com quem você ama"};
 const VSL={vturb:true,src:"m/vsl.mp4",poster:"m/capa-vsl.webp",vturbId:"6adb740834309aec6fe675ae",vturbJs:"https://scripts.converteai.net/f343e8e2-4cf6-4a8e-9218-b209b36aeeca/players/6adb740834309aec6fe675ae/v4/player.js"};
 const VSL_DELAY=90; // segundos até liberar o conteúdo abaixo da VSL
 const LEAD_WEBHOOK=""; // cole aqui a URL que recebe os leads (planilha, CRM ou automação)
 const HOW=[
   {t:0,h:"Cole o arquivo na IA",d:"Adicione o Clique Edite ao Claude seguindo o vídeo de instrução."},
-  {t:7,h:"Diga “EDITE” e o que quer criar",d:"Por texto ou por voz, do jeito que você fala."},
+  {t:7,h:"Diga “EDITE” e o criativo que quer",d:"Por texto ou por voz: gancho, legenda, texto e CTA."},
   {t:13.2,h:"A IA cria, você aprova",d:"Peça ajustes na mesma conversa até ficar do seu jeito."}
 ];
 const FAQ=[
   ["Preciso saber editar?","Não. Você só escreve ou fala o que quer. A IA ajuda e você aprova."],
-  ["Funciona por áudio?","Sim. Se o seu celular ou computador digita por voz, é só falar o pedido."],
+  ["Serve para criativos de anúncio?","Sim. Você pede gancho, legenda, texto na tela e CTA, e cria variações para testar."],
   ["E se eu não gostar?","Você tem 7 dias de garantia incondicional. Pede o reembolso e recebe 100% de volta."]
 ];
 
-let step=-1,answers={},nome="",whats="",cleanups=[];
+let step=-1,answers={},whats="",cleanups=[];
 const app=document.getElementById("app"),prog=document.getElementById("prog"),track=document.getElementById("track"),
       buybar=document.getElementById("buybar");
 const coverHTML=app.innerHTML;
-const NAME_STEP=QUESTIONS.length,LOAD_STEP=NAME_STEP+1,RES_STEP=NAME_STEP+2;
+// telas: capa (-1) · perguntas e pausa (0..4) · captura (5) · vendas (6)
+const CAP_STEP=QUESTIONS.length,RES_STEP=CAP_STEP+1;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const qIndex=i=>QUESTIONS.slice(0,i+1).filter(q=>!q.pause).length;
-const goal=()=>answers.objetivo!=null?QUESTIONS[0].opts[answers.objetivo].v:"zero";
-const rq=q=>q.by&&q.by[goal()]?Object.assign({},q,q.by[goal()]):q;
-const val=id=>rq(QUESTIONS.find(x=>x.id===id)).opts[answers[id]];
+const val=id=>QUESTIONS.find(x=>x.id===id).opts[answers[id]];
 const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const tryPlay=v=>{const p=v.play();if(p&&p.catch)p.catch(()=>{})};
 
@@ -523,18 +454,20 @@ function setupCover(){
 function updateChrome(){
   const inFlow=step>=0&&step<RES_STEP;
   prog.hidden=!inFlow;
-  const isPause=QUESTIONS[step]?.pause;
-  const done=step>=QUESTIONS.length?QN:(isPause?qIndex(step):qIndex(step)-1);
-  const pct=step<0?0:step>=QUESTIONS.length?100:Math.round((done+(isPause?0:.5))/QN*100);
+  // telas 2–7 (passos 0..5): a barra enche conforme a tela atual
+  const pct=inFlow?Math.round((step+1)/(CAP_STEP+1)*100):step<0?0:100;
   document.getElementById("tfill").style.width=Math.max(4,pct)+"%";track.setAttribute("aria-valuenow",pct);
-  const res=step===RES_STEP;
-  buybar.setAttribute("aria-hidden",String(!res));
-  buybar.querySelector("a").tabIndex=res?0:-1;
-  if(!res)buybar.classList.remove("show");
+  setBuybar(false);
+}
+// a barra fixa só fica visível e acessível junto com a classe .show
+function setBuybar(on){
+  buybar.classList.toggle("show",on);
+  buybar.setAttribute("aria-hidden",String(!on));
+  buybar.querySelector("a").tabIndex=on?0:-1;
 }
 
 function renderQuestion(){
-  const q=rq(QUESTIONS[step]),chosen=answers[q.id];
+  const q=QUESTIONS[step],chosen=answers[q.id];
   const body=q.type==="video"
     ?`<div class="vgrid">${q.opts.map((o,i)=>`<button type="button" class="vopt${chosen===i?" sel":""}" data-i="${i}" id="${q.id}-${i}" aria-label="${o.t}: ${o.s}"><video data-src="${o.vid}" poster="${o.p}" muted loop playsinline preload="none"></video><span class="lb">${o.t}<small>${o.s}</small></span><span class="chk">✓</span></button>`).join("")}</div>`
     :`<div class="opts">${q.opts.map((o,i)=>`<button type="button" class="opt${chosen===i?" sel":""}" data-i="${i}" id="${q.id}-${i}">${o.t}${o.s?`<small>${o.s}</small>`:""}</button>`).join("")}</div>`;
@@ -546,7 +479,7 @@ function renderQuestion(){
     answers[q.id]=+b.dataset.i;
     app.querySelectorAll("[data-i]").forEach(x=>x.classList.toggle("sel",x===b));
     if(navigator.vibrate)try{navigator.vibrate(8)}catch(e){}
-    setTimeout(()=>go(step+1),280);
+    const t=setTimeout(()=>go(step+1),280);cleanups.push(()=>clearTimeout(t));
   }));
 }
 
@@ -562,22 +495,25 @@ function renderPause(){
   const {semana,mes}=hours();
   app.innerHTML=`<section class="col"><div class="q">
     <h2 id="qt">Você está entregando para a edição</h2>
-    <div class="clock"><strong class="gold" id="cnt">0h</strong><span>por semana · ${Math.round(mes)}h por mês</span></div>
-    <p class="insight">Horas que poderiam virar conteúdo, clientes e vendas. Olha o que um único pedido faz:</p>
+    <div class="clock"><strong class="gold" id="cnt">≈0h</strong><span>por semana · ≈${Math.round(mes)}h por mês</span></div>
+    <p class="tiny">Estimativa com base nas suas respostas.</p>
+    <p class="insight">Horas que poderiam estar testando novos ganchos e baixando seu custo por venda.</p>
     <div class="cuts">
       <figure><div class="scr"><span class="chip raw">Bruto</span><video data-src="m/antes.mp4" poster="m/antes.webp" muted loop playsinline preload="none"></video><button class="sound" type="button" aria-pressed="false">🔇 Ouvir</button></div><figcaption>Erros e pausas</figcaption></figure>
       <figure><div class="scr"><span class="chip ok">Editado</span><video data-src="m/depois.mp4" poster="m/depois.webp" muted loop playsinline preload="none"></video><button class="sound" type="button" aria-pressed="false">🔇 Ouvir</button></div><figcaption>Pronto para postar</figcaption></figure>
     </div>
-    <p class="ask"><small>O pedido</small>“EDITE: corta os erros e as pausas, coloca legenda e efeitos.”</p>
+    <p class="ask"><small>O pedido</small>“EDITE: corta os erros, coloca legenda, um gancho forte e CTA no final.”</p>
     <button class="cta" id="cont" type="button" style="max-width:420px">Continuar <span class="arr">→</span></button>
   </div></section>`;
-  countUp(document.getElementById("cnt"),semana,fmtH);
+  countUp(document.getElementById("cnt"),semana,h=>"≈"+fmtH(h));
   wireSound(app);autoplayVisible(app);
   document.getElementById("cont").addEventListener("click",()=>go(step+1));
 }
 
 function fmtPhone(v){
-  const d=v.replace(/\D/g,"").slice(0,11);
+  let d=v.replace(/\D/g,"");
+  if(d.length>11&&d.startsWith("55"))d=d.slice(2); // colado com +55
+  d=d.slice(0,11);
   if(d.length<=2)return d.length?"("+d:"";
   if(d.length<=6)return `(${d.slice(0,2)}) ${d.slice(2)}`;
   if(d.length<=10)return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
@@ -587,78 +523,70 @@ function sendLead(){
   if(!LEAD_WEBHOOK)return;
   const r={};QUESTIONS.forEach(q=>{if(!q.pause&&answers[q.id]!=null)r[q.id]=val(q.id).t});
   const {mes}=hours();
-  const body=JSON.stringify({nome,whatsapp:whats,horas_mes:Math.round(mes),respostas:r,pagina:location.href,data:new Date().toISOString()});
+  const body=JSON.stringify({whatsapp:whats,horas_mes:Math.round(mes),respostas:r,pagina:location.href,data:new Date().toISOString()});
   try{fetch(LEAD_WEBHOOK,{method:"POST",mode:"no-cors",keepalive:true,headers:{"Content-Type":"text/plain;charset=utf-8"},body})}catch(e){}
 }
-function renderName(){
+function renderCapture(){
   app.innerHTML=`<section class="col"><div class="q">
-    <h2 id="qt">Digite seu nome e seu número para receber o arquivo de edição</h2>
+    <h2 id="qt">Digite seu WhatsApp para receber o arquivo de edição</h2>
     <p class="insight">Iremos personalizar a skill de acordo com seu perfil.</p>
     <form class="namebox" id="leadForm" novalidate>
-      <label for="nome" class="flabel">Seu nome</label>
-      <input id="nome" type="text" autocomplete="given-name" autocapitalize="words" enterkeyhint="next" maxlength="40" placeholder="Digite seu nome" value="${esc(nome)}" required>
       <label for="whats" class="flabel">Seu WhatsApp</label>
-      <input id="whats" type="tel" inputmode="numeric" autocomplete="tel-national" enterkeyhint="go" maxlength="16" placeholder="(11) 99999-9999" value="${esc(whats)}" required>
+      <input id="whats" type="tel" inputmode="numeric" autocomplete="tel-national" enterkeyhint="go" maxlength="20" placeholder="(11) 99999-9999" value="${esc(whats)}" required>
       <p class="err" id="err" role="alert"></p>
       <button class="cta pulse" id="see" type="submit" aria-disabled="true">Acesso a Skill de Edição <span class="arr">→</span></button>
     </form>
     <p class="lock">🔒 Seus dados estão protegidos. Nada de spam.</p>
   </div></section>`;
-  const f=document.getElementById("leadForm"),n=document.getElementById("nome"),w=document.getElementById("whats"),btn=document.getElementById("see"),err=document.getElementById("err");
-  const okN=()=>n.value.trim().replace(/[^\p{L}]/gu,"").length>=2;
+  const f=document.getElementById("leadForm"),w=document.getElementById("whats"),btn=document.getElementById("see"),err=document.getElementById("err");
   const okW=()=>{const d=w.value.replace(/\D/g,"");return(d.length===10||d.length===11)&&+d.slice(0,2)>=11};
-  const sync=()=>{btn.setAttribute("aria-disabled",String(!(okN()&&okW())));if(okN())n.removeAttribute("aria-invalid");if(okW())w.removeAttribute("aria-invalid");if(okN()&&okW())err.textContent=""};
-  n.addEventListener("input",sync);
+  const sync=()=>{btn.setAttribute("aria-disabled",String(!okW()));if(okW()){w.removeAttribute("aria-invalid");err.textContent=""}};
   w.addEventListener("input",()=>{w.value=fmtPhone(w.value);sync()});
-  n.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();w.focus()}});
   f.addEventListener("submit",e=>{
     e.preventDefault();
-    if(!okN()){err.textContent="Digite seu nome para receber o arquivo.";n.setAttribute("aria-invalid","true");n.focus();return}
     if(!okW()){err.textContent="Digite um WhatsApp válido com DDD.";w.setAttribute("aria-invalid","true");w.focus();return}
-    const first=n.value.trim().split(/\s+/)[0].slice(0,24);nome=first.charAt(0).toUpperCase()+first.slice(1);
-    whats=w.value;sendLead();go(LOAD_STEP);
+    whats=w.value;sendLead();renderAdjusting();
   });
   sync();
-  setTimeout(()=>(okN()?w:n).focus({preventScroll:true}),350);
+  const ft=setTimeout(()=>w.focus({preventScroll:true}),350);cleanups.push(()=>clearTimeout(ft));
 }
-
-function renderLoading(){
+// depois do envio, a própria tela de captura vira a animação "Ajustando sua ferramenta…"
+function renderAdjusting(){
+  runCleanups();
   app.innerHTML=`<section class="col"><div class="loading">
     <div class="ring"><svg viewBox="0 0 110 110"><circle class="bgc" cx="55" cy="55" r="48"/><circle class="fgc" cx="55" cy="55" r="48"/></svg><b id="pct">0%</b></div>
-    <h2 id="qt" style="margin:0;font-size:22px;letter-spacing:-.02em">Ajustando sua ferramenta, ${esc(nome)}…</h2>
-    <ul class="checks"><li><i>✓</i>Ajustando o comando ao seu objetivo</li><li><i>✓</i>Configurando a edição para o seu ritmo</li><li><i>✓</i>Preparando sua Skill de Edição</li></ul>
+    <h2 id="qt" tabindex="-1" style="margin:0;font-size:22px;letter-spacing:-.02em">Ajustando sua ferramenta…</h2>
+    <ul class="checks"><li><i>✓</i>Ajustando o comando aos seus criativos</li><li><i>✓</i>Configurando a edição para o seu ritmo</li><li><i>✓</i>Preparando sua Skill de Edição</li></ul>
   </div></section>`;
-  const pct=document.getElementById("pct"),lis=app.querySelectorAll(".checks li"),t0=performance.now();
-  (function f(t){const p=Math.min(1,(t-t0)/3000);pct.textContent=Math.round(p*100)+"%";if(p<1&&step===LOAD_STEP)requestAnimationFrame(f)})(t0);
+  window.scrollTo(0,0);
+  document.getElementById("qt").focus({preventScroll:true});
+  const pct=document.getElementById("pct"),lis=app.querySelectorAll(".checks li"),t0=performance.now();let live=true;
+  (function f(t){const p=Math.min(1,(t-t0)/3000);pct.textContent=Math.round(p*100)+"%";if(p<1&&live)requestAnimationFrame(f)})(t0);
   const ts=[700,1600,2500].map((ms,k)=>setTimeout(()=>lis[k].classList.add("done"),ms));
-  ts.push(setTimeout(()=>{if(step===LOAD_STEP)go(RES_STEP)},3300));
-  cleanups.push(()=>ts.forEach(clearTimeout));
+  ts.push(setTimeout(()=>{if(live&&step===CAP_STEP)go(RES_STEP)},3200));
+  cleanups.push(()=>{live=false;ts.forEach(clearTimeout)});
 }
 
 function renderResult(){
-  const obj=val("objetivo"),tempo=val("tempo"),trava=val("trava"),custo=val("custo"),gal=val("galeria"),sonho=val("sonho");
+  const trava=val("trava");
   const {semana,mes}=hours(),H=Math.max(1,Math.round(mes));
-  const comIA=Math.max(.25,tempo.v*.15)*val("freq").v*4.3;
-  const prof=PROFILES[trava.v],N=esc(nome);
   const porHora=(97/H).toFixed(2).replace(".",",");
-  const cat=obj.v==="zero"?"social":obj.v;
-  const reels=[...REELS.filter(r=>r.c===cat),...REELS.filter(r=>r.c!==cat)];
-  const galTxt=gal.v>0?` E tem ${gal.v>=25?"dezenas de":gal.v} vídeo${gal.v===1?"":"s"} morrendo na sua galeria.`:"";
+  const reels=[...REELS.filter(r=>r.c==="ads"),...REELS.filter(r=>r.c!=="ads")];
 
   app.innerHTML=`<section class="col"><div class="sales">
-    <h2 class="hero" id="qt">${N}, edite seus vídeos com <span class="gold">apenas um clique.</span></h2>
+    <h2 class="hero" id="qt">Edite seus criativos com <span class="gold">apenas um clique.</span></h2>
 
     <div class="vsl" id="vslBox"></div>
 
     <div class="after" id="afterVsl" hidden>
 
-    <span class="badge">Seu perfil · ${prof.tag}</span>
-    <p class="punch">${prof.line}</p>
-    <p class="muted">Enquanto isso, ${custo.c}. Cada semana assim custa mais ${fmtH(semana)}.</p>
+    <span class="badge">Seu perfil · ${trava.tag}</span>
+    <p class="punch">${trava.line}</p>
+    <p class="muted">Enquanto isso, ${trava.c}. Cada semana assim custa mais ≈${fmtH(semana)}.</p>
 
     <div class="how">
       <span class="eyebrow">Como funciona</span>
-      <h3>Comece a editar seus vídeos com IA em apenas <span class="gold">3 passos simples.</span></h3>
+      <h3>Comece a editar seus criativos com IA em apenas <span class="gold">3 passos simples.</span></h3>
       <div class="hvid"><video id="howVid" data-src="m/guiado.mp4" poster="m/guiado.webp" muted loop playsinline preload="none"></video><span class="hprog"><b id="howBar"></b></span></div>
       <div class="hsteps">${HOW.map((s,i)=>`<button type="button" class="hstep${i?"":" on"}" data-t="${s.t}"><span class="n">${i+1}</span><span>${s.h}<small>${s.d}</small></span></button>`).join("")}</div>
       <p class="tiny">Sem programação e sem precisar saber editar.</p>
@@ -672,12 +600,12 @@ function renderResult(){
         <li><i>✓</i>Mapa Mental de Criação de Vídeos</li>
       </ul>
       <div class="price"><span>Pagamento único</span><strong>R$ 97</strong><span>ou 12x de R$ 10 no cartão</span></div>
-      ${H>=4?`<p class="perhour">R$ 97 ÷ ${H}h de edição por mês = R$ ${porHora} por hora.</p>`:""}
+      ${H>=4?`<p class="perhour">R$ 97 ÷ ≈${H}h de edição por mês ≈ R$ ${porHora} por hora.</p>`:""}
       <a class="cta pulse" href="${CHECKOUT}" target="_blank" rel="noopener">Quero editar com IA <span class="arr">→</span></a>
       <div class="guar"><div class="seal"><span><b>7</b><small>dias</small></span></div><p><b style="color:var(--text)">Risco zero.</b> Não funcionou na sua IA ou achou complicado? Devolvemos 100% do seu dinheiro.</p></div>
     </div>
 
-    <span class="eyebrow" style="margin-top:8px">Tudo isso sai de um pedido</span>
+    <span class="eyebrow" style="margin-top:8px">Criativos que saem de um pedido</span>
     <div class="flow" id="resFlow" style="height:clamp(230px,34svh,360px)"></div>
 
     <div class="faq">${FAQ.map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join("")}</div>
@@ -702,11 +630,11 @@ function renderResult(){
     // barra fixa aparece quando nenhum botão de compra está à vista
     if("IntersectionObserver" in window){
       const ctas=[...after.querySelectorAll(".cta"),document.getElementById("oferta")],seen=new Set();
-      const upd=()=>buybar.classList.toggle("show",step===RES_STEP&&seen.size===0&&scrollY>200);
+      const upd=()=>setBuybar(step===RES_STEP&&seen.size===0&&scrollY>200);
       const io=new IntersectionObserver(es=>{es.forEach(e=>e.isIntersecting?seen.add(e.target):seen.delete(e.target));upd()},{threshold:.15});
       ctas.forEach(c=>io.observe(c));addEventListener("scroll",upd,{passive:true});
       cleanups.push(()=>{io.disconnect();removeEventListener("scroll",upd)});
-    }else buybar.classList.add("show");
+    }else setBuybar(true);
   };
   const dt=setTimeout(reveal,VSL_DELAY*1000);
   cleanups.push(()=>clearTimeout(dt));
@@ -722,18 +650,18 @@ function mountVsl(box){
   }
 }
 
+function runCleanups(){cleanups.forEach(f=>{try{f&&f()}catch(e){}});cleanups=[]}
 function go(n){
-  cleanups.forEach(f=>{try{f&&f()}catch(e){}});cleanups=[];
+  runCleanups();
   document.querySelectorAll(".dots").forEach(d=>d.remove());
   step=n;updateChrome();
   if(step<0){app.innerHTML=coverHTML;setupCover()}
   else if(step<QUESTIONS.length){QUESTIONS[step].pause?renderPause():renderQuestion()}
-  else if(step===NAME_STEP)renderName();
-  else if(step===LOAD_STEP)renderLoading();
+  else if(step===CAP_STEP)renderCapture();
   else renderResult();
   window.scrollTo(0,0);
   const h=app.querySelector("#qt");
-  if(h&&step!==NAME_STEP){h.setAttribute("tabindex","-1");h.focus({preventScroll:true})}
+  if(h&&step!==CAP_STEP){h.setAttribute("tabindex","-1");h.focus({preventScroll:true})}
 }
 document.addEventListener("keydown",e=>{
   if(step<0||step>=QUESTIONS.length||QUESTIONS[step].pause||e.target.tagName==="INPUT"||e.key.length!==1)return;
@@ -743,7 +671,7 @@ setupCover();
 </script>
 
 <script>
-(function(){var p=new URLSearchParams(location.search),k=new URLSearchParams();p.forEach(function(v,n){if(/^(utm_|src|sck|fbclid|gclid)/i.test(n))k.set(n,v)});if(![...k.keys()].length)return;
+(function(){var p=new URLSearchParams(location.search),k=new URLSearchParams();p.forEach(function(v,n){if(/^(utm_[a-z0-9_]+|src|sck|fbclid|gclid)$/i.test(n))k.set(n,v)});if(![...k.keys()].length)return;
 var fix=function(){document.querySelectorAll('a[href*="pay.cakto.com.br"]').forEach(function(a){try{var u=new URL(a.href);k.forEach(function(v,n){u.searchParams.set(n,v)});a.href=u.toString()}catch(e){}})};
 new MutationObserver(fix).observe(document.body,{childList:true,subtree:true});fix()})();
 </script>
