@@ -153,14 +153,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .ask{max-width:380px;font-size:14px;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
 .ask small{display:block;font-size:11px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:2px}
 
-/* Captura (WhatsApp) */
-.namebox{width:100%;max-width:420px;display:flex;flex-direction:column;gap:8px}
-.namebox input{width:100%;text-align:center;background:var(--card);border:1.5px solid var(--line-2);border-radius:16px;padding:17px;color:var(--text);font:600 18px var(--f)}
-.namebox input::placeholder{color:var(--dim);font-weight:500}
-.namebox input:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 4px var(--gold-soft)}
-.namebox input[aria-invalid="true"]{border-color:var(--red)}
-.err{min-height:20px;font-size:13px;color:#ff8a80;margin:0}
-.lock{font-size:12.5px;color:var(--dim);margin:0}
 
 /* Carregando */
 .loading{display:flex;flex-direction:column;align-items:center;gap:24px;padding-block:56px;animation:rise .4s var(--ease) both}
@@ -220,8 +212,6 @@ details p{margin:0 0 15px;color:var(--muted);font-size:14px}
 .redo{background:none;border:0;color:var(--dim);font:500 13px var(--f);text-decoration:underline;cursor:pointer;padding:8px}
 
 /* Lead */
-.flabel{font:600 11.5px/1.2 var(--f);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
-.namebox .cta{margin-top:4px}
 
 /* Como funciona em 3 passos */
 .how{width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 16px 18px;border-radius:26px;border:1px solid var(--line);background:linear-gradient(180deg,var(--card-2),var(--card))}
@@ -364,12 +354,17 @@ const QUESTIONS=[
     {t:"Não sei que gancho usar",v:"gancho",tag:"Caçador de Gancho",line:"Você grava, mas o começo não prende. A IA cria ganchos diferentes para você testar em segundos.",c:"seus anúncios perdem o público nos primeiros segundos"},
     {t:"Meus criativos cansam rápido",v:"fadiga",tag:"Refém da Fadiga",line:"Seus anúncios morrem rápido porque falta volume. Com um pedido você gera variações novas toda semana.",c:"seu custo por venda sobe"},
     {t:"Demoro muito para editar",v:"tempo",tag:"Editor Sobrecarregado",line:"A edição está engolindo o tempo que era para testar. Você pede, a IA edita, você aprova.",c:"você testa menos e aprende mais devagar"},
-    {t:"Pago caro para alguém editar",v:"caro",tag:"Dependente de Editor",line:"Cada criativo custa caro e demora para voltar. Com o Clique Edite você faz na hora, sem esperar ninguém.",c:"cada criativo novo custa caro"}]}
+    {t:"Pago caro para alguém editar",v:"caro",tag:"Dependente de Editor",line:"Cada criativo custa caro e demora para voltar. Com o Clique Edite você faz na hora, sem esperar ninguém.",c:"cada criativo novo custa caro"}]},
+  {id:"meta",last:true,title:"Se você tivesse criativos novos toda semana, o que mudaria primeiro?",insight:"Quem tem volume de criativo controla o próprio custo por venda.",
+   opts:[
+    {t:"Meu custo por venda cairia",v:"cpa",w:"baixar seu custo por venda"},
+    {t:"Eu escalaria a verba com segurança",v:"escala",w:"escalar a verba com segurança"},
+    {t:"Testaria mais ofertas e públicos",v:"testes",w:"testar mais ofertas e públicos"},
+    {t:"Pararia de depender de editor",v:"autonomia",w:"parar de depender de editor"}]}
 ];
 
 const VSL={vturb:true,src:"m/vsl.mp4",poster:"m/capa-vsl.webp",vturbId:"6adb740834309aec6fe675ae",vturbJs:"https://scripts.converteai.net/f343e8e2-4cf6-4a8e-9218-b209b36aeeca/players/6adb740834309aec6fe675ae/v4/player.js"};
 const VSL_DELAY=90; // segundos até liberar o conteúdo abaixo da VSL
-const LEAD_WEBHOOK=""; // cole aqui a URL que recebe os leads (planilha, CRM ou automação)
 const HOW=[
   {t:0,h:"Cole o arquivo na IA",d:"Adicione o Clique Edite ao Claude seguindo o vídeo de instrução."},
   {t:7,h:"Diga “EDITE” e o criativo que quer",d:"Por texto ou por voz: gancho, legenda, texto e CTA."},
@@ -381,13 +376,12 @@ const FAQ=[
   ["E se eu não gostar?","Você tem 7 dias de garantia incondicional. Pede o reembolso e recebe 100% de volta."]
 ];
 
-let step=-1,answers={},whats="",cleanups=[];
+let step=-1,answers={},cleanups=[];
 const app=document.getElementById("app"),prog=document.getElementById("prog"),track=document.getElementById("track"),
       buybar=document.getElementById("buybar");
 const coverHTML=app.innerHTML;
-// telas: capa (-1) · perguntas e pausa (0..4) · captura (5) · vendas (6)
-const CAP_STEP=QUESTIONS.length,RES_STEP=CAP_STEP+1;
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+// telas: capa (-1) · perguntas e pausa (0..5; a última pergunta vira a animação "Ajustando…") · vendas (6)
+const LAST_STEP=QUESTIONS.length-1,RES_STEP=QUESTIONS.length;
 const val=id=>QUESTIONS.find(x=>x.id===id).opts[answers[id]];
 const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const tryPlay=v=>{const p=v.play();if(p&&p.catch)p.catch(()=>{})};
@@ -455,7 +449,7 @@ function updateChrome(){
   const inFlow=step>=0&&step<RES_STEP;
   prog.hidden=!inFlow;
   // telas 2–7 (passos 0..5): a barra enche conforme a tela atual
-  const pct=inFlow?Math.round((step+1)/(CAP_STEP+1)*100):step<0?0:100;
+  const pct=inFlow?Math.round((step+1)/QUESTIONS.length*100):step<0?0:100;
   document.getElementById("tfill").style.width=Math.max(4,pct)+"%";track.setAttribute("aria-valuenow",pct);
   setBuybar(false);
 }
@@ -479,7 +473,7 @@ function renderQuestion(){
     answers[q.id]=+b.dataset.i;
     app.querySelectorAll("[data-i]").forEach(x=>x.classList.toggle("sel",x===b));
     if(navigator.vibrate)try{navigator.vibrate(8)}catch(e){}
-    const t=setTimeout(()=>go(step+1),280);cleanups.push(()=>clearTimeout(t));
+    const t=setTimeout(()=>q.last?renderAdjusting():go(step+1),280);cleanups.push(()=>clearTimeout(t));
   }));
 }
 
@@ -510,47 +504,7 @@ function renderPause(){
   document.getElementById("cont").addEventListener("click",()=>go(step+1));
 }
 
-function fmtPhone(v){
-  let d=v.replace(/\D/g,"");
-  if(d.length>11&&d.startsWith("55"))d=d.slice(2); // colado com +55
-  d=d.slice(0,11);
-  if(d.length<=2)return d.length?"("+d:"";
-  if(d.length<=6)return `(${d.slice(0,2)}) ${d.slice(2)}`;
-  if(d.length<=10)return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
-  return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
-}
-function sendLead(){
-  if(!LEAD_WEBHOOK)return;
-  const r={};QUESTIONS.forEach(q=>{if(!q.pause&&answers[q.id]!=null)r[q.id]=val(q.id).t});
-  const {mes}=hours();
-  const body=JSON.stringify({whatsapp:whats,horas_mes:Math.round(mes),respostas:r,pagina:location.href,data:new Date().toISOString()});
-  try{fetch(LEAD_WEBHOOK,{method:"POST",mode:"no-cors",keepalive:true,headers:{"Content-Type":"text/plain;charset=utf-8"},body})}catch(e){}
-}
-function renderCapture(){
-  app.innerHTML=`<section class="col"><div class="q">
-    <h2 id="qt">Digite seu WhatsApp para receber o arquivo de edição</h2>
-    <p class="insight">Iremos personalizar a skill de acordo com seu perfil.</p>
-    <form class="namebox" id="leadForm" novalidate>
-      <label for="whats" class="flabel">Seu WhatsApp</label>
-      <input id="whats" type="tel" inputmode="numeric" autocomplete="tel-national" enterkeyhint="go" maxlength="20" placeholder="(11) 99999-9999" value="${esc(whats)}" required>
-      <p class="err" id="err" role="alert"></p>
-      <button class="cta pulse" id="see" type="submit" aria-disabled="true">Acesso a Skill de Edição <span class="arr">→</span></button>
-    </form>
-    <p class="lock">🔒 Seus dados estão protegidos. Nada de spam.</p>
-  </div></section>`;
-  const f=document.getElementById("leadForm"),w=document.getElementById("whats"),btn=document.getElementById("see"),err=document.getElementById("err");
-  const okW=()=>{const d=w.value.replace(/\D/g,"");return(d.length===10||d.length===11)&&+d.slice(0,2)>=11};
-  const sync=()=>{btn.setAttribute("aria-disabled",String(!okW()));if(okW()){w.removeAttribute("aria-invalid");err.textContent=""}};
-  w.addEventListener("input",()=>{w.value=fmtPhone(w.value);sync()});
-  f.addEventListener("submit",e=>{
-    e.preventDefault();
-    if(!okW()){err.textContent="Digite um WhatsApp válido com DDD.";w.setAttribute("aria-invalid","true");w.focus();return}
-    whats=w.value;sendLead();renderAdjusting();
-  });
-  sync();
-  const ft=setTimeout(()=>w.focus({preventScroll:true}),350);cleanups.push(()=>clearTimeout(ft));
-}
-// depois do envio, a própria tela de captura vira a animação "Ajustando sua ferramenta…"
+// depois da última resposta, a própria tela vira a animação "Ajustando sua ferramenta…"
 function renderAdjusting(){
   runCleanups();
   app.innerHTML=`<section class="col"><div class="loading">
@@ -563,12 +517,12 @@ function renderAdjusting(){
   const pct=document.getElementById("pct"),lis=app.querySelectorAll(".checks li"),t0=performance.now();let live=true;
   (function f(t){const p=Math.min(1,(t-t0)/3000);pct.textContent=Math.round(p*100)+"%";if(p<1&&live)requestAnimationFrame(f)})(t0);
   const ts=[700,1600,2500].map((ms,k)=>setTimeout(()=>lis[k].classList.add("done"),ms));
-  ts.push(setTimeout(()=>{if(live&&step===CAP_STEP)go(RES_STEP)},3200));
+  ts.push(setTimeout(()=>{if(live&&step===LAST_STEP)go(RES_STEP)},3200));
   cleanups.push(()=>{live=false;ts.forEach(clearTimeout)});
 }
 
 function renderResult(){
-  const trava=val("trava");
+  const trava=val("trava"),meta=val("meta");
   const {semana,mes}=hours(),H=Math.max(1,Math.round(mes));
   const porHora=(97/H).toFixed(2).replace(".",",");
   const reels=[...REELS.filter(r=>r.c==="ads"),...REELS.filter(r=>r.c!=="ads")];
@@ -611,6 +565,7 @@ function renderResult(){
     <div class="faq">${FAQ.map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join("")}</div>
 
     <div class="final">
+      <p class="punch">Pronto para ${meta.w}?</p>
       <a class="cta pulse" href="${CHECKOUT}" target="_blank" rel="noopener">Garantir Agora <span class="arr">→</span></a>
       <div class="seals"><span>Acesso imediato</span><span>Pagamento único</span><span>7 dias de garantia</span></div>
     </div>
@@ -657,11 +612,10 @@ function go(n){
   step=n;updateChrome();
   if(step<0){app.innerHTML=coverHTML;setupCover()}
   else if(step<QUESTIONS.length){QUESTIONS[step].pause?renderPause():renderQuestion()}
-  else if(step===CAP_STEP)renderCapture();
   else renderResult();
   window.scrollTo(0,0);
   const h=app.querySelector("#qt");
-  if(h&&step!==CAP_STEP){h.setAttribute("tabindex","-1");h.focus({preventScroll:true})}
+  if(h){h.setAttribute("tabindex","-1");h.focus({preventScroll:true})}
 }
 document.addEventListener("keydown",e=>{
   if(step<0||step>=QUESTIONS.length||QUESTIONS[step].pause||e.target.tagName==="INPUT"||e.key.length!==1)return;
