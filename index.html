@@ -543,7 +543,7 @@ footer{padding:28px 0 32px;text-align:center;font-size:12px;color:var(--dim);bor
           <span class="once">PAGAMENTO ÚNICO</span>
           <span class="cmp">Menos que <b>1 mês</b> de um único aplicativo.</span>
         </div>
-        <a href="https://pay.hub.la/I3yjw0fYzsLZFm8vH3pD" class="btn">Eu quero agora!</a>
+        <a href="https://pay.hub.la/I3yjw0fYzsLZFm8vH3pD" class="btn" data-cta="checkout" target="_blank" rel="noopener">Eu quero agora!</a>
         <div class="trust"><span>🔒 Compra segura</span><span class="wa"><i class="si" data-si="whatsapp"></i>Chega no WhatsApp</span></div>
       </div>
     </div>
@@ -881,6 +881,15 @@ const countUp = el => { const to=+el.dataset.count, pre=el.dataset.pre||''; let 
 const io = new IntersectionObserver(es=>es.forEach(en=>{ if(!en.isIntersecting) return; en.target.classList.add('in'); en.target.querySelectorAll('[data-count]').forEach(countUp); io.unobserve(en.target); }),{threshold:.12,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 
+/* repassa utm_*, src, sck, fbclid e gclid da URL para o link do checkout (rastreio da venda) */
+(function(){
+  const qs = new URLSearchParams(location.search), keep = [];
+  qs.forEach((v,k)=>{ if (/^utm_/.test(k) || ['src','sck','fbclid','gclid'].includes(k)) keep.push([k,v]); });
+  if (!keep.length) return;
+  document.querySelectorAll('a[data-cta="checkout"]').forEach(a=>{
+    try { const u = new URL(a.href); keep.forEach(([k,v])=>u.searchParams.set(k,v)); a.href = u.toString(); } catch(e) {}
+  });
+})();
 </script>
 </body>
 </html>
