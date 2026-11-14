@@ -109,6 +109,27 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 .ftk{height:10px;border-radius:5px;background:var(--card-3);overflow:hidden}
 .ftk i{display:block;height:100%;border-radius:5px;background:var(--gold-grad)}
 .fm{display:flex;flex-wrap:wrap;gap:6px}
+.pass{padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.pass small{display:block;font-size:11px;color:var(--dim);overflow-wrap:anywhere}
+.pass-n{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 10px;margin-top:2px}
+.pass-n b{font-size:15px;font-weight:700}
+.pass-n span{font-size:12.5px;font-weight:600;color:var(--muted)}
+.pass.bad{border-color:rgba(255,107,107,.45);background:rgba(255,107,107,.08)}
+.pass.bad .pass-n span{color:#ff9b9b}
+.perdas{display:grid;gap:12px}
+.perda{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:baseline;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card-2)}
+.perda .pl{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 6px;min-width:0;font-size:13px;line-height:1.3}
+.perda .pa{color:var(--muted);overflow-wrap:anywhere}
+.perda .seta{color:var(--dim)}
+.perda .pb{color:var(--text);font-weight:600;overflow-wrap:anywhere}
+.perda .pn{font-size:17px;font-weight:800;color:var(--muted);white-space:nowrap}
+.perda .pt{grid-column:1/-1;height:7px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.perda .pt i{display:block;height:100%;border-radius:99px;background:rgba(255,255,255,.35)}
+.perda small{grid-column:1/-1;font-size:11.5px;color:var(--dim)}
+.perda.bad .pn{color:#ff8a8a}
+.perda.bad .pt i{background:#ff6b6b}
+.perda.pior{border-color:rgba(255,107,107,.55);background:rgba(255,107,107,.08)}
+@media (min-width:760px){.perdas{grid-template-columns:1fr 1fr}}
 button.callout{display:block;width:100%;text-align:left;font-family:inherit;cursor:pointer}
 button.callout::after{content:" →";color:#ff9b9b}
 /* colunas do funil: só a faixa rola pro lado, a página não */
@@ -407,6 +428,28 @@ const SEM_RESPOSTA = {   // o que acontece nas etapas que não têm pergunta
   capa:"Abriu a capa do quiz", pausa:"Prévia com as contas da pessoa", carregando:"Tela de carregamento (~3 s)",
   resultado:"Página de vendas com o vídeo", oferta:"Quem ficou ~30 s no resultado", clique:"Clicou em comprar"
 };
+/* passagem de uma etapa para a seguinte: quantos chegaram, quantos se perderam e quanto isso representa */
+const perda = (a, b) => { const de = a.sessoes, para = b.sessoes, perdeu = Math.max(0, de - para); return {de, para, perdeu, pc: de ? perdeu / de * 100 : null}; };
+function passagemCol(a, b){
+  const p = perda(a, b);
+  return el("div", {class:"pass" + (p.pc != null && p.pc > 30 ? " bad" : "")},
+    el("small", {text:`Passagem de "${a.nome}"`}),
+    el("div", {class:"pass-n"}, el("b", {text:`${fmtN(p.de)} → ${fmtN(p.para)}`}),
+      el("span", {text: p.pc == null ? "sem dados" : `perdeu ${fmtN(p.perdeu)} · ${fmtPc(p.pc)}`})));
+}
+function blocoPerdas(F){
+  const et = F.etapas;
+  if (et.length < 2) return box("Perda entre etapas", null, el("p", {class:"note", text:"Sem dados do funil."}), true);
+  const linhas = et.slice(1).map((b, k) => ({a: et[k], b, ...perda(et[k], b)}));
+  let pior = -1;
+  linhas.forEach((l, k) => { if (l.b.etapa !== "clique" && l.pc != null && l.pc > 0 && (pior < 0 || l.pc > linhas[pior].pc)) pior = k; });
+  return box("Perda entre etapas", "quantos % se perderam na passagem de uma etapa para a próxima", el("div", {class:"perdas"},
+    linhas.map((l, k) => el("div", {class:"perda" + (l.pc != null && l.pc > 30 ? " bad" : "") + (k === pior ? " pior" : "")},
+      el("span", {class:"pl"}, el("span", {class:"pa", text:l.a.nome}), el("span", {class:"seta", "aria-hidden":"true", text:"→"}), el("span", {class:"pb", text:l.b.nome})),
+      el("b", {class:"pn", text: l.pc == null ? "–" : l.perdeu ? `−${fmtPc(l.pc)}` : "0%"}),
+      el("span", {class:"pt", "aria-hidden":"true"}, el("i", {style:`width:${l.pc == null ? 0 : Math.max(l.pc ? 1.5 : 0, Math.min(100, l.pc))}%`})),
+      el("small", {text: l.pc == null ? "ninguém chegou na etapa anterior" : `${fmtN(l.de)} → ${fmtN(l.para)} · perdeu ${fmtN(l.perdeu)} ${l.perdeu === 1 ? "pessoa" : "pessoas"}${k === pior ? " · maior perda do quiz" : ""}`})))), true);
+}
 function colunaFunil(F, e, i, total, worst){
   const vivo = F.aoVivo.get(e.etapa) || 0, w = e.pctTopo == null ? 0 : e.pctTopo;
   let ans;
@@ -420,6 +463,7 @@ function colunaFunil(F, e, i, total, worst){
     el("h3", {text:e.nome}),
     el("div", {class:"big"}, el("b", {text:fmtN(e.sessoes)}), el("small", {text:`pessoas · ${fmtPc(e.pctTopo)} do topo`})),
     el("div", {class:"ftk", "aria-hidden":"true"}, el("i", {style:`width:${Math.max(e.sessoes ? 1.5 : 0, w)}%`})),
+    i ? passagemCol(F.etapas[i-1], e) : null,
     el("div", {class:"fm"},
       i ? el("span", {class:"chip" + (e.saida != null && e.saida > 30 ? " bad" : ""), text:e.saida == null ? "saída –" : `${fmtPc(e.saida)} saíram aqui`}) : null,
       e.etapa !== "clique" ? el("span", {class:"chip", text:`pararam aqui: ${fmtN(e.pararam)}`}) : null,
@@ -549,7 +593,7 @@ function render(){
   else {
     dash.append(blocoEngajamento(F), blocoCards(F));
     const g = el("div", {class:"grid"});
-    g.append(blocoFunil(F), blocoBotoes(F), blocoDias(F),
+    g.append(blocoFunil(F), blocoPerdas(F), blocoBotoes(F), blocoDias(F),
       tabela("Origem", "utm_source", F.porOrigem), tabela("Nicho", null, F.porNicho), blocoDisp(F));
     dash.append(g);
   }
