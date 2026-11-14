@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Respostas do quiz · Biblioteca de Skills</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://ritjeqziygxnywznwhsc.supabase.co; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="theme-color" content="#000000">
+<meta name="color-scheme" content="dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-weight='800' font-size='36' fill='%23D6A329'%3EA.%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+:root{
+  --bg:#000;--card:#111113;--card-2:#17171A;--card-3:#202024;
+  --line:rgba(255,255,255,.10);--line-2:rgba(255,255,255,.17);
+  --text:#ECE9E2;--muted:#A9A498;--dim:#6E6A62;
+  --gold:#D6A329;--gold-hi:#F2D488;--gold-soft:rgba(214,163,41,.12);
+  --gold-grad:linear-gradient(100deg,#F4DB8F 0%,#D6A329 52%,#B8871A 100%);
+  --btn-ink:#1A1406;--err:#FF6B6B;--ok:#4FD18B;
+  --f:"Poppins",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+html{overflow-x:clip;-webkit-text-size-adjust:100%}
+body{font-family:var(--f);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:clip}
+button,select{font-family:inherit;font-size:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold-hi);outline-offset:2px}
+.gold{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wrap{width:100%;max-width:1100px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-left,0px)) 48px max(16px,env(safe-area-inset-right,0px))}
+
+/* topo */
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.top h1{margin:0;font-size:24px;line-height:1.15;letter-spacing:-.02em;font-weight:700}
+.top h1 .mk{margin-right:6px}
+.upd{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border-radius:12px;border:1px solid var(--line-2);background:var(--card);font-weight:600;font-size:14px;cursor:pointer}
+.btn:hover{border-color:rgba(214,163,41,.6)}
+.btn.pri{background:var(--gold-grad);color:var(--btn-ink);border-color:transparent}
+.btn:disabled{opacity:.5;cursor:default}
+
+/* filtros */
+.filters{display:grid;gap:10px;margin-bottom:18px}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.seg button{min-height:40px;border:0;border-radius:10px;background:none;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--gold-grad);color:var(--btn-ink)}
+.sel{width:100%;min-height:46px;border-radius:12px;border:1px solid var(--line-2);background:var(--card);padding:0 12px;font-weight:500}
+@media (min-width:760px){.filters{grid-template-columns:minmax(0,420px) minmax(0,320px)}}
+
+/* números */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{min-width:0;padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.stat small{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.stat b{display:block;margin-top:4px;font-size:26px;line-height:1.15;font-weight:800;letter-spacing:-.02em;overflow-wrap:anywhere}
+.stat b.sm{font-size:15px;font-weight:700;line-height:1.3}
+.stat span{display:block;font-size:12px;color:var(--dim);margin-top:2px}
+@media (min-width:760px){.stats{grid-template-columns:repeat(4,1fr)}}
+
+/* blocos */
+.grid{display:grid;gap:14px}
+@media (min-width:900px){.grid{grid-template-columns:1fr 1fr}.grid .full{grid-column:1/-1}}
+.box{min-width:0;padding:16px;border-radius:18px;background:var(--card);border:1px solid var(--line)}
+.box h2{margin:0 0 12px;font-size:16px;font-weight:700;letter-spacing:-.01em}
+.box h2 small{font-weight:500;color:var(--muted);font-size:12.5px;margin-left:6px}
+.bars{display:grid;gap:10px}
+.bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;font-size:13.5px}
+.bar .l{min-width:0;overflow-wrap:anywhere}
+.bar .n{font-family:var(--mono);font-size:12.5px;color:var(--muted);white-space:nowrap}
+.bar .t{grid-column:1/-1;height:8px;border-radius:4px;background:var(--card-3);overflow:hidden}
+.bar .t i{display:block;height:100%;border-radius:4px;background:var(--gold-grad)}
+.tops{display:grid;gap:8px}
+.topi{padding:10px 12px;border-radius:12px;background:var(--card-2);border:1px solid var(--line)}
+.topi small{display:block;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.topi b{display:block;font-size:14px;font-weight:600;overflow-wrap:anywhere}
+.topi span{font-family:var(--mono);font-size:12px;color:var(--gold-hi)}
+.note{margin:0;color:var(--muted);font-size:13.5px}
+
+/* últimas respostas: tabela no computador, cartões no celular */
+.tw{width:100%}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:8px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+.tbl td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
+.tbl td.dt{font-family:var(--mono);font-size:12px;white-space:nowrap;color:var(--gold-hi)}
+@media (min-width:760px){.tw{overflow-x:auto}}
+@media (max-width:759px){
+  .tbl thead{display:none}
+  .tbl,.tbl tbody{display:block}
+  .tbl tr{display:block;margin-bottom:10px;padding:10px 12px;border-radius:14px;background:var(--card-2);border:1px solid var(--line)}
+  .tbl td{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:4px 0;border:0;text-align:right;min-width:0}
+  .tbl td::before{content:attr(data-l);flex:none;text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .tbl td>span{min-width:0}
+}
+
+/* estados */
+.state{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px 0}
+.state h2{margin:0;font-size:22px;letter-spacing:-.02em}
+.state p{margin:0;color:var(--muted);max-width:34ch}
+.spin{width:38px;height:38px;border-radius:50%;border:3px solid var(--card-3);border-top-color:var(--gold);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mark{font:800 34px/1 var(--f)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top" id="top" hidden>
+    <div>
+      <h1><span class="mk gold" aria-hidden="true">A.</span>Respostas do quiz</h1>
+      <p class="upd" id="upd" aria-live="polite"></p>
+    </div>
+    <div class="acts">
+      <button class="btn" id="btnCsv" type="button">Baixar CSV</button>
+      <button class="btn pri" id="btnUpd" type="button">Atualizar</button>
+    </div>
+  </header>
+
+  <div class="filters" id="filters" hidden>
+    <div class="seg" role="group" aria-label="Período">
+      <button type="button" data-p="hoje" aria-pressed="false">Hoje</button>
+      <button type="button" data-p="7" aria-pressed="true">7 dias</button>
+      <button type="button" data-p="30" aria-pressed="false">30 dias</button>
+      <button type="button" data-p="tudo" aria-pressed="false">Tudo</button>
+    </div>
+    <select class="sel" id="selNicho" aria-label="Nicho"></select>
+  </div>
+
+  <main id="dash" hidden></main>
+
+  <section class="state" id="state" aria-live="polite"></section>
+</div>
+
+<script>
+/* Painel de respostas do quiz. A chave vem no hash (#k=...), nunca vai pro servidor nem pro Referer.
+   Tudo que vem do banco é tratado como NÃO CONFIÁVEL: só entra na página via textContent. */
+const API = "https://ritjeqziygxnywznwhsc.supabase.co/rest/v1/rpc/quiz_respostas_painel";
+const APIKEY = "sb_publishable_6xr50iEvbMHEYcyE6F9pEg_xkrTpZkS";
+const TZ = "America/Sao_Paulo";
+const NICHOS = {   // mesmos rótulos do quiz (NICHES)
+  comida:"🍔 Restaurante, lanchonete ou padaria",
+  imoveis:"🏠 Corretor ou imobiliária",
+  arq:"📐 Arquitetura, engenharia ou obra",
+  beleza:"💆‍♀️ Estética, beleza ou saúde",
+  criador:"🎥 Criador de conteúdo ou infoprodutor",
+  loja:"🛍️ Loja ou e-commerce",
+  servicos:"🧰 Prestador de serviço ou MEI",
+  foto:"📸 Fotografia e eventos",
+  outro:"✨ Outra área / uso pessoal"
+};
+const hasOwn = (o,k) => Object.prototype.hasOwnProperty.call(o,k);
+const nichoLabel = k => hasOwn(NICHOS,k) ? NICHOS[k] : (k || "Sem nicho");
+
+/* chave: lê do hash, guarda só na memória e limpa a barra de endereço */
+let KEY = "";
+function readKey(){
+  const m = location.hash.match(/(?:^#|&)k=([^&]*)/);
+  let k = "";
+  if (m){ try { k = decodeURIComponent(m[1]).trim(); } catch(e){ k = ""; } }
+  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  return k;
+}
+KEY = readKey();
+// link colado numa aba que já está no painel: só o hash muda, sem recarregar
+addEventListener("hashchange", () => { const k = readKey(); if (k){ KEY = k; rows = []; load(); } });
+
+let rows = [], periodo = "7", nichoF = "", loading = false, again = false, lastUpd = null;
+const $ = id => document.getElementById(id);
+const top_ = $("top"), filters = $("filters"), dash = $("dash"), state = $("state"), upd = $("upd"), selNicho = $("selNicho");
+
+/* cria elementos só com texto (nunca innerHTML com dado do banco) */
+function el(tag, props, ...kids){
+  const e = document.createElement(tag);
+  if (props) for (const k in props){
+    const v = props[k];
+    if (k === "class") e.className = v;
+    else if (k === "text") e.textContent = v;
+    else if (k === "style") e.style.cssText = v;
+    else if (k.slice(0,2) === "on") e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  kids.flat().forEach(c => { if (c != null && c !== false) e.append(c instanceof Node ? c : String(c)); });
+  return e;
+}
+
+/* normaliza cada linha (campos não confiáveis) */
+const S = (v, n=200) => v == null ? "" : (typeof v === "object" ? JSON.stringify(v) : String(v)).slice(0, n);
+const N = v => { if (v == null || v === "") return null; const x = Number(v); return Number.isFinite(x) && x >= 0 && x < 1e7 ? x : null; };
+function norm(r){
+  r = r && typeof r === "object" ? r : {};
+  const a = r.respostas && typeof r.respostas === "object" ? r.respostas : {};
+  const u = r.utm && typeof r.utm === "object" ? r.utm : {};
+  const d = new Date(r.created_at);
+  return {
+    d: isNaN(d) ? null : d, nicho: S(r.nicho, 60),
+    dor: S(a.dor), gasto: S(a.gasto), horas: S(a.horas), ia: S(a.ia), tempo: S(a.tempo),
+    hm: N(r.horas_mes), gm: N(r.gasto_mes),
+    src: S(u.utm_source, 80).trim() || "direto",
+    utm: {medium:S(u.utm_medium,120), campaign:S(u.utm_campaign,120), content:S(u.utm_content,120), term:S(u.utm_term,120)}
+  };
+}
+
+/* datas no fuso de São Paulo */
+const fDay = new Intl.DateTimeFormat("en-CA", {timeZone:TZ, year:"numeric", month:"2-digit", day:"2-digit"});
+const fDT = new Intl.DateTimeFormat("pt-BR", {timeZone:TZ, day:"2-digit", month:"2-digit", year:"2-digit", hour:"2-digit", minute:"2-digit"});
+const fHM = new Intl.DateTimeFormat("pt-BR", {timeZone:TZ, hour:"2-digit", minute:"2-digit", second:"2-digit"});
+const fmtN = n => Math.round(n).toLocaleString("pt-BR");
+
+function filtered(){
+  const now = Date.now(), today = fDay.format(new Date());
+  return rows.filter(r => {
+    if (nichoF && r.nicho !== nichoF) return false;
+    if (periodo === "tudo") return true;
+    if (!r.d) return false;
+    if (periodo === "hoje") return fDay.format(r.d) === today;
+    return now - r.d.getTime() <= (+periodo) * 86400000;
+  });
+}
+function tally(list, f){
+  const m = new Map();
+  list.forEach(r => { const k = f(r) || "(sem resposta)"; m.set(k, (m.get(k) || 0) + 1); });
+  return [...m].sort((a,b) => b[1] - a[1]);
+}
+const avg = (list, f) => { const v = list.map(f).filter(x => x != null); return v.length ? v.reduce((a,b)=>a+b,0) / v.length : null; };
+const pct = (n, t) => t ? Math.round(n / t * 100) + "%" : "0%";
+
+/* ---------- blocos ---------- */
+function bars(entries, total, max=8, label=x=>x){
+  let list = entries;
+  if (entries.length > max){
+    const rest = entries.slice(max-1).reduce((s,e)=>s+e[1],0);
+    list = [...entries.slice(0,max-1), ["Outras respostas", rest]];
+  }
+  const top = Math.max(1, ...list.map(e=>e[1]));
+  return el("div", {class:"bars"}, list.map(([k,n]) =>
+    el("div", {class:"bar"},
+      el("span", {class:"l", text:label(k)}),
+      el("span", {class:"n", text:`${n} · ${pct(n,total)}`}),
+      el("span", {class:"t", "aria-hidden":"true"}, el("i", {style:`width:${Math.max(2, n/top*100)}%`}))
+    )));
+}
+const box = (title, sub, body, full) => el("section", {class:"box" + (full ? " full" : "")}, el("h2", null, title, sub ? el("small", {text:sub}) : null), body);
+const stat = (label, value, sub, small) => el("div", {class:"stat"}, el("small", {text:label}), el("b", {class:small ? "sm" : "", text:value}), sub ? el("span", {text:sub}) : null);
+
+function render(){
+  showDash();
+  upd.textContent = lastUpd ? "Atualizado às " + fHM.format(lastUpd) : "";
+  fillNichos();
+  const list = filtered(), t = list.length;
+  $("btnCsv").disabled = !t;
+  dash.replaceChildren();
+  if (!rows.length){ dash.append(el("div", {class:"state"}, el("h2", {text:"Nenhuma resposta ainda"}), el("p", {text:"Assim que alguém terminar o quiz, a resposta aparece aqui."}))); return; }
+  if (!t){ dash.append(el("div", {class:"state"}, el("h2", {text:"Nenhuma resposta nesse filtro"}), el("p", {text:"Troque o período ou o nicho para ver mais."}))); return; }
+
+  // 1. números
+  const hm = avg(list, r=>r.hm), gm = avg(list, r=>r.gm), porNicho = tally(list, r=>r.nicho);
+  dash.append(el("div", {class:"stats"},
+    stat("Respostas", fmtN(t), periodoLabel()),
+    stat("Horas/mês (média)", hm == null ? "–" : fmtN(hm) + " h", "estimativa de quem respondeu"),
+    stat("Gasto/mês (média)", gm == null ? "–" : "R$ " + fmtN(gm), "com app, sistema ou freelancer"),
+    stat("Nicho mais comum", nichoLabel(porNicho[0][0]), `${porNicho[0][1]} · ${pct(porNicho[0][1], t)}`, true)
+  ));
+
+  const g = el("div", {class:"grid"});
+  // 2. por nicho
+  g.append(box("Respostas por nicho", null, bars(porNicho, t, 10, nichoLabel)));
+  // 3. dor
+  if (nichoF){
+    g.append(box("Maior trava", "ranking", bars(tally(list, r=>r.dor), t)));
+  } else {
+    g.append(box("Maior trava por nicho", "a mais escolhida", el("div", {class:"tops"}, porNicho.map(([k,n]) => {
+      const d = tally(list.filter(r=>r.nicho===k), r=>r.dor)[0];
+      return el("div", {class:"topi"}, el("small", {text:nichoLabel(k)}), el("b", {text:d[0]}), el("span", {text:`${d[1]} de ${n}`}));
+    }))));
+  }
+  // 4. IA e tempo livre
+  g.append(box("Relação com IA", null, bars(tally(list, r=>r.ia), t)));
+  g.append(box("O que faria com o tempo livre", null, bars(tally(list, r=>r.tempo), t)));
+  // 5. origem
+  g.append(box("Origem", "utm_source", bars(tally(list, r=>r.src), t)));
+  // 6. últimas 100
+  const L = ["Data","Nicho","Trava","Gasto","Horas","IA","Tempo livre","Origem"];
+  const last = list.slice(0,100);
+  g.append(box("Últimas respostas", last.length < t ? `${last.length} de ${fmtN(t)}` : `${last.length}`,
+    el("div", {class:"tw"}, el("table", {class:"tbl"},
+      el("thead", null, el("tr", null, L.map(h => el("th", {text:h})))),
+      el("tbody", null, last.map(r => el("tr", null,
+        [r.d ? fDT.format(r.d) : "–", nichoLabel(r.nicho), r.dor, r.gasto, r.horas, r.ia, r.tempo, r.src]
+          .map((v,i) => el("td", {"data-l":L[i], class:i ? "" : "dt"}, el("span", {text:v || "–"})))
+      )))
+    )), true));
+  dash.append(g);
+}
+function periodoLabel(){ return {hoje:"hoje", "7":"últimos 7 dias", "30":"últimos 30 dias", tudo:"todas"}[periodo]; }
+function fillNichos(){
+  const keys = [...new Set([...Object.keys(NICHOS), ...rows.map(r=>r.nicho).filter(Boolean)])];
+  const cur = nichoF;
+  selNicho.replaceChildren(el("option", {value:"", text:"Todos os nichos"}), ...keys.map(k => el("option", {value:k, text:nichoLabel(k)})));
+  selNicho.value = keys.includes(cur) ? cur : "";
+}
+
+/* ---------- CSV (; + BOM, protegido contra fórmula) ---------- */
+function csvCell(v){
+  let s = v == null ? "" : String(v);
+  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+  return '"' + s.replace(/"/g, '""') + '"';
+}
+function downloadCsv(){
+  const list = filtered(); if (!list.length) return;
+  const head = ["data_hora","nicho","trava","gasto","horas","ia","tempo_livre","horas_mes","gasto_mes","utm_source","utm_medium","utm_campaign","utm_content","utm_term"];
+  const lines = [head.map(csvCell).join(";")].concat(list.map(r => [
+    r.d ? fDT.format(r.d) : "", nichoLabel(r.nicho), r.dor, r.gasto, r.horas, r.ia, r.tempo,
+    r.hm == null ? "" : String(r.hm).replace(".", ","), r.gm == null ? "" : String(r.gm).replace(".", ","),
+    r.src, r.utm.medium, r.utm.campaign, r.utm.content, r.utm.term
+  ].map(csvCell).join(";")));
+  const blob = new Blob(["﻿" + lines.join("\r\n")], {type:"text/csv;charset=utf-8"});
+  const a = el("a", {href:URL.createObjectURL(blob), download:`quiz-respostas-${fDay.format(new Date())}.csv`});
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+/* ---------- estados ---------- */
+function showDash(){ top_.hidden = false; filters.hidden = false; dash.hidden = false; state.hidden = true; }
+function showState(kind){
+  dash.hidden = true; state.hidden = false;
+  const onlyMsg = kind === "invalid";
+  top_.hidden = onlyMsg || kind === "loading"; filters.hidden = true;
+  if (kind === "loading") state.replaceChildren(el("div", {class:"spin", "aria-hidden":"true"}), el("p", {text:"Carregando respostas…"}));
+  if (kind === "invalid") state.replaceChildren(el("span", {class:"mark gold", "aria-hidden":"true", text:"A."}), el("h2", {text:"Link inválido ou expirado"}), el("p", {text:"Peça o link do painel de novo pra quem cuida do quiz."}));
+  if (kind === "error") state.replaceChildren(el("h2", {text:"Não deu pra carregar"}), el("p", {text:"Verifique a internet e tente de novo."}), el("button", {class:"btn pri", type:"button", text:"Tentar de novo", onclick:load}));
+}
+
+async function load(){
+  if (!KEY){ showState("invalid"); return; }
+  if (loading){ again = true; return; } loading = true; again = false;
+  const btn = $("btnUpd"); btn.disabled = true;
+  if (!rows.length) showState("loading"); else upd.textContent = "Atualizando…";
+  const k = KEY;
+  try {
+    const res = await fetch(API, {method:"POST", cache:"no-store", credentials:"omit", referrerPolicy:"no-referrer",
+      headers:{"apikey":APIKEY, "Content-Type":"application/json"}, body:JSON.stringify({p_chave:k})});
+    let data = null; try { data = await res.json(); } catch(e) {}
+    if (k !== KEY) return;   // chegou uma chave nova no meio do caminho: o finally carrega de novo
+    if (res.status === 401 || res.status === 403 || (data && !Array.isArray(data) && data.message === "chave inválida")){
+      KEY = ""; rows = []; showState("invalid"); return;
+    }
+    if (!res.ok || !Array.isArray(data)) throw new Error("resposta inesperada");
+    rows = data.map(norm); lastUpd = new Date(); render();
+  } catch(e) {
+    if (rows.length){ render(); upd.textContent = "Não deu pra atualizar agora. Verifique a internet."; }
+    else showState("error");
+  } finally { loading = false; btn.disabled = false; if (again || k !== KEY) load(); }
+}
+
+/* ---------- eventos ---------- */
+$("btnUpd").addEventListener("click", load);
+$("btnCsv").addEventListener("click", downloadCsv);
+filters.querySelectorAll("[data-p]").forEach(b => b.addEventListener("click", () => {
+  periodo = b.dataset.p;
+  filters.querySelectorAll("[data-p]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  render();
+}));
+selNicho.addEventListener("change", () => { nichoF = selNicho.value; render(); });
+load();
+</script>
+</body>
+</html>

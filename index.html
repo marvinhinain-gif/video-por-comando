@@ -325,7 +325,7 @@ footer{width:100%;padding:24px 16px 30px;font-size:12px;color:var(--dim);border-
 /* =========================================================
    CONFIGURAÇÃO — troque aqui
    ========================================================= */
-const CHECKOUT = "#";          // link do checkout (com "#", o botão não leva a lugar nenhum)
+const CHECKOUT = "https://pay.hub.la/I3yjw0fYzsLZFm8vH3pD";   // link do checkout (Hubla); com "#", o botão não leva a lugar nenhum
 const LEAD_WEBHOOK = "";       // URL que recebe o lead em POST JSON; vazio = não envia nada
 /* respostas anônimas (sem nome nem telefone) salvas no Supabase, tabela quiz_respostas.
    A chave abaixo é a "publishable": pode ficar no site; a tabela só aceita inserir, ninguém lê por aqui.
@@ -355,9 +355,13 @@ const MEDIA = {
   v14:{t:"Controle do MEI: lucro e caixa", c:"Finanças"},
   cardapio:{img:1, fx:"pan", t:"Cardápio digital da hamburgueria", c:"Cardápio digital"},
   casamento:{img:1, fx:"zoom", t:"Edição profissional para casamentos", c:"Fotografia"},
-  relatorio:{img:1, fx:"side", t:"Relatório com gráficos do seu negócio", c:"Relatório"}
+  relatorio:{img:1, fx:"side", t:"Relatório com gráficos do seu negócio", c:"Relatório"},
+  // soCapa:1 = aparece só no carrossel da capa (não entra no carrossel do resultado)
+  v15:{t:"Tráfego Pago Automático para seu negócio", c:"Tráfego pago", som:1, soCapa:1},
+  v16:{t:"WhatsApp automático", c:"Atendimento", soCapa:1}
 };
-const COVER_ORDER = ["v3","v5","v1","v4","v14","v6","v2","v13","v8"];
+/* capa: abre com v3 no centro; à direita v15, v1, v16; à esquerda (o último da lista) o casamento */
+const COVER_ORDER = ["v3","v15","v1","v16","v5","v4","v14","v6","v2","v13","v8","casamento"];
 
 /* =========================================================
    NICHOS — tudo depois da 1ª pergunta muda por aqui
@@ -484,7 +488,7 @@ const GASTO = [{t:"Nada, faço tudo na mão",v:0},{t:"Até R$ 100",v:80},{t:"De 
 const HORAS = [{t:"Até 3 horas",v:3},{t:"De 4 a 7 horas",v:6},{t:"De 8 a 15 horas",v:12},{t:"Mais de 15 horas",v:20}];
 const IA = ["Nunca usei","Uso o ChatGPT pra coisa simples","Uso, mas não sai do jeito que eu quero","Pago assinatura e não aproveito"];
 
-/* As 9 etapas: P1, P2, P3, P4, Pausa, P5, P6, Captura, Carregamento */
+/* As etapas: P1, P2, P3, P4, Pausa, P5, P6, (Captura — desligada por enquanto), Carregamento */
 const STEPS = [
   {id:"nicho", grid:true, title:()=>"Com o que você trabalha?", sub:()=>"Vamos montar suas skills pro seu dia a dia.",
    opts:()=>NICHE_KEYS.map(k=>({t:NICHES[k].label, e:NICHES[k].emoji, v:k})),
@@ -820,7 +824,7 @@ function renderLoading(){
 /* ---------- RESULTADO / PÁGINA DE VENDAS ---------- */
 function renderResult(){
   const n = niche(), dor = pick("dor") || n.dores[0], h = horasMes(), g = gastoMes();
-  const order = [...n.carrossel, ...Object.keys(MEDIA).filter(k=>!n.carrossel.includes(k))];
+  const order = [...n.carrossel, ...Object.keys(MEDIA).filter(k=>!MEDIA[k].soCapa && !n.carrossel.includes(k))];
   const conta = g > 0
     ? `<p>Você gasta cerca de <b>${brl(g)}/mês</b> = <b>${brl(g*12)} por ano</b>.</p>`
     : `<p>Você faz tudo na mão: cerca de <b>${h} horas por mês</b>.</p>`;
