@@ -532,7 +532,7 @@ footer{padding:28px 0 32px;text-align:center;font-size:12px;color:var(--dim);bor
           <span class="once">PAGAMENTO ÚNICO</span>
           <span class="cmp">Menos que <b>1 mês</b> de um único aplicativo.</span>
         </div>
-        <a href="#" class="btn">Eu quero agora!</a>
+        <a href="https://pay.hub.la/I3yjw0fYzsLZFm8vH3pD" class="btn">Eu quero agora!</a>
         <div class="trust"><span>🔒 Compra segura</span><span class="wa"><i class="si" data-si="whatsapp"></i>Chega no WhatsApp</span></div>
       </div>
     </div>
@@ -716,8 +716,10 @@ ITEMS.splice(ITEMS.findIndex(it=>it.v && it.v.f==='v6') + 1, 0, {p:{f:'videos/ca
 /* relatório da oficina entra logo depois do CRM Próprio (imagem larga, desliza pro lado) */
 ITEMS.splice(ITEMS.findIndex(it=>it.v && it.v.f==='v11') + 1, 0, {p:{f:'videos/relatorio.jpg', n:'Relatório com gráficos do seu negócio', c:'Relatório', x:1}});
 /* estes vídeos aparecem primeiro, nesta ordem; o resto segue depois */
-const FIRST = ['v3','v5','v1','v4','v14'];   // animação 3D, terreno à casa pronta, avatar no imóvel, obra em 3D, controle do MEI
+const FIRST = ['v3','v13','v5','v1','v4','v14'];   // animação 3D (frente), página de vendas (direita), terreno à casa pronta, avatar no imóvel, obra em 3D, controle do MEI
 FIRST.slice().reverse().forEach(f=>{ const i = ITEMS.findIndex(it=>it.v && it.v.f===f); if (i>=0) ITEMS.unshift(ITEMS.splice(i,1)[0]); });
+/* foto do casamento vai pro fim da fila: no leque, fica à esquerda do card da frente */
+ITEMS.push(ITEMS.splice(ITEMS.findIndex(it=>it.p && it.p.f==='videos/casamento.jpg'), 1)[0]);
 const SND_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6M16 9l6 6"/></svg>';
 const SND_ON  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>';
 
