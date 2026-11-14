@@ -69,8 +69,6 @@ section{padding:var(--sec) 0;position:relative}
 .h1 .ball{display:inline-block;width:.2em;height:.2em;margin-left:.06em;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF1BF,#E2B03C 45%,#8A6716 100%);box-shadow:0 0 .3em rgba(214,163,41,.6)}
 .hero-sub{max-width:520px;margin:18px auto 0;font-size:clamp(16px,4.4vw,19px);line-height:1.5;color:var(--muted)}
 .hero-sub b{color:#fff;font-weight:500}
-.pill{display:inline-flex;align-items:center;gap:10px;padding:7px 16px;border:1px solid rgba(214,163,41,.45);border-radius:99px;background:rgba(214,163,41,.07);font-size:13px;font-weight:600;color:var(--gold-hi);margin-bottom:22px}
-.pill::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(214,163,41,.18)}
 .h2{font-size:clamp(25px,7.2vw,32px);line-height:1.13;font-weight:700;letter-spacing:-.02em;color:#fff;margin-top:12px}
 .gold{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .lead{color:var(--muted);font-size:15.5px;margin-top:14px}
@@ -272,15 +270,12 @@ section{padding:var(--sec) 0;position:relative}
 /* primeira dobra no celular: do topo até "Envio imediato no seu WhatsApp" cabe na tela */
 @media (max-width:640px){
   .topbar{padding:8px 14px}
-  .hero{padding-top:12px}
-  .hero .pill{margin-bottom:10px;padding:5px 13px;font-size:12px}
+  .hero{padding-top:20px}
   .hero-sub{margin-top:8px;font-size:15px;line-height:1.42}
   .hero .fan{margin-top:12px;margin-bottom:12px}
   .hero .btn{min-height:52px;padding:12px 20px}
   .hero .trust{margin-top:9px}
 }
-/* celular baixinho (ex.: iPhone SE): esconde o selo de cima pra caber tudo */
-@media (max-width:640px) and (max-height:620px){ .hero .pill{display:none} .hero{padding-top:14px} }
 .cc.rv.in li{animation:liIn .45s var(--ease) .15s both}
 @keyframes liIn{from{opacity:0;transform:translateX(-10px)}}
 .cc.rv.in li:nth-child(2){animation-delay:.23s}.cc.rv.in li:nth-child(3){animation-delay:.31s}.cc.rv.in li:nth-child(4){animation-delay:.39s}.cc.rv.in li:nth-child(5){animation-delay:.47s}.cc.rv.in li:nth-child(6){animation-delay:.55s}.cc.rv.in li:nth-child(7){animation-delay:.63s}
@@ -364,7 +359,6 @@ footer{padding:28px 0 32px;text-align:center;font-size:12px;color:var(--dim);bor
 <!-- 2. HERO -->
 <header class="hero">
   <div class="wrap">
-    <div class="pill">Para quem não sabe programar</div>
     <h1 class="h1"><span class="ln">250 skills pra sua IA</span><span class="ln"><span class="ul">trabalhar por você</span><span class="ball"></span></span></h1>
     <p class="hero-sub">Cada skill é <b>um arquivo simples</b> que ensina sua IA a atender, postar e organizar por você. <b>Pare de pagar aplicativo pra tudo.</b></p>
 
