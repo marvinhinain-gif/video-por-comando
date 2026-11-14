@@ -327,6 +327,10 @@ footer{width:100%;padding:24px 16px 30px;font-size:12px;color:var(--dim);border-
    ========================================================= */
 const CHECKOUT = "#";          // link do checkout (com "#", o botão não leva a lugar nenhum)
 const LEAD_WEBHOOK = "";       // URL que recebe o lead em POST JSON; vazio = não envia nada
+/* respostas anônimas (sem nome nem telefone) salvas no Supabase, tabela quiz_respostas.
+   A chave abaixo é a "publishable": pode ficar no site; a tabela só aceita inserir, ninguém lê por aqui.
+   Para desligar o envio, deixe url vazio. */
+const SUPABASE = {url:"https://ritjeqziygxnywznwhsc.supabase.co", key:"sb_publishable_6xr50iEvbMHEYcyE6F9pEg_xkrTpZkS", tabela:"quiz_respostas"};
 const VSL = {vturb:false, src:"m/vsl.mp4", poster:"m/vsl.webp", vturbId:"", vturbJs:""};
 const VSL_DELAY = 30;          // segundos até liberar tudo que fica abaixo do vídeo principal
 
@@ -496,7 +500,8 @@ const STEPS = [
    insight:"A IA não precisa de você saber programar. Precisa das instruções certas. Isso é uma skill."},
   {id:"tempo", title:()=>"Se a IA fizesse isso por você, o que você faria com o tempo livre?", opts:n=>n.tempo.map(t=>({t, v:t})),
    insight:"Quem tira o trabalho repetido da frente cresce sem trabalhar mais."},
-  {id:"captura", capture:true},
+  // captura de nome e WhatsApp desligada por enquanto; para religar, tire o "//" da linha abaixo
+  // {id:"captura", capture:true},
   {id:"carregando", loading:true}
 ];
 const RES_STEP = STEPS.length;
@@ -778,12 +783,31 @@ function sendLead(){
   try { fetch(LEAD_WEBHOOK, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data), keepalive:true}).catch(()=>{}); } catch(e) {}
 }
 
+/* salva as respostas (uma vez por visita) no Supabase; se falhar, o quiz segue normalmente */
+let answersSent = false;
+function sendAnswers(){
+  if (answersSent || !SUPABASE.url) return; answersSent = true;
+  const utm = {}, qs = new URLSearchParams(location.search);
+  qs.forEach((v,k)=>{ if (/^utm_/.test(k) || ["src","sck","fbclid","gclid"].includes(k)) utm[k] = v.slice(0,200); });
+  const row = {
+    quiz: "biblioteca", nicho: nicheKey(),
+    respostas: {dor:(pick("dor")||{}).t, gasto:(pick("gasto")||{}).t, horas:(pick("horas")||{}).t, ia:(pick("ia")||{}).t, tempo:(pick("tempo")||{}).t},
+    horas_mes: horasMes(), gasto_mes: gastoMes(), utm
+  };
+  try {
+    fetch(`${SUPABASE.url}/rest/v1/${SUPABASE.tabela}`, {method:"POST", keepalive:true,
+      headers:{"Content-Type":"application/json", "apikey":SUPABASE.key, "Prefer":"return=minimal"},
+      body:JSON.stringify(row)}).catch(()=>{});
+  } catch(e) {}
+}
+
 /* ---------- CARREGANDO (~3 s) ---------- */
 function renderLoading(){
   const n = niche();
+  sendAnswers();
   app.innerHTML = `<section class="col"><div class="loading">
     <div class="ring"><svg viewBox="0 0 110 110"><circle class="bgc" cx="55" cy="55" r="48"/><circle class="fgc" cx="55" cy="55" r="48"/></svg><b id="pct">0%</b></div>
-    <h2 id="qt">Separando as skills ${pra(n.curto)}, ${esc(firstName())}…</h2>
+    <h2 id="qt">Separando as skills ${pra(n.curto)}${firstName() ? ", " + esc(firstName()) : ""}…</h2>
     <ul class="checks"><li><i>✓</i>Lendo as suas respostas</li><li><i>✓</i>Escolhendo as skills do seu nicho</li><li><i>✓</i>Montando seu plano</li></ul>
   </div></section>`;
   const pct = document.getElementById("pct"), lis = app.querySelectorAll(".checks li"), t0 = performance.now(); let live = true;
@@ -801,7 +825,7 @@ function renderResult(){
     ? `<p>Você gasta cerca de <b>${brl(g)}/mês</b> = <b>${brl(g*12)} por ano</b>.</p>`
     : `<p>Você faz tudo na mão: cerca de <b>${h} horas por mês</b>.</p>`;
   app.innerHTML = `<section class="col"><div class="sales">
-    <h2 class="hero2" id="qt">${esc(firstName())}, sua IA pronta <span class="gold">${pra(n.curto)}.</span></h2>
+    <h2 class="hero2" id="qt">${firstName() ? esc(firstName()) + ", sua" : "Sua"} IA pronta <span class="gold">${pra(n.curto)}.</span></h2>
     <div class="vsl" id="vslBox"></div>
 
     <div class="after" id="afterVsl" hidden>
