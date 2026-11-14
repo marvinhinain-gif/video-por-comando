@@ -992,10 +992,18 @@ function sendEvent(row){
       body:JSON.stringify(body)}).catch(()=>{});
   } catch(e) {}
 }
+/* resposta dada numa etapa: P1 manda a chave do nicho; P2..P6 mandam o texto da opção (até 120); o resto não tem resposta */
+function respostaDe(id){
+  if (!id || answers[id] == null) return "";
+  if (id === "nicho") return nicheKey();
+  if (!["dor","gasto","horas","ia","tempo"].includes(id)) return "";
+  const o = pick(id); return o && o.t ? String(o.t).slice(0,120) : "";
+}
 function trackStep(etapa){
   if (!ETAPAS_OK.includes(etapa) || etapa === lastEtapa) return;
   const now = performance.now(), row = {evento:"etapa", etapa, anterior:lastEtapa};
   if (lastEtapa) row.ms = Math.max(0, Math.min(86400000, Math.round(now - lastEtapaT)));   // tempo na etapa anterior
+  const resp = respostaDe(lastEtapa); if (resp) row.resposta = resp;                        // o que respondeu na etapa anterior
   lastEtapa = etapa; lastEtapaT = now;
   sendEvent(row);
 }

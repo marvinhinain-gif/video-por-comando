@@ -93,17 +93,40 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 /* funil por etapa */
 .callout{margin:0 0 12px;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,107,107,.45);background:rgba(255,107,107,.08);color:#ffd6d6;font-size:14px;line-height:1.4}
 .callout b{color:#fff}
-.frow{display:grid;gap:6px;padding:11px 0;border-top:1px solid var(--line)}
-.frow:first-child{border-top:0;padding-top:2px}
-.frow.worst{margin:0 -10px;padding:11px 10px;border-radius:12px;background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.3)}
-.frow.worst+.frow{border-top:0}
-.fh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px;font-weight:600}
-.fh .nm{min-width:0;overflow-wrap:anywhere}
-.fh .ct{flex:none;font-family:var(--mono);font-size:13px;color:#fff;white-space:nowrap}
-.fh .ct small{color:var(--muted);font-size:12px;margin-left:6px}
 .ftk{height:10px;border-radius:5px;background:var(--card-3);overflow:hidden}
 .ftk i{display:block;height:100%;border-radius:5px;background:var(--gold-grad)}
 .fm{display:flex;flex-wrap:wrap;gap:6px}
+button.callout{display:block;width:100%;text-align:left;font-family:inherit;cursor:pointer}
+button.callout::after{content:" →";color:#ff9b9b}
+/* colunas do funil: só a faixa rola pro lado, a página não */
+.fstrip{position:relative;display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 0 4px}
+.fstrip::-webkit-scrollbar{display:none}
+.fcol{flex:0 0 82%;min-width:0;scroll-snap-align:start;display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:16px;background:var(--card-2);border:1px solid var(--line)}
+@media (min-width:760px){.fcol{flex-basis:280px}}
+.fcol.worst{border-color:rgba(255,107,107,.55);background:linear-gradient(180deg,rgba(255,107,107,.10),var(--card-2) 45%)}
+.fcol .et{font:500 11px/1 var(--mono);letter-spacing:.08em;color:var(--gold)}
+.fcol h3{margin:-4px 0 0;font-size:15.5px;line-height:1.25;font-weight:700;overflow-wrap:anywhere}
+.fcol .big{display:flex;align-items:baseline;gap:8px;line-height:1}
+.fcol .big b{font-size:34px;font-weight:800;letter-spacing:-.03em}
+.fcol .big small{font-size:12.5px;color:var(--muted)}
+.fcol .tm{font-size:12.5px;color:var(--muted)}
+.fcol .tm b{color:var(--text);font-weight:600}
+.fans{margin-top:2px;padding-top:10px;border-top:1px solid var(--line)}
+.fans h4{margin:0 0 8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.fans .bars{gap:8px}
+.fans .bar{font-size:12.5px}
+.fans .note{font-size:12.5px}
+.fnav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+.fnav .ind{display:flex;align-items:center;gap:10px;min-width:0;font-size:12.5px;color:var(--muted)}
+.fdots{display:flex;gap:4px;flex-wrap:wrap}
+.fdots i{width:6px;height:6px;border-radius:3px;background:var(--card-3);transition:all .3s}
+.fdots i.on{width:16px;background:var(--gold)}
+.fdots i.bad{background:rgba(255,107,107,.6)}
+.fdots i.bad.on{background:#ff6b6b}
+.farr{display:none;gap:6px}
+.farr button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);background:var(--card-2);font-size:20px;line-height:1;cursor:pointer}
+.farr button:disabled{opacity:.35;cursor:default}
+@media (min-width:760px),(hover:hover) and (pointer:fine){.farr{display:flex}}
 .chip{font-size:11.5px;line-height:1.3;padding:3px 8px;border-radius:99px;background:var(--card-2);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
 .chip.bad{background:rgba(255,107,107,.14);border-color:rgba(255,107,107,.45);color:#ff9b9b;font-weight:600}
 .chip.live{color:var(--ok);border-color:rgba(79,209,139,.45)}
@@ -263,7 +286,8 @@ function normFunil(d){   // o funil (quiz_funil_painel)
     aoVivo: new Map(entries(d.ao_vivo)),
     etapas: arr(d.funil).slice(0,20).map(f => { f = obj(f); const e = S(f.etapa, 20); return {
       etapa:e, nome: hasOwn(ETAPAS,e) ? ETAPAS[e] : (S(f.nome, 60) || e), sessoes:I(f.sessoes),
-      pctTopo:PC(f.pct_topo), saida:PC(f.saida_pct), pararam:I(f.pararam_aqui), med:MS(f.mediana_ms)}; }),
+      pctTopo:PC(f.pct_topo), saida:PC(f.saida_pct), pararam:I(f.pararam_aqui), med:MS(f.mediana_ms),
+      respostas: arr(f.respostas).slice(0,12).map(obj).map(r => [S(r.t, 120).trim() || "(vazio)", I(r.n)]).filter(r => r[1] > 0).sort((a,b) => b[1] - a[1])}; }),
     porDia: arr(d.por_dia).map(obj).filter(r => /^\d{4}-\d{2}-\d{2}$/.test(S(r.dia, 10))).map(r => ({dia:S(r.dia,10), ...seg(r)})).sort((a,b)=>a.dia<b.dia?-1:1),
     porOrigem: arr(d.por_origem).map(obj).map(r => ({nome:S(r.origem, 100).trim() || "direto", ...seg(r)})),
     porNicho: arr(d.por_nicho).map(obj).map(r => ({nome:nichoLabel(S(r.nicho, 40)), key:S(r.nicho, 40), ...seg(r)})),
@@ -339,6 +363,32 @@ function blocoCards(F){
     stat("Agora no quiz", [el("i", {class:"dot", "aria-hidden":"true"}), fmtN(vivo)], "ativos nos últimos 5 minutos", "live")
   );
 }
+const COM_RESPOSTA = ["nicho","dor","gasto","horas","ia","tempo"];
+const SEM_RESPOSTA = {   // o que acontece nas etapas que não têm pergunta
+  capa:"Abriu a capa do quiz", pausa:"Prévia com as contas da pessoa", carregando:"Tela de carregamento (~3 s)",
+  resultado:"Página de vendas com o vídeo", oferta:"Quem ficou ~30 s no resultado", clique:"Clicou em comprar"
+};
+function colunaFunil(F, e, i, total, worst){
+  const vivo = F.aoVivo.get(e.etapa) || 0, w = e.pctTopo == null ? 0 : e.pctTopo;
+  let ans;
+  if (COM_RESPOSTA.includes(e.etapa)){
+    const tot = e.respostas.reduce((a,r)=>a+r[1],0);
+    ans = e.respostas.length ? bars(e.respostas, tot, 12, e.etapa === "nicho" ? nichoLabel : x=>x)
+                             : el("p", {class:"note", text:"Ainda sem respostas registradas nessa etapa."});
+  } else ans = el("p", {class:"note", text:hasOwn(SEM_RESPOSTA, e.etapa) ? SEM_RESPOSTA[e.etapa] : "—"});
+  return el("article", {class:"fcol" + (i === worst ? " worst" : ""), "data-i":String(i), "aria-label":`Etapa ${i+1} de ${total}: ${e.nome}`},
+    el("span", {class:"et", text:`ETAPA ${i+1}`}),
+    el("h3", {text:e.nome}),
+    el("div", {class:"big"}, el("b", {text:fmtN(e.sessoes)}), el("small", {text:`pessoas · ${fmtPc(e.pctTopo)} do topo`})),
+    el("div", {class:"ftk", "aria-hidden":"true"}, el("i", {style:`width:${Math.max(e.sessoes ? 1.5 : 0, w)}%`})),
+    el("div", {class:"fm"},
+      i ? el("span", {class:"chip" + (e.saida != null && e.saida > 30 ? " bad" : ""), text:e.saida == null ? "saída –" : `${fmtPc(e.saida)} saíram aqui`}) : null,
+      e.etapa !== "clique" ? el("span", {class:"chip", text:`pararam aqui: ${fmtN(e.pararam)}`}) : null,
+      vivo > 0 ? el("span", {class:"chip live", text:`● ${fmtN(vivo)} agora`}) : null),
+    e.etapa !== "clique" ? el("p", {class:"tm", style:"margin:0"}, "Tempo mediano na etapa: ", el("b", {text:fmtDur(e.med)})) : null,
+    el("div", {class:"fans"}, el("h4", {text:"O que responderam"}), ans)
+  );
+}
 function blocoFunil(F){
   const et = F.etapas;
   if (!et.length) return box("Funil por etapa", null, el("p", {class:"note", text:"Sem dados do funil."}), true);
@@ -346,21 +396,44 @@ function blocoFunil(F){
   // maior saída entre as etapas do quiz; o clique (compra) fica de fora, senão ele sempre "ganharia"
   et.forEach((e,i) => { if (i && e.etapa !== "clique" && e.saida != null && et[i-1].sessoes > 0 && (worst < 0 || e.saida > et[worst].saida)) worst = i; });
   if (worst >= 0 && !(et[worst].saida > 0)) worst = -1;
+
+  const strip = el("div", {class:"fstrip", tabindex:"0", role:"region", "aria-label":"Etapas do funil, deslize para o lado"},
+    et.map((e,i) => colunaFunil(F, e, i, et.length, worst)));
+  const cols = () => [...strip.children];
+  const ind = el("span", {"aria-live":"polite", text:`Etapa 1 de ${et.length}`});
+  const dots = el("span", {class:"fdots", "aria-hidden":"true"}, et.map((e,i) => el("i", {class: (i === worst ? "bad" : "") + (i ? "" : " on")})));
+  const prev = el("button", {type:"button", "aria-label":"Etapa anterior", text:"‹"});
+  const next = el("button", {type:"button", "aria-label":"Próxima etapa", text:"›"});
+  let cur = 0;
+  const atual = () => {   // coluna mais perto do começo da faixa
+    const x = strip.scrollLeft; let best = 0, d = Infinity;
+    cols().forEach((c,i) => { const dd = Math.abs(c.offsetLeft - x); if (dd < d){ d = dd; best = i; } });
+    if (strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 2) best = Math.max(best, cols().length - 1 - Math.max(0, Math.floor(strip.clientWidth / Math.max(1, cols()[0].offsetWidth)) - 1));
+    return best;
+  };
+  const paint = () => {
+    cur = atual();
+    ind.textContent = `Etapa ${cur + 1} de ${et.length}`;
+    [...dots.children].forEach((d,i) => d.classList.toggle("on", i === cur));
+    prev.disabled = strip.scrollLeft <= 2;
+    next.disabled = strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 2;
+  };
+  const irPara = (i, foco) => {
+    const c = cols()[Math.max(0, Math.min(cols().length - 1, i))]; if (!c) return;
+    // primeiro a página (sem animação), depois a faixa: duas rolagens suaves ao mesmo tempo se cancelam
+    if (foco) strip.scrollIntoView({block:"nearest"});
+    strip.scrollTo({left:c.offsetLeft, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+  };
+  prev.addEventListener("click", () => irPara(cur - 1));
+  next.addEventListener("click", () => irPara(cur + 1));
+  let raf = 0; strip.addEventListener("scroll", () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(paint); }, {passive:true});
+  setTimeout(paint, 0);   // depois que a faixa entra na página
+
   const body = [];
-  if (worst >= 0) body.push(el("p", {class:"callout"}, "Maior saída: ", el("b", {text:et[worst].nome}), ` — ${fmtPc(et[worst].saida)} saíram aqui`));
-  body.push(el("div", null, et.map((e,i) => {
-    const vivo = F.aoVivo.get(e.etapa) || 0, w = e.pctTopo == null ? 0 : e.pctTopo;
-    return el("div", {class:"frow" + (i === worst ? " worst" : "")},
-      el("div", {class:"fh"}, el("span", {class:"nm", text:e.nome}), el("span", {class:"ct"}, fmtN(e.sessoes), el("small", {text:fmtPc(e.pctTopo)}))),
-      el("div", {class:"ftk", role:"img", "aria-label":`${e.nome}: ${fmtN(e.sessoes)} pessoas, ${fmtPc(e.pctTopo)} do topo`}, el("i", {style:`width:${Math.max(e.sessoes ? 1.5 : 0, w)}%`})),
-      el("div", {class:"fm"},
-        i ? el("span", {class:"chip" + (e.saida != null && e.saida > 30 ? " bad" : ""), text:e.saida == null ? "saída –" : `${fmtPc(e.saida)} saíram`}) : null,
-        e.etapa !== "clique" ? el("span", {class:"chip", text:`⏱ ${fmtDur(e.med)}`}) : null,
-        e.etapa !== "clique" ? el("span", {class:"chip", text:`pararam aqui: ${fmtN(e.pararam)}`}) : null,
-        vivo > 0 ? el("span", {class:"chip live", text:`● ${fmtN(vivo)} agora`}) : null)
-    );
-  })));
-  return box("Funil por etapa", "% do topo · saída em relação à etapa anterior", body, true);
+  if (worst >= 0) body.push(el("button", {type:"button", class:"callout", onclick:() => irPara(worst, true)},
+    "Maior saída: ", el("b", {text:et[worst].nome}), ` — ${fmtPc(et[worst].saida)} saíram aqui`));
+  body.push(strip, el("div", {class:"fnav"}, el("div", {class:"ind"}, ind, dots), el("div", {class:"farr"}, prev, next)));
+  return box("Funil por etapa", "deslize para o lado · % do topo e saída em relação à etapa anterior", body, true);
 }
 function blocoBotoes(F){
   return box("Botões de compra", null, [
@@ -411,13 +484,16 @@ function blocoRespostas(){
     el("div", null, el("b", {text:fmtN(t)}), el("small", {text:"respostas"})),
     el("div", null, el("b", {text:hm == null ? "–" : fmtN(hm) + " h"}), el("small", {text:"horas/mês (média)"})),
     el("div", null, el("b", {text:gm == null ? "–" : "R$ " + fmtN(gm)}), el("small", {text:"gasto/mês (média)"})))));
-  if (nichoF) g.append(box("Maior trava", "ranking", bars(tally(list, r=>r.dor), t)));
+  // IA, tempo livre e o ranking de trava já aparecem nas colunas do funil quando há respostas lá;
+  // aqui só entram enquanto a coluna correspondente ainda está vazia (dados antigos, antes do rastreio de respostas)
+  const naColuna = id => !!(funil && funil.etapas.some(e => e.etapa === id && e.respostas.length));
+  if (nichoF){ if (!naColuna("dor")) g.append(box("Maior trava", "ranking", bars(tally(list, r=>r.dor), t))); }
   else g.append(box("Maior trava por nicho", "a mais escolhida", el("div", {class:"tops"}, porNicho.map(([k,n]) => {
     const d = tally(list.filter(r=>r.nicho===k), r=>r.dor)[0];
     return el("div", {class:"topi"}, el("small", {text:nichoLabel(k)}), el("b", {text:d[0]}), el("span", {text:`${fmtN(d[1])} de ${fmtN(n)}`}));
   }))));
-  g.append(box("Relação com IA", null, bars(tally(list, r=>r.ia), t)));
-  g.append(box("O que faria com o tempo livre", null, bars(tally(list, r=>r.tempo), t)));
+  if (!naColuna("ia")) g.append(box("Relação com IA", null, bars(tally(list, r=>r.ia), t)));
+  if (!naColuna("tempo")) g.append(box("O que faria com o tempo livre", null, bars(tally(list, r=>r.tempo), t)));
   return [g];
 }
 
