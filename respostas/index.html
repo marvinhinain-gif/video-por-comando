@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Respostas do quiz · Biblioteca de Skills</title>
+<title>Painel do quiz · Biblioteca de Skills</title>
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://ritjeqziygxnywznwhsc.supabase.co; img-src data:; base-uri 'none'; form-action 'none'">
@@ -53,15 +53,19 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 .seg button[aria-pressed="true"]{background:var(--gold-grad);color:var(--btn-ink)}
 .sel{width:100%;min-height:46px;border-radius:12px;border:1px solid var(--line-2);background:var(--card);padding:0 12px;font-weight:500}
 @media (min-width:760px){.filters{grid-template-columns:minmax(0,420px) minmax(0,320px)}}
+#dash.busy{opacity:.55;transition:opacity .2s}
 
-/* números */
+/* números do topo */
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .stat{min-width:0;padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
 .stat small{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .stat b{display:block;margin-top:4px;font-size:26px;line-height:1.15;font-weight:800;letter-spacing:-.02em;overflow-wrap:anywhere}
-.stat b.sm{font-size:15px;font-weight:700;line-height:1.3}
+.stat b.sm{font-size:18px;line-height:1.3}
 .stat span{display:block;font-size:12px;color:var(--dim);margin-top:2px}
-@media (min-width:760px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat.live{border-color:rgba(79,209,139,.4)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--ok);margin-right:8px;vertical-align:4px;animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(79,209,139,.6)}70%{box-shadow:0 0 0 9px rgba(79,209,139,0)}100%{box-shadow:0 0 0 0 rgba(79,209,139,0)}}
+@media (min-width:760px){.stats{grid-template-columns:repeat(3,1fr)}}
 
 /* blocos */
 .grid{display:grid;gap:14px}
@@ -69,6 +73,11 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 .box{min-width:0;padding:16px;border-radius:18px;background:var(--card);border:1px solid var(--line)}
 .box h2{margin:0 0 12px;font-size:16px;font-weight:700;letter-spacing:-.01em}
 .box h2 small{font-weight:500;color:var(--muted);font-size:12.5px;margin-left:6px}
+.sec{margin:26px 0 12px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.note{margin:0;color:var(--muted);font-size:13.5px}
+.note.err{color:var(--err)}
+
+/* barras simples */
 .bars{display:grid;gap:10px}
 .bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;font-size:13.5px}
 .bar .l{min-width:0;overflow-wrap:anywhere}
@@ -80,26 +89,52 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 .topi small{display:block;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
 .topi b{display:block;font-size:14px;font-weight:600;overflow-wrap:anywhere}
 .topi span{font-family:var(--mono);font-size:12px;color:var(--gold-hi)}
-.note{margin:0;color:var(--muted);font-size:13.5px}
 
-/* últimas respostas: tabela no computador, cartões no celular */
-.tw{width:100%}
-.tbl{width:100%;border-collapse:collapse;font-size:13px}
-.tbl th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:8px;border-bottom:1px solid var(--line-2);white-space:nowrap}
-.tbl td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
-.tbl td.dt{font-family:var(--mono);font-size:12px;white-space:nowrap;color:var(--gold-hi)}
-@media (min-width:760px){.tw{overflow-x:auto}}
-@media (max-width:759px){
-  .tbl thead{display:none}
-  .tbl,.tbl tbody{display:block}
-  .tbl tr{display:block;margin-bottom:10px;padding:10px 12px;border-radius:14px;background:var(--card-2);border:1px solid var(--line)}
-  .tbl td{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:4px 0;border:0;text-align:right;min-width:0}
-  .tbl td::before{content:attr(data-l);flex:none;text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
-  .tbl td>span{min-width:0}
-}
+/* funil por etapa */
+.callout{margin:0 0 12px;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,107,107,.45);background:rgba(255,107,107,.08);color:#ffd6d6;font-size:14px;line-height:1.4}
+.callout b{color:#fff}
+.frow{display:grid;gap:6px;padding:11px 0;border-top:1px solid var(--line)}
+.frow:first-child{border-top:0;padding-top:2px}
+.frow.worst{margin:0 -10px;padding:11px 10px;border-radius:12px;background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.3)}
+.frow.worst+.frow{border-top:0}
+.fh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px;font-weight:600}
+.fh .nm{min-width:0;overflow-wrap:anywhere}
+.fh .ct{flex:none;font-family:var(--mono);font-size:13px;color:#fff;white-space:nowrap}
+.fh .ct small{color:var(--muted);font-size:12px;margin-left:6px}
+.ftk{height:10px;border-radius:5px;background:var(--card-3);overflow:hidden}
+.ftk i{display:block;height:100%;border-radius:5px;background:var(--gold-grad)}
+.fm{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:11.5px;line-height:1.3;padding:3px 8px;border-radius:99px;background:var(--card-2);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.chip.bad{background:rgba(255,107,107,.14);border-color:rgba(255,107,107,.45);color:#ff9b9b;font-weight:600}
+.chip.live{color:var(--ok);border-color:rgba(79,209,139,.45)}
+
+/* minicards dos botões */
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.mini div{min-width:0;padding:10px;border-radius:12px;background:var(--card-2);border:1px solid var(--line)}
+.mini b{display:block;font-size:20px;font-weight:800;line-height:1.2}
+.mini small{display:block;font-size:11px;color:var(--muted);line-height:1.3}
+
+/* gráfico por dia (só CSS) */
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin-bottom:10px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+.chart{display:flex;align-items:flex-end;gap:4px;height:160px;border-bottom:1px solid var(--line-2)}
+.day{flex:1 1 0;min-width:0;height:100%;display:flex;align-items:flex-end;justify-content:center;gap:1px}
+.day i{flex:1 1 0;max-width:12px;min-height:2px;border-radius:3px 3px 0 0;background:var(--c)}
+.days{display:flex;gap:4px;margin-top:6px}
+.days span{flex:1 1 0;min-width:0;text-align:center;font:500 10px/1.2 var(--mono);color:var(--dim);overflow:hidden;white-space:nowrap}
+.cV{--c:#6E6A62}.cR{--c:var(--gold)}.cC{--c:var(--ok)}
+
+/* tabela compacta (origem / nicho) */
+.tb{display:grid}
+.tr{display:grid;grid-template-columns:minmax(0,1fr) 50px 62px 56px;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+.tr.h{border-top:0;padding-top:0;font-size:10.5px;line-height:1.25;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.tr .nm{min-width:0;overflow-wrap:anywhere}
+.tr .num{text-align:right;font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+.tr.h .num{font-family:var(--f);font-size:10.5px;white-space:normal}
 
 /* estados */
 .state{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px 0}
+.state.in{min-height:0;padding:36px 0}
 .state h2{margin:0;font-size:22px;letter-spacing:-.02em}
 .state p{margin:0;color:var(--muted);max-width:34ch}
 .spin{width:38px;height:38px;border-radius:50%;border:3px solid var(--card-3);border-top-color:var(--gold);animation:spin 1s linear infinite}
@@ -112,7 +147,7 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 <div class="wrap">
   <header class="top" id="top" hidden>
     <div>
-      <h1><span class="mk gold" aria-hidden="true">A.</span>Respostas do quiz</h1>
+      <h1><span class="mk gold" aria-hidden="true">A.</span>Funil do quiz</h1>
       <p class="upd" id="upd" aria-live="polite"></p>
     </div>
     <div class="acts">
@@ -137,9 +172,10 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 </div>
 
 <script>
-/* Painel de respostas do quiz. A chave vem no hash (#k=...), nunca vai pro servidor nem pro Referer.
-   Tudo que vem do banco é tratado como NÃO CONFIÁVEL: só entra na página via textContent. */
-const API = "https://ritjeqziygxnywznwhsc.supabase.co/rest/v1/rpc/quiz_respostas_painel";
+/* Painel estratégico do quiz: funil por etapa (quiz_funil_painel) + respostas agregadas (quiz_respostas_painel).
+   A chave vem no hash (#k=...), nunca vai pro servidor nem pro Referer.
+   Tudo que vem do banco é NÃO CONFIÁVEL: texto só via textContent, números só via N()/I(). */
+const BASE = "https://ritjeqziygxnywznwhsc.supabase.co/rest/v1/rpc/";
 const APIKEY = "sb_publishable_6xr50iEvbMHEYcyE6F9pEg_xkrTpZkS";
 const TZ = "America/Sao_Paulo";
 const NICHOS = {   // mesmos rótulos do quiz (NICHES)
@@ -153,6 +189,12 @@ const NICHOS = {   // mesmos rótulos do quiz (NICHES)
   foto:"📸 Fotografia e eventos",
   outro:"✨ Outra área / uso pessoal"
 };
+const ETAPAS = {   // nomes das etapas (iguais aos da função do banco)
+  capa:"Entrou no quiz", nicho:"P1 · Nicho", dor:"P2 · Maior trava", gasto:"P3 · Gasto com apps",
+  horas:"P4 · Horas por semana", pausa:"Pausa · Prévia", ia:"P5 · Relação com IA", tempo:"P6 · Tempo livre",
+  carregando:"Carregando", resultado:"Página de resultado", oferta:"Viu a oferta (após o vídeo)", clique:"Clicou no botão de compra"
+};
+const BOTOES = {oferta:"Botão da oferta", final:"Botão final (Garantir Agora)"};
 const hasOwn = (o,k) => Object.prototype.hasOwnProperty.call(o,k);
 const nichoLabel = k => hasOwn(NICHOS,k) ? NICHOS[k] : (k || "Sem nicho");
 
@@ -167,9 +209,10 @@ function readKey(){
 }
 KEY = readKey();
 // link colado numa aba que já está no painel: só o hash muda, sem recarregar
-addEventListener("hashchange", () => { const k = readKey(); if (k){ KEY = k; rows = []; load(); } });
+addEventListener("hashchange", () => { const k = readKey(); if (k){ KEY = k; funil = null; rows = []; respLoaded = false; booted = false; load(true); } });
 
-let rows = [], periodo = "7", nichoF = "", loading = false, again = false, lastUpd = null;
+let funil = null, funErr = false, rows = [], respErr = false, respLoaded = false;
+let periodo = "7", nichoF = "", booted = false, lastUpd = null, funTok = 0, respTok = 0;
 const $ = id => document.getElementById(id);
 const top_ = $("top"), filters = $("filters"), dash = $("dash"), state = $("state"), upd = $("upd"), selNicho = $("selNicho");
 
@@ -188,13 +231,19 @@ function el(tag, props, ...kids){
   return e;
 }
 
-/* normaliza cada linha (campos não confiáveis) */
+/* ---------- normalização (campos não confiáveis) ---------- */
 const S = (v, n=200) => v == null ? "" : (typeof v === "object" ? JSON.stringify(v) : String(v)).slice(0, n);
 const N = v => { if (v == null || v === "") return null; const x = Number(v); return Number.isFinite(x) && x >= 0 && x < 1e7 ? x : null; };
-function norm(r){
-  r = r && typeof r === "object" ? r : {};
-  const a = r.respostas && typeof r.respostas === "object" ? r.respostas : {};
-  const u = r.utm && typeof r.utm === "object" ? r.utm : {};
+const I = v => { const x = N(v); return x == null ? 0 : Math.round(x); };                                   // contagem
+const MS = v => { if (v == null || v === "") return null; const x = Number(v); return Number.isFinite(x) && x >= 0 && x < 1e11 ? x : null; };
+const PC = v => { if (v == null || v === "") return null; const x = Number(v); return Number.isFinite(x) && x >= 0 && x <= 100 ? x : null; };
+const obj = v => v && typeof v === "object" && !Array.isArray(v) ? v : {};
+const arr = v => Array.isArray(v) ? v.slice(0, 1000) : [];
+const entries = o => Object.keys(obj(o)).map(k => [S(k, 40), I(o[k])]);
+
+function norm(r){   // uma resposta (quiz_respostas_painel)
+  r = obj(r);
+  const a = obj(r.respostas), u = obj(r.utm);
   const d = new Date(r.created_at);
   return {
     d: isNaN(d) ? null : d, nicho: S(r.nicho, 60),
@@ -204,13 +253,45 @@ function norm(r){
     utm: {medium:S(u.utm_medium,120), campaign:S(u.utm_campaign,120), content:S(u.utm_content,120), term:S(u.utm_term,120)}
   };
 }
+function normFunil(d){   // o funil (quiz_funil_painel)
+  d = obj(d);
+  const seg = r => ({visitas:I(r.visitas), resultado:I(r.resultado), clicaram:I(r.clicaram)});
+  return {
+    visitas:I(d.visitas), iniciaram:I(d.iniciaram), resultado:I(d.resultado), viram:I(d.viram_oferta),
+    clicaram:I(d.clicaram), cliquesTotal:I(d.cliques_total), durMed:MS(d.duracao_mediana_ms),
+    porBotao: entries(d.cliques_por_botao).sort((a,b)=>b[1]-a[1]),
+    aoVivo: new Map(entries(d.ao_vivo)),
+    etapas: arr(d.funil).slice(0,20).map(f => { f = obj(f); const e = S(f.etapa, 20); return {
+      etapa:e, nome: hasOwn(ETAPAS,e) ? ETAPAS[e] : (S(f.nome, 60) || e), sessoes:I(f.sessoes),
+      pctTopo:PC(f.pct_topo), saida:PC(f.saida_pct), pararam:I(f.pararam_aqui), med:MS(f.mediana_ms)}; }),
+    porDia: arr(d.por_dia).map(obj).filter(r => /^\d{4}-\d{2}-\d{2}$/.test(S(r.dia, 10))).map(r => ({dia:S(r.dia,10), ...seg(r)})).sort((a,b)=>a.dia<b.dia?-1:1),
+    porOrigem: arr(d.por_origem).map(obj).map(r => ({nome:S(r.origem, 100).trim() || "direto", ...seg(r)})),
+    porNicho: arr(d.por_nicho).map(obj).map(r => ({nome:nichoLabel(S(r.nicho, 40)), key:S(r.nicho, 40), ...seg(r)})),
+    disp: entries(d.por_dispositivo).sort((a,b)=>b[1]-a[1])
+  };
+}
 
-/* datas no fuso de São Paulo */
+/* ---------- formatos ---------- */
 const fDay = new Intl.DateTimeFormat("en-CA", {timeZone:TZ, year:"numeric", month:"2-digit", day:"2-digit"});
 const fDT = new Intl.DateTimeFormat("pt-BR", {timeZone:TZ, day:"2-digit", month:"2-digit", year:"2-digit", hour:"2-digit", minute:"2-digit"});
 const fHM = new Intl.DateTimeFormat("pt-BR", {timeZone:TZ, hour:"2-digit", minute:"2-digit", second:"2-digit"});
 const fmtN = n => Math.round(n).toLocaleString("pt-BR");
+const pct = (n, t) => t ? Math.round(n / t * 100) + "%" : "–";
+const fmtPc = x => x == null ? "–" : (Math.round(x * 10) / 10).toLocaleString("pt-BR") + "%";
+function fmtDur(ms){
+  if (ms == null) return "–";
+  const s = Math.round(ms / 1000);
+  if (s < 60) return s + " s";
+  const m = Math.floor(s / 60), r = s % 60;
+  if (m < 60) return r ? `${m} min ${r} s` : `${m} min`;
+  const h = Math.floor(m / 60), mm = m % 60;
+  return mm ? `${h} h ${mm} min` : `${h} h`;
+}
+const diaCurto = d => d.slice(8,10) + "/" + d.slice(5,7);
+const periodoLabel = () => ({hoje:"hoje", "7":"últimos 7 dias", "30":"últimos 30 dias", tudo:"desde o início"}[periodo]);
+const diasParam = () => ({hoje:0, "7":7, "30":30, tudo:null}[periodo]);
 
+/* respostas filtradas no navegador (período + nicho) */
 function filtered(){
   const now = Date.now(), today = fDay.format(new Date());
   return rows.filter(r => {
@@ -227,84 +308,145 @@ function tally(list, f){
   return [...m].sort((a,b) => b[1] - a[1]);
 }
 const avg = (list, f) => { const v = list.map(f).filter(x => x != null); return v.length ? v.reduce((a,b)=>a+b,0) / v.length : null; };
-const pct = (n, t) => t ? Math.round(n / t * 100) + "%" : "0%";
 
-/* ---------- blocos ---------- */
-function bars(entries, total, max=8, label=x=>x){
-  let list = entries;
-  if (entries.length > max){
-    const rest = entries.slice(max-1).reduce((s,e)=>s+e[1],0);
-    list = [...entries.slice(0,max-1), ["Outras respostas", rest]];
+/* ---------- peças ---------- */
+function bars(list, total, max=8, label=x=>x){
+  if (list.length > max){
+    const rest = list.slice(max-1).reduce((s,e)=>s+e[1],0);
+    list = [...list.slice(0,max-1), ["Outras respostas", rest]];
   }
   const top = Math.max(1, ...list.map(e=>e[1]));
   return el("div", {class:"bars"}, list.map(([k,n]) =>
     el("div", {class:"bar"},
       el("span", {class:"l", text:label(k)}),
-      el("span", {class:"n", text:`${n} · ${pct(n,total)}`}),
+      el("span", {class:"n", text:`${fmtN(n)} · ${pct(n,total)}`}),
       el("span", {class:"t", "aria-hidden":"true"}, el("i", {style:`width:${Math.max(2, n/top*100)}%`}))
     )));
 }
 const box = (title, sub, body, full) => el("section", {class:"box" + (full ? " full" : "")}, el("h2", null, title, sub ? el("small", {text:sub}) : null), body);
-const stat = (label, value, sub, small) => el("div", {class:"stat"}, el("small", {text:label}), el("b", {class:small ? "sm" : "", text:value}), sub ? el("span", {text:sub}) : null);
+const stat = (label, value, sub, cls="", bcls="") => el("div", {class:"stat " + cls}, el("small", {text:label}), el("b", {class:bcls}, value), sub ? el("span", {text:sub}) : null);
+const emptyIn = (t, p) => el("div", {class:"state in"}, el("h2", {text:t}), p ? el("p", {text:p}) : null);
 
+/* ---------- blocos do funil ---------- */
+function blocoCards(F){
+  const vivo = [...F.aoVivo.values()].reduce((a,b)=>a+b,0);
+  return el("div", {class:"stats"},
+    stat("Visitas", fmtN(F.visitas), periodoLabel()),
+    stat("Iniciaram o quiz", fmtN(F.iniciaram), `${pct(F.iniciaram, F.visitas)} das visitas`),
+    stat("Chegaram ao resultado", fmtN(F.resultado), `${pct(F.resultado, F.visitas)} das visitas (conclusão)`),
+    stat("Clicaram no botão", fmtN(F.clicaram), `${pct(F.clicaram, F.visitas)} das visitas · ${pct(F.clicaram, F.viram)} de quem viu a oferta`),
+    stat("Tempo mediano no quiz", fmtDur(F.durMed), "da entrada até a última etapa", "", "sm"),
+    stat("Agora no quiz", [el("i", {class:"dot", "aria-hidden":"true"}), fmtN(vivo)], "ativos nos últimos 5 minutos", "live")
+  );
+}
+function blocoFunil(F){
+  const et = F.etapas;
+  if (!et.length) return box("Funil por etapa", null, el("p", {class:"note", text:"Sem dados do funil."}), true);
+  let worst = -1;
+  // maior saída entre as etapas do quiz; o clique (compra) fica de fora, senão ele sempre "ganharia"
+  et.forEach((e,i) => { if (i && e.etapa !== "clique" && e.saida != null && et[i-1].sessoes > 0 && (worst < 0 || e.saida > et[worst].saida)) worst = i; });
+  if (worst >= 0 && !(et[worst].saida > 0)) worst = -1;
+  const body = [];
+  if (worst >= 0) body.push(el("p", {class:"callout"}, "Maior saída: ", el("b", {text:et[worst].nome}), ` — ${fmtPc(et[worst].saida)} saíram aqui`));
+  body.push(el("div", null, et.map((e,i) => {
+    const vivo = F.aoVivo.get(e.etapa) || 0, w = e.pctTopo == null ? 0 : e.pctTopo;
+    return el("div", {class:"frow" + (i === worst ? " worst" : "")},
+      el("div", {class:"fh"}, el("span", {class:"nm", text:e.nome}), el("span", {class:"ct"}, fmtN(e.sessoes), el("small", {text:fmtPc(e.pctTopo)}))),
+      el("div", {class:"ftk", role:"img", "aria-label":`${e.nome}: ${fmtN(e.sessoes)} pessoas, ${fmtPc(e.pctTopo)} do topo`}, el("i", {style:`width:${Math.max(e.sessoes ? 1.5 : 0, w)}%`})),
+      el("div", {class:"fm"},
+        i ? el("span", {class:"chip" + (e.saida != null && e.saida > 30 ? " bad" : ""), text:e.saida == null ? "saída –" : `${fmtPc(e.saida)} saíram`}) : null,
+        e.etapa !== "clique" ? el("span", {class:"chip", text:`⏱ ${fmtDur(e.med)}`}) : null,
+        e.etapa !== "clique" ? el("span", {class:"chip", text:`pararam aqui: ${fmtN(e.pararam)}`}) : null,
+        vivo > 0 ? el("span", {class:"chip live", text:`● ${fmtN(vivo)} agora`}) : null)
+    );
+  })));
+  return box("Funil por etapa", "% do topo · saída em relação à etapa anterior", body, true);
+}
+function blocoBotoes(F){
+  return box("Botões de compra", null, [
+    el("div", {class:"mini"},
+      el("div", null, el("b", {text:fmtN(F.cliquesTotal)}), el("small", {text:"cliques no total"})),
+      el("div", null, el("b", {text:fmtN(F.clicaram)}), el("small", {text:"pessoas clicaram"})),
+      el("div", null, el("b", {text:pct(F.clicaram, F.viram)}), el("small", {text:"viu a oferta → clicou"}))),
+    F.porBotao.length ? bars(F.porBotao, F.cliquesTotal, 6, k => hasOwn(BOTOES,k) ? BOTOES[k] : k) : el("p", {class:"note", text:"Nenhum clique ainda."})
+  ]);
+}
+function blocoDias(F){
+  const dias = F.porDia.slice(-14);
+  if (!dias.length) return box("Por dia", null, el("p", {class:"note", text:"Sem visitas nesse período."}));
+  const top = Math.max(1, ...dias.map(d => Math.max(d.visitas, d.resultado, d.clicaram)));
+  const h = v => `height:${v ? Math.max(2, v / top * 100) : 0}%`;
+  return box("Por dia", F.porDia.length > 14 ? "últimos 14 dias" : null, [
+    el("div", {class:"legend"}, el("span", {class:"cV", text:"Visitas"}), el("span", {class:"cR", text:"Resultado"}), el("span", {class:"cC", text:"Clicaram"})),
+    el("div", {class:"chart"}, dias.map(d => el("div", {class:"day", role:"img",
+        "aria-label":`${diaCurto(d.dia)}: ${d.visitas} visitas, ${d.resultado} no resultado, ${d.clicaram} cliques`,
+        title:`${diaCurto(d.dia)} · ${d.visitas} visitas · ${d.resultado} resultado · ${d.clicaram} cliques`},
+      el("i", {class:"cV", style:h(d.visitas)}), el("i", {class:"cR", style:h(d.resultado)}), el("i", {class:"cC", style:h(d.clicaram)})))),
+    el("div", {class:"days", "aria-hidden":"true"}, dias.map((d,i) => el("span", {text: dias.length <= 7 ? diaCurto(d.dia) : (i % 2 === dias.length % 2 ? "" : d.dia.slice(8,10))})))
+  ]);
+}
+function tabela(title, sub, list){
+  if (!list.length) return box(title, sub, el("p", {class:"note", text:"Sem dados nesse período."}));
+  return box(title, sub, el("div", {class:"tb"},
+    el("div", {class:"tr h"}, el("span", {text:"Nome"}), el("span", {class:"num", text:"Visitas"}), el("span", {class:"num", text:"Concluiu"}), el("span", {class:"num", text:"Clicou"})),
+    list.slice(0,20).map(r => el("div", {class:"tr"},
+      el("span", {class:"nm", text:r.nome}), el("span", {class:"num", text:fmtN(r.visitas)}),
+      el("span", {class:"num", text:pct(r.resultado, r.visitas)}), el("span", {class:"num", text:pct(r.clicaram, r.visitas)})))
+  ));
+}
+function blocoDisp(F){
+  const tot = F.disp.reduce((s,e)=>s+e[1],0);
+  const nome = k => ({celular:"📱 Celular", computador:"💻 Computador"})[k] || "Não informado";
+  return box("Dispositivo", null, tot ? bars(F.disp, tot, 4, nome) : el("p", {class:"note", text:"Sem dados nesse período."}));
+}
+
+/* ---------- respostas agregadas ---------- */
+function blocoRespostas(){
+  if (respErr && !respLoaded) return [el("p", {class:"note err", text:"Não deu pra carregar as respostas agora. Toque em Atualizar."})];
+  const list = filtered(), t = list.length;
+  if (!t) return [el("p", {class:"note", text:"Nenhuma resposta nesse período."})];
+  const hm = avg(list, r=>r.hm), gm = avg(list, r=>r.gm), porNicho = tally(list, r=>r.nicho);
+  const g = el("div", {class:"grid"});
+  g.append(box("Resumo", null, el("div", {class:"mini"},
+    el("div", null, el("b", {text:fmtN(t)}), el("small", {text:"respostas"})),
+    el("div", null, el("b", {text:hm == null ? "–" : fmtN(hm) + " h"}), el("small", {text:"horas/mês (média)"})),
+    el("div", null, el("b", {text:gm == null ? "–" : "R$ " + fmtN(gm)}), el("small", {text:"gasto/mês (média)"})))));
+  if (nichoF) g.append(box("Maior trava", "ranking", bars(tally(list, r=>r.dor), t)));
+  else g.append(box("Maior trava por nicho", "a mais escolhida", el("div", {class:"tops"}, porNicho.map(([k,n]) => {
+    const d = tally(list.filter(r=>r.nicho===k), r=>r.dor)[0];
+    return el("div", {class:"topi"}, el("small", {text:nichoLabel(k)}), el("b", {text:d[0]}), el("span", {text:`${fmtN(d[1])} de ${fmtN(n)}`}));
+  }))));
+  g.append(box("Relação com IA", null, bars(tally(list, r=>r.ia), t)));
+  g.append(box("O que faria com o tempo livre", null, bars(tally(list, r=>r.tempo), t)));
+  return [g];
+}
+
+/* ---------- tela ---------- */
 function render(){
   showDash();
   upd.textContent = lastUpd ? "Atualizado às " + fHM.format(lastUpd) : "";
   fillNichos();
-  const list = filtered(), t = list.length;
-  $("btnCsv").disabled = !t;
+  $("btnCsv").disabled = !filtered().length;
   dash.replaceChildren();
-  if (!rows.length){ dash.append(el("div", {class:"state"}, el("h2", {text:"Nenhuma resposta ainda"}), el("p", {text:"Assim que alguém terminar o quiz, a resposta aparece aqui."}))); return; }
-  if (!t){ dash.append(el("div", {class:"state"}, el("h2", {text:"Nenhuma resposta nesse filtro"}), el("p", {text:"Troque o período ou o nicho para ver mais."}))); return; }
-
-  // 1. números
-  const hm = avg(list, r=>r.hm), gm = avg(list, r=>r.gm), porNicho = tally(list, r=>r.nicho);
-  dash.append(el("div", {class:"stats"},
-    stat("Respostas", fmtN(t), periodoLabel()),
-    stat("Horas/mês (média)", hm == null ? "–" : fmtN(hm) + " h", "estimativa de quem respondeu"),
-    stat("Gasto/mês (média)", gm == null ? "–" : "R$ " + fmtN(gm), "com app, sistema ou freelancer"),
-    stat("Nicho mais comum", nichoLabel(porNicho[0][0]), `${porNicho[0][1]} · ${pct(porNicho[0][1], t)}`, true)
-  ));
-
-  const g = el("div", {class:"grid"});
-  // 2. por nicho
-  g.append(box("Respostas por nicho", null, bars(porNicho, t, 10, nichoLabel)));
-  // 3. dor
-  if (nichoF){
-    g.append(box("Maior trava", "ranking", bars(tally(list, r=>r.dor), t)));
-  } else {
-    g.append(box("Maior trava por nicho", "a mais escolhida", el("div", {class:"tops"}, porNicho.map(([k,n]) => {
-      const d = tally(list.filter(r=>r.nicho===k), r=>r.dor)[0];
-      return el("div", {class:"topi"}, el("small", {text:nichoLabel(k)}), el("b", {text:d[0]}), el("span", {text:`${d[1]} de ${n}`}));
-    }))));
+  const F = funil;
+  if (funErr || !F) dash.append(el("p", {class:"note err", text:"Não deu pra carregar o funil agora. Toque em Atualizar."}));
+  else if (!F.visitas) dash.append(emptyIn("Ainda sem visitas nesse período", "Quando alguém abrir o quiz, o funil aparece aqui."));
+  else {
+    dash.append(blocoCards(F));
+    const g = el("div", {class:"grid"});
+    g.append(blocoFunil(F), blocoBotoes(F), blocoDias(F),
+      tabela("Origem", "utm_source", F.porOrigem), tabela("Nicho", null, F.porNicho), blocoDisp(F));
+    dash.append(g);
   }
-  // 4. IA e tempo livre
-  g.append(box("Relação com IA", null, bars(tally(list, r=>r.ia), t)));
-  g.append(box("O que faria com o tempo livre", null, bars(tally(list, r=>r.tempo), t)));
-  // 5. origem
-  g.append(box("Origem", "utm_source", bars(tally(list, r=>r.src), t)));
-  // 6. últimas 100
-  const L = ["Data","Nicho","Trava","Gasto","Horas","IA","Tempo livre","Origem"];
-  const last = list.slice(0,100);
-  g.append(box("Últimas respostas", last.length < t ? `${last.length} de ${fmtN(t)}` : `${last.length}`,
-    el("div", {class:"tw"}, el("table", {class:"tbl"},
-      el("thead", null, el("tr", null, L.map(h => el("th", {text:h})))),
-      el("tbody", null, last.map(r => el("tr", null,
-        [r.d ? fDT.format(r.d) : "–", nichoLabel(r.nicho), r.dor, r.gasto, r.horas, r.ia, r.tempo, r.src]
-          .map((v,i) => el("td", {"data-l":L[i], class:i ? "" : "dt"}, el("span", {text:v || "–"})))
-      )))
-    )), true));
-  dash.append(g);
+  dash.append(el("h2", {class:"sec", text:"O que as pessoas responderam"}), ...blocoRespostas());
 }
-function periodoLabel(){ return {hoje:"hoje", "7":"últimos 7 dias", "30":"últimos 30 dias", tudo:"todas"}[periodo]; }
 function fillNichos(){
-  const keys = [...new Set([...Object.keys(NICHOS), ...rows.map(r=>r.nicho).filter(Boolean)])];
-  const cur = nichoF;
+  const keys = [...new Set([...Object.keys(NICHOS), ...rows.map(r=>r.nicho), ...(funil ? funil.porNicho.map(r=>r.key) : [])].filter(Boolean))];
   selNicho.replaceChildren(el("option", {value:"", text:"Todos os nichos"}), ...keys.map(k => el("option", {value:k, text:nichoLabel(k)})));
-  selNicho.value = keys.includes(cur) ? cur : "";
+  selNicho.value = keys.includes(nichoF) ? nichoF : "";
 }
 
-/* ---------- CSV (; + BOM, protegido contra fórmula) ---------- */
+/* ---------- CSV (respostas filtradas; ; + BOM, protegido contra fórmula) ---------- */
 function csvCell(v){
   let s = v == null ? "" : String(v);
   if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
@@ -328,45 +470,58 @@ function downloadCsv(){
 function showDash(){ top_.hidden = false; filters.hidden = false; dash.hidden = false; state.hidden = true; }
 function showState(kind){
   dash.hidden = true; state.hidden = false;
-  const onlyMsg = kind === "invalid";
-  top_.hidden = onlyMsg || kind === "loading"; filters.hidden = true;
-  if (kind === "loading") state.replaceChildren(el("div", {class:"spin", "aria-hidden":"true"}), el("p", {text:"Carregando respostas…"}));
+  top_.hidden = kind !== "error"; filters.hidden = true;
+  if (kind === "loading") state.replaceChildren(el("div", {class:"spin", "aria-hidden":"true"}), el("p", {text:"Carregando o painel…"}));
   if (kind === "invalid") state.replaceChildren(el("span", {class:"mark gold", "aria-hidden":"true", text:"A."}), el("h2", {text:"Link inválido ou expirado"}), el("p", {text:"Peça o link do painel de novo pra quem cuida do quiz."}));
-  if (kind === "error") state.replaceChildren(el("h2", {text:"Não deu pra carregar"}), el("p", {text:"Verifique a internet e tente de novo."}), el("button", {class:"btn pri", type:"button", text:"Tentar de novo", onclick:load}));
+  if (kind === "error") state.replaceChildren(el("h2", {text:"Não deu pra carregar"}), el("p", {text:"Verifique a internet e tente de novo."}), el("button", {class:"btn pri", type:"button", text:"Tentar de novo", onclick:()=>load(true)}));
 }
 
-async function load(){
+/* ---------- dados ---------- */
+async function rpc(name, body){
+  const res = await fetch(BASE + name, {method:"POST", cache:"no-store", credentials:"omit", referrerPolicy:"no-referrer",
+    headers:{"apikey":APIKEY, "Content-Type":"application/json"}, body:JSON.stringify(body)});
+  let data = null; try { data = await res.json(); } catch(e) {}
+  if (res.status === 401 || res.status === 403 || (data && !Array.isArray(data) && data.message === "chave inválida")){
+    const e = new Error("chave"); e.invalid = true; throw e;
+  }
+  if (!res.ok) throw new Error("http " + res.status);
+  return data;
+}
+/* all=true: funil + respostas (Atualizar); all=false: só o funil (trocou período ou nicho) */
+async function load(all=true){
   if (!KEY){ showState("invalid"); return; }
-  if (loading){ again = true; return; } loading = true; again = false;
-  const btn = $("btnUpd"); btn.disabled = true;
-  if (!rows.length) showState("loading"); else upd.textContent = "Atualizando…";
-  const k = KEY;
-  try {
-    const res = await fetch(API, {method:"POST", cache:"no-store", credentials:"omit", referrerPolicy:"no-referrer",
-      headers:{"apikey":APIKEY, "Content-Type":"application/json"}, body:JSON.stringify({p_chave:k})});
-    let data = null; try { data = await res.json(); } catch(e) {}
-    if (k !== KEY) return;   // chegou uma chave nova no meio do caminho: o finally carrega de novo
-    if (res.status === 401 || res.status === 403 || (data && !Array.isArray(data) && data.message === "chave inválida")){
-      KEY = ""; rows = []; showState("invalid"); return;
-    }
-    if (!res.ok || !Array.isArray(data)) throw new Error("resposta inesperada");
-    rows = data.map(norm); lastUpd = new Date(); render();
-  } catch(e) {
-    if (rows.length){ render(); upd.textContent = "Não deu pra atualizar agora. Verifique a internet."; }
-    else showState("error");
-  } finally { loading = false; btn.disabled = false; if (again || k !== KEY) load(); }
+  const k = KEY, ft = ++funTok, rt = all ? ++respTok : 0;
+  if (!booted) showState("loading"); else { upd.textContent = "Atualizando…"; dash.classList.add("busy"); }
+  $("btnUpd").disabled = true;
+  const pf = rpc("quiz_funil_painel", {p_chave:k, p_dias:diasParam(), p_nicho:nichoF || null})
+    .then(d => { if (!d || typeof d !== "object" || Array.isArray(d)) throw new Error("formato"); return normFunil(d); });
+  const pr = all ? rpc("quiz_respostas_painel", {p_chave:k})
+    .then(d => { if (!Array.isArray(d)) throw new Error("formato"); return d.map(norm); }) : Promise.resolve(null);
+  const [f, r] = await Promise.allSettled([pf, pr]);
+  if (k !== KEY) return;   // chegou outra chave no meio do caminho
+  if ([f, r].some(x => x.status === "rejected" && x.reason && x.reason.invalid)){
+    KEY = ""; funil = null; rows = []; respLoaded = false; booted = false; showState("invalid"); return;
+  }
+  if (all && rt === respTok){
+    if (r.status === "fulfilled"){ rows = r.value; respErr = false; respLoaded = true; } else respErr = true;
+  }
+  if (ft !== funTok) return;   // tem um pedido do funil mais novo a caminho
+  if (f.status === "fulfilled"){ funil = f.value; funErr = false; } else { funil = null; funErr = true; }
+  $("btnUpd").disabled = false; dash.classList.remove("busy");
+  if (!funil && !respLoaded){ booted = false; showState("error"); return; }
+  booted = true; lastUpd = new Date(); render();
 }
 
 /* ---------- eventos ---------- */
-$("btnUpd").addEventListener("click", load);
+$("btnUpd").addEventListener("click", () => load(true));
 $("btnCsv").addEventListener("click", downloadCsv);
 filters.querySelectorAll("[data-p]").forEach(b => b.addEventListener("click", () => {
   periodo = b.dataset.p;
   filters.querySelectorAll("[data-p]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-  render();
+  load(false);
 }));
-selNicho.addEventListener("change", () => { nichoF = selNicho.value; render(); });
-load();
+selNicho.addEventListener("change", () => { nichoF = selNicho.value; load(false); });
+load(true);
 </script>
 </body>
 </html>

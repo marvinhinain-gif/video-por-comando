@@ -893,7 +893,7 @@ function renderResult(){
           <div class="val"><small>R$</small><b>37</b><small>,00</small></div>
           <span class="once">PAGAMENTO ÚNICO</span>
         </div>
-        <a class="cta buy" ${buyAttrs()}>Quero minhas skills <span class="arr">→</span></a>
+        <a class="cta buy" data-botao="oferta" ${buyAttrs()}>Quero minhas skills <span class="arr">→</span></a>
         <div class="trust"><span>🔒 Compra segura</span><span class="wa">${WA}Chega no WhatsApp</span></div>
       </div></div>
 
@@ -917,7 +917,7 @@ function renderResult(){
       <div class="faq">${FAQ.map(([q,a])=>`<details><summary>${q}</summary><p>${a}</p></details>`).join("")}</div>
 
       <div class="final">
-        <a class="cta buy" ${buyAttrs()}>Garantir Agora <span class="arr">→</span></a>
+        <a class="cta buy" data-botao="final" ${buyAttrs()}>Garantir Agora <span class="arr">→</span></a>
         <div class="trust"><span>Acesso na hora</span><span class="wa">${WA}No seu WhatsApp</span><span>Garantia de 7 dias</span></div>
       </div>
       <footer>Axion Co. · Biblioteca de Skills</footer>
@@ -930,6 +930,7 @@ function renderResult(){
   const reveal = () => {
     if (revealed || step !== RES_STEP) return; revealed = true;
     after.hidden = false; after.classList.add("show");
+    trackStep("oferta");
     // o carrossel só começa depois de visível (escondido, mediria largura 0)
     requestAnimationFrame(()=>{ if (step === RES_STEP) cleanups.push(makeFlow(document.getElementById("resFlow"), document.getElementById("resDots"), order)); });
   };
@@ -961,6 +962,44 @@ function mountVsl(box){
   autoplayVisible(box);
 }
 
+/* ---------- rastreio do funil (tabela quiz_eventos): só etapa, tempo, nicho, origem e aparelho; nada de nome/telefone ---------- */
+const ETAPAS_OK = ["capa","nicho","dor","gasto","horas","pausa","ia","tempo","carregando","resultado","oferta"];
+const sessao = (()=>{
+  const mk = () => {
+    try { if (crypto.randomUUID) return crypto.randomUUID(); } catch(e) {}
+    const b = new Uint8Array(16);
+    try { crypto.getRandomValues(b); } catch(e) { for (let i = 0; i < 16; i++) b[i] = Math.random()*256 | 0; }
+    b[6] = b[6] & 15 | 64; b[8] = b[8] & 63 | 128;
+    const h = [...b].map(x=>x.toString(16).padStart(2,"0")).join("");
+    return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
+  };
+  let s = "";
+  try { s = sessionStorage.getItem("qb_sessao") || ""; } catch(e) {}
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s)){ s = mk(); try { sessionStorage.setItem("qb_sessao", s); } catch(e) {} }
+  return s;   // recarregar na mesma aba = mesma visita
+})();
+const utmSource = (()=>{ try { return (new URLSearchParams(location.search).get("utm_source") || "").replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0,100); } catch(e) { return ""; } })();
+const dispositivo = () => { try { return innerWidth < 768 || matchMedia("(pointer: coarse)").matches ? "celular" : "computador"; } catch(e) { return "celular"; } };
+let lastEtapa = null, lastEtapaT = 0;
+function sendEvent(row){
+  if (!SUPABASE.url) return;
+  const body = Object.assign({quiz:"biblioteca", sessao, dispositivo:dispositivo()}, row);
+  if (utmSource) body.utm_source = utmSource;
+  if (answers.nicho != null) body.nicho = nicheKey();
+  try {
+    fetch(`${SUPABASE.url}/rest/v1/quiz_eventos`, {method:"POST", keepalive:true,
+      headers:{"Content-Type":"application/json", "apikey":SUPABASE.key, "Prefer":"return=minimal"},
+      body:JSON.stringify(body)}).catch(()=>{});
+  } catch(e) {}
+}
+function trackStep(etapa){
+  if (!ETAPAS_OK.includes(etapa) || etapa === lastEtapa) return;
+  const now = performance.now(), row = {evento:"etapa", etapa, anterior:lastEtapa};
+  if (lastEtapa) row.ms = Math.max(0, Math.min(86400000, Math.round(now - lastEtapaT)));   // tempo na etapa anterior
+  lastEtapa = etapa; lastEtapaT = now;
+  sendEvent(row);
+}
+
 /* ---------- navegação (só pra frente) ---------- */
 function updateChrome(){
   const inFlow = step >= 0 && step < RES_STEP;
@@ -978,12 +1017,18 @@ function go(n){
   if (step < 0) renderCover();
   else if (step < STEPS.length){ const q = STEPS[step]; q.pause ? renderPause() : q.capture ? renderCapture() : q.loading ? renderLoading() : renderQuestion(); }
   else renderResult();
+  trackStep(step < 0 ? "capa" : step < STEPS.length ? STEPS[step].id : "resultado");
   window.scrollTo(0,0);
   const h = app.querySelector("#qt");
   if (h && step >= 0){ h.setAttribute("tabindex","-1"); h.focus({preventScroll:true}); }
 }
-// enquanto o CHECKOUT for "#", o botão de compra não pula pro topo
-document.addEventListener("click", e=>{ const a = e.target.closest("a.buy"); if (a && a.getAttribute("href") === "#") e.preventDefault(); });
+// clique no botão de compra: registra o evento (keepalive, não se perde ao abrir o checkout);
+// enquanto o CHECKOUT for "#", o botão não pula pro topo
+document.addEventListener("click", e=>{
+  const a = e.target.closest("a.buy"); if (!a) return;
+  sendEvent({evento:"cta", botao:(a.dataset.botao || "outro").slice(0,30)});
+  if (a.getAttribute("href") === "#") e.preventDefault();
+});
 
 go(-1);
 document.fonts && document.fonts.ready.then(()=>{ if (step < 0) fitCover(); });
