@@ -269,6 +269,18 @@ section{padding:var(--sec) 0;position:relative}
 /* carrossel no topo */
 .hero .fan{margin-top:26px}
 .hero .fan{margin-bottom:30px}
+/* primeira dobra no celular: do topo até "Envio imediato no seu WhatsApp" cabe na tela */
+@media (max-width:640px){
+  .topbar{padding:8px 14px}
+  .hero{padding-top:12px}
+  .hero .pill{margin-bottom:10px;padding:5px 13px;font-size:12px}
+  .hero-sub{margin-top:8px;font-size:15px;line-height:1.42}
+  .hero .fan{margin-top:12px;margin-bottom:12px}
+  .hero .btn{min-height:52px;padding:12px 20px}
+  .hero .trust{margin-top:9px}
+}
+/* celular baixinho (ex.: iPhone SE): esconde o selo de cima pra caber tudo */
+@media (max-width:640px) and (max-height:620px){ .hero .pill{display:none} .hero{padding-top:14px} }
 .cc.rv.in li{animation:liIn .45s var(--ease) .15s both}
 @keyframes liIn{from{opacity:0;transform:translateX(-10px)}}
 .cc.rv.in li:nth-child(2){animation-delay:.23s}.cc.rv.in li:nth-child(3){animation-delay:.31s}.cc.rv.in li:nth-child(4){animation-delay:.39s}.cc.rv.in li:nth-child(5){animation-delay:.47s}.cc.rv.in li:nth-child(6){animation-delay:.55s}.cc.rv.in li:nth-child(7){animation-delay:.63s}
@@ -746,8 +758,18 @@ function layout(pos){
     c.style.visibility = a > 3.4 ? 'hidden' : 'visible';
   });
 }
-const fitFan = () => { K = Math.min(1, innerWidth * .57 / 300); fan.style.setProperty('--k', K); };
-fitFan(); addEventListener('resize', fitFan);
+/* tamanho do leque: cabe na largura e, na altura, deixa o topo inteiro (até o "Envio no WhatsApp") visível sem rolar */
+const trustRow = document.querySelector('.hero .trust');
+const fitFan = () => {
+  const wK = Math.min(1, innerWidth * .57 / 300);
+  fan.style.setProperty('--k', wK);
+  const others = trustRow.getBoundingClientRect().bottom + scrollY - fan.offsetHeight;   // tudo da dobra menos o leque
+  const hK = (innerHeight - others - 10) / 556;
+  K = Math.max(.42, Math.min(wK, hK)); fan.style.setProperty('--k', K);
+};
+let fitW = innerWidth;
+fitFan(); document.fonts && document.fonts.ready.then(fitFan);
+addEventListener('resize', ()=>{ if (innerWidth !== fitW){ fitW = innerWidth; fitFan(); } });   // ignora a barra do navegador subindo e descendo
 
 /* vídeo do card ativo: toca sem som; o resto pausa */
 const vidOf = c => c.querySelector('video');
