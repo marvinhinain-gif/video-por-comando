@@ -56,6 +56,19 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 #dash.busy{opacity:.55;transition:opacity .2s}
 
 /* números do topo */
+.eng{margin-bottom:12px;padding:18px 16px;border-radius:20px;border:1px solid rgba(214,163,41,.45);background:radial-gradient(120% 90% at 0% 0%,rgba(214,163,41,.16),transparent 60%),var(--card)}
+.eng-top{display:flex;align-items:center;gap:16px}
+.eng-top small{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-hi,#F2D488);font-weight:700}
+.eng-top b{display:block;font-size:44px;line-height:1;font-weight:800;letter-spacing:-.03em;margin-top:4px;background:linear-gradient(100deg,#F4DB8F,#D6A329 52%,#B8871A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.eng-top p{margin:0;font-size:13px;line-height:1.45;color:var(--muted)}
+.eng-ls{display:grid;gap:12px;margin-top:16px}
+.eng-l{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:baseline}
+.eng-l .l{font-size:13.5px;color:var(--text,#ECE9E2)}
+.eng-l b{font-size:18px;font-weight:800}
+.eng-l .t{grid-column:1/-1;height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.eng-l .t i{display:block;height:100%;border-radius:99px;background:linear-gradient(100deg,#F4DB8F,#D6A329 52%,#B8871A)}
+.eng-l small{grid-column:1/-1;font-size:11.5px;color:var(--dim)}
+@media (min-width:760px){.eng-ls{grid-template-columns:repeat(3,1fr);gap:16px}}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .stat{min-width:0;padding:14px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
 .stat small{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
@@ -352,6 +365,32 @@ const stat = (label, value, sub, cls="", bcls="") => el("div", {class:"stat " + 
 const emptyIn = (t, p) => el("div", {class:"state in"}, el("h2", {text:t}), p ? el("p", {text:p}) : null);
 
 /* ---------- blocos do funil ---------- */
+/* engajamento do funil inteiro: em média, quantas das etapas cada visita percorreu */
+function blocoEngajamento(F){
+  const et = F.etapas.filter(e => e.etapa !== "clique"), n = et.length;
+  const soma = et.reduce((s,e) => s + Math.min(e.sessoes, F.visitas), 0);
+  const eng = F.visitas && n ? Math.round(soma / (F.visitas * n) * 100) : null;
+  const media = F.visitas && n ? soma / F.visitas : null;
+  const linha = (rotulo, valor, total) => {
+    const p = total ? Math.min(100, valor / total * 100) : 0;
+    return el("div", {class:"eng-l"},
+      el("span", {class:"l", text:rotulo}),
+      el("b", {text: pct(valor, total)}),
+      el("span", {class:"t", "aria-hidden":"true"}, el("i", {style:`width:${Math.max(p ? 2 : 0, p)}%`})),
+      el("small", {text:`${fmtN(valor)} de ${fmtN(total)} visitas`}));
+  };
+  return el("section", {class:"eng"},
+    el("div", {class:"eng-top"},
+      el("div", null,
+        el("small", {text:"Engajamento do funil"}),
+        el("b", {text: eng == null ? "–" : eng + "%"})),
+      el("p", {text: media == null ? "Ainda sem visitas nesse período."
+        : `Em média, cada visita percorreu ${media.toLocaleString("pt-BR", {maximumFractionDigits:1})} de ${n} etapas do quiz.`})),
+    el("div", {class:"eng-ls"},
+      linha("Entraram e começaram o quiz", F.iniciaram, F.visitas),
+      linha("Entraram e foram até o final", F.resultado, F.visitas),
+      linha("Entraram e clicaram em comprar", F.clicaram, F.visitas)));
+}
 function blocoCards(F){
   const vivo = [...F.aoVivo.values()].reduce((a,b)=>a+b,0);
   return el("div", {class:"stats"},
@@ -508,7 +547,7 @@ function render(){
   if (funErr || !F) dash.append(el("p", {class:"note err", text:"Não deu pra carregar o funil agora. Toque em Atualizar."}));
   else if (!F.visitas) dash.append(emptyIn("Ainda sem visitas nesse período", "Quando alguém abrir o quiz, o funil aparece aqui."));
   else {
-    dash.append(blocoCards(F));
+    dash.append(blocoEngajamento(F), blocoCards(F));
     const g = el("div", {class:"grid"});
     g.append(blocoFunil(F), blocoBotoes(F), blocoDias(F),
       tabela("Origem", "utm_source", F.porOrigem), tabela("Nicho", null, F.porNicho), blocoDisp(F));
