@@ -247,13 +247,22 @@ const NICHOS = {   // mesmos rótulos do quiz (NICHES)
   outro:"✨ Outra área / uso pessoal"
 };
 const ETAPAS = {   // nomes das etapas (iguais aos da função do banco)
-  capa:"Entrou no quiz", nicho:"P1 · Nicho", dor:"P2 · Maior trava", gasto:"P3 · Gasto com apps",
+  capa:"Entrou no quiz", nicho:"P1 · O que quer da IA", dor:"P2 · Maior trava", gasto:"P3 · Gasto com apps",
   horas:"P4 · Horas por semana", pausa:"Pausa · Prévia", ia:"P5 · Relação com IA", tempo:"P6 · Tempo livre",
   carregando:"Carregando", resultado:"Página de resultado", oferta:"Viu a oferta (após o vídeo)", clique:"Clicou no botão de compra"
 };
 const BOTOES = {oferta:"Botão da oferta", final:"Botão final (Garantir Agora)"};
 const hasOwn = (o,k) => Object.prototype.hasOwnProperty.call(o,k);
 const nichoLabel = k => hasOwn(NICHOS,k) ? NICHOS[k] : (k || "Sem nicho");
+/* o que a pessoa escolheu na P1 ("o que você quer que a IA faça"), pelo mesmo código do nicho */
+const DESEJOS = {
+  comida:"🍔 Receber pedidos no WhatsApp no automático", imoveis:"🏠 Vender mais imóveis com vídeo e avatar",
+  arq:"📐 Mostrar meus projetos em 3D pro cliente", beleza:"💆‍♀️ Lotar minha agenda de clientes",
+  criador:"🎥 Criar conteúdo e vídeo sem editar", loja:"🛍️ Vender mais na minha loja online",
+  servicos:"🧰 Organizar contas, clientes e orçamentos", foto:"📸 Entregar fotos e vídeos em tempo recorde",
+  outro:"✨ Trabalhar menos e ganhar tempo"
+};
+const desejoLabel = k => hasOwn(DESEJOS,k) ? DESEJOS[k] : nichoLabel(k);
 
 /* chave: lê do hash, guarda só na memória e limpa a barra de endereço */
 let KEY = "";
@@ -455,7 +464,7 @@ function colunaFunil(F, e, i, total, worst){
   let ans;
   if (COM_RESPOSTA.includes(e.etapa)){
     const tot = e.respostas.reduce((a,r)=>a+r[1],0);
-    ans = e.respostas.length ? bars(e.respostas, tot, 12, e.etapa === "nicho" ? nichoLabel : x=>x)
+    ans = e.respostas.length ? bars(e.respostas, tot, 12, e.etapa === "nicho" ? desejoLabel : x=>x)
                              : el("p", {class:"note", text:"Ainda sem respostas registradas nessa etapa."});
   } else ans = el("p", {class:"note", text:hasOwn(SEM_RESPOSTA, e.etapa) ? SEM_RESPOSTA[e.etapa] : "—"});
   return el("article", {class:"fcol" + (i === worst ? " worst" : ""), "data-i":String(i), "aria-label":`Etapa ${i+1} de ${total}: ${e.nome}`},

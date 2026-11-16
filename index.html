@@ -150,10 +150,10 @@ main,.progress,.topbar{position:relative;z-index:1}
 .opt.sel::after{content:"✓";position:absolute;right:14px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:var(--gold-grad);color:var(--btn-ink);display:grid;place-items:center;font-size:12px;font-weight:800}
 /* P1: grade de nichos */
 .ngrid{width:100%;max-width:440px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ngrid .opt{min-height:88px;padding:12px 10px;gap:6px;font-size:13.5px;line-height:1.25}
-.ngrid .opt .em{font-size:28px;line-height:1}
-.ngrid .opt:last-child{grid-column:1/-1;flex-direction:row;gap:10px;min-height:60px}
-.ngrid .opt.sel::after{top:10px;right:10px;transform:none}
+.ngrid .opt{min-height:62px;padding:10px 12px;gap:9px;font-size:13.5px;line-height:1.25;flex-direction:row;justify-content:flex-start;text-align:left}
+.ngrid .opt .em{font-size:24px;line-height:1;flex:none}
+.ngrid .opt:last-child{grid-column:1/-1;justify-content:center;min-height:52px}
+.ngrid .opt.sel::after{top:6px;right:6px;transform:none;width:18px;height:18px;font-size:11px}
 
 /* Pausa */
 .clock{display:flex;flex-direction:column;align-items:center;gap:0}
@@ -373,7 +373,7 @@ const COVER_ORDER = ["v3","v15","v1","v16","v5","v4","v14","v6","v2","v13","v8",
    tempo = opções da P6 · skills = [nome, ícone] · carrossel = mídias que aparecem primeiro
    ========================================================= */
 const NICHES = {
-  comida:{label:"Restaurante, lanchonete ou padaria", emoji:"🍔", nome:"sua hamburgueria, restaurante ou padaria", curto:"seu restaurante",
+  comida:{desejo:"Receber pedidos no WhatsApp no automático", label:"Restaurante, lanchonete ou padaria", emoji:"🍔", nome:"sua hamburgueria, restaurante ou padaria", curto:"seu restaurante",
     dores:[
       {t:"Responder pedido no WhatsApp o dia todo", c:"Cliente que espera resposta pede no concorrente."},
       {t:"Fazer post bonito do cardápio", c:"Sem post, o cardápio do dia não vende."},
@@ -385,7 +385,7 @@ const NICHES = {
     tempo:["Atender melhor no balcão","Criar pratos e promoções novas","Abrir mais horas e vender mais","Descansar e ficar com a família"],
     skills:[["Cardápio digital","utensils"],["Atendente de WhatsApp","chat"],["Post do prato do dia","image"],["Controle de caixa","wallet"]],
     carrossel:["cardapio","v14","v3","relatorio","v2","v12"]},
-  imoveis:{label:"Corretor ou imobiliária", emoji:"🏠", nome:"seus imóveis", curto:"seus imóveis",
+  imoveis:{desejo:"Vender mais imóveis com vídeo e avatar", label:"Corretor ou imobiliária", emoji:"🏠", nome:"seus imóveis", curto:"seus imóveis",
     dores:[
       {t:"Fazer anúncio e vídeo de cada imóvel", c:"Imóvel sem vídeo fica parado no portal."},
       {t:"Responder lead que chega a qualquer hora", c:"Lead que espera 1 hora já falou com outro corretor."},
@@ -397,7 +397,7 @@ const NICHES = {
     tempo:["Fazer mais visitas","Fechar mais negócios","Captar mais imóveis","Ter fim de semana de novo"],
     skills:[["Avatar apresentando o imóvel","video"],["Vídeo do imóvel pro Reels","play"],["CRM de clientes","users"],["Anúncio que faz o cliente chamar","megaphone"]],
     carrossel:["v1","v6","v5","v7","v11","v12"]},
-  arq:{label:"Arquitetura, engenharia ou obra", emoji:"📐", nome:"seus projetos", curto:"seus projetos",
+  arq:{desejo:"Mostrar meus projetos em 3D pro cliente", label:"Arquitetura, engenharia ou obra", emoji:"📐", nome:"seus projetos", curto:"seus projetos",
     dores:[
       {t:"Mostrar o projeto pro cliente entender", c:"Cliente que não visualiza não fecha."},
       {t:"Fazer render e apresentação", c:"Cada render terceirizado sai do seu bolso."},
@@ -409,7 +409,7 @@ const NICHES = {
     tempo:["Pegar mais projetos","Focar na parte criativa","Visitar mais obras","Ter mais tempo pra mim"],
     skills:[["Render do projeto","image"],["Obra em 3D andar por andar","layers"],["Orçamento em PDF","file"],["Simulação de empreendimento","ruler"]],
     carrossel:["v4","v7","v5","v6","relatorio","v12"]},
-  beleza:{label:"Estética, beleza ou saúde", emoji:"💆‍♀️", nome:"seu espaço de beleza", curto:"seu espaço de beleza",
+  beleza:{desejo:"Lotar minha agenda de clientes", label:"Estética, beleza ou saúde", emoji:"💆‍♀️", nome:"seu espaço de beleza", curto:"seu espaço de beleza",
     dores:[
       {t:"Responder agenda e preço no WhatsApp", c:"Quem não é respondido marca com outra."},
       {t:"Criar conteúdo pro Instagram", c:"Perfil parado não enche agenda."},
@@ -421,7 +421,7 @@ const NICHES = {
     tempo:["Atender mais clientes","Fazer curso e me especializar","Abrir mais horários","Descansar e cuidar de mim"],
     skills:[["Atendente de agenda no WhatsApp","calendar"],["Vídeo animado da promoção","video"],["Lembrete pro cliente voltar","bell"],["Controle do caixa","wallet"]],
     carrossel:["v2","v3","v9","v11","v14","v12"]},
-  criador:{label:"Criador de conteúdo ou infoprodutor", emoji:"🎥", nome:"seu conteúdo", curto:"seu conteúdo",
+  criador:{desejo:"Criar conteúdo e vídeo sem editar", label:"Criador de conteúdo ou infoprodutor", emoji:"🎥", nome:"seu conteúdo", curto:"seu conteúdo",
     dores:[
       {t:"Editar vídeo toda semana", c:"Cada vídeo parado na galeria é alcance perdido."},
       {t:"Ter ideia e roteiro todo dia", c:"Sem constância, o algoritmo te esquece."},
@@ -433,7 +433,7 @@ const NICHES = {
     tempo:["Gravar mais conteúdo","Lançar um produto novo","Fazer mais parcerias","Ter vida fora do celular"],
     skills:[["Roteiro de Reels","pencil"],["Vídeo explicativo animado","video"],["Edição com efeitos","cut"],["Página de vendas","globe"]],
     carrossel:["v8","v9","v10","v13","v3","v2"]},
-  loja:{label:"Loja ou e-commerce", emoji:"🛍️", nome:"sua loja", curto:"sua loja",
+  loja:{desejo:"Vender mais na minha loja online", label:"Loja ou e-commerce", emoji:"🛍️", nome:"sua loja", curto:"sua loja",
     dores:[
       {t:"Criar anúncio e criativo", c:"Criativo fraco encarece cada venda."},
       {t:"Fazer página de produto que venda", c:"Visita sem página boa vai embora."},
@@ -445,7 +445,7 @@ const NICHES = {
     tempo:["Testar mais produtos","Escalar os anúncios","Cuidar do atendimento","Ter mais tempo livre"],
     skills:[["Página de vendas","globe"],["Anúncio animado","megaphone"],["Atendente de WhatsApp","chat"],["Relatório de vendas","chart"]],
     carrossel:["v13","v3","v2","relatorio","v11","v12"]},
-  servicos:{label:"Prestador de serviço ou MEI", emoji:"🧰", nome:"seu negócio", curto:"seu negócio",
+  servicos:{desejo:"Organizar contas, clientes e orçamentos", label:"Prestador de serviço ou MEI", emoji:"🧰", nome:"seu negócio", curto:"seu negócio",
     dores:[
       {t:"Fazer orçamento rápido e bonito", c:"Orçamento que demora perde pro concorrente."},
       {t:"Controlar as contas do MEI", c:"Você trabalha muito e não sabe quanto sobra."},
@@ -457,7 +457,7 @@ const NICHES = {
     tempo:["Pegar mais serviços","Aumentar meu preço","Organizar a empresa","Ter mais tempo pra família"],
     skills:[["Orçamento em PDF","file"],["Controle do MEI","calc"],["CRM de clientes","users"],["Site animado","globe"]],
     carrossel:["v14","v12","v11","relatorio","v3","v13"]},
-  foto:{label:"Fotografia e eventos", emoji:"📸", nome:"seus ensaios e eventos", curto:"seus ensaios e eventos",
+  foto:{desejo:"Entregar fotos e vídeos em tempo recorde", label:"Fotografia e eventos", emoji:"📸", nome:"seus ensaios e eventos", curto:"seus ensaios e eventos",
     dores:[
       {t:"Separar e organizar centenas de fotos", c:"Cada hora separando foto é uma hora sem fotografar."},
       {t:"Editar e entregar rápido", c:"Entrega que atrasa vira reclamação."},
@@ -469,7 +469,7 @@ const NICHES = {
     tempo:["Fotografar mais eventos","Entregar mais rápido","Cuidar do portfólio","Descansar entre os eventos"],
     skills:[["Organizar fotos do evento","grid"],["Edição profissional","sparkle"],["Portfólio animado","image"],["Orçamento e contrato","clipboard"]],
     carrossel:["casamento","v10","v12","v13","v9","v3"]},
-  outro:{label:"Outra área / uso pessoal", emoji:"✨", nome:"seu dia a dia", curto:"seu dia a dia",
+  outro:{desejo:"Trabalhar menos e ganhar tempo", label:"Outra área / uso pessoal", emoji:"✨", nome:"seu dia a dia", curto:"seu dia a dia",
     dores:[
       {t:"Escrever textos e mensagens", c:"Horas na frente do celular que podiam ser suas."},
       {t:"Organizar contas e rotina", c:"Sem organização, o mês escapa."},
@@ -490,9 +490,10 @@ const IA = ["Nunca usei","Uso o ChatGPT pra coisa simples","Uso, mas não sai do
 
 /* As etapas: P1, P2, P3, P4, Pausa, P5, P6, (Captura — desligada por enquanto), Carregamento */
 const STEPS = [
-  {id:"nicho", grid:true, title:()=>"Com o que você trabalha?", sub:()=>"Vamos montar suas skills pro seu dia a dia.",
-   opts:()=>NICHE_KEYS.map(k=>({t:NICHES[k].label, e:NICHES[k].emoji, v:k})),
-   insight:"A IA certa pro seu nicho economiza mais do que qualquer aplicativo."},
+  // P1: o que a pessoa quer que a IA faça. Cada desejo aponta para um nicho (NICHES), que personaliza o resto do quiz.
+  {id:"nicho", grid:true, title:()=>"O que você quer que a IA faça por você?", sub:()=>"Toque no que mais mudaria a sua semana.",
+   opts:()=>NICHE_KEYS.map(k=>({t:NICHES[k].desejo, e:NICHES[k].emoji, v:k})),
+   insight:"Você não precisa aprender IA. Só escolher o que ela vai fazer por você."},
   {id:"dor", title:()=>"O que mais te trava hoje?", opts:n=>n.dores.map(d=>({...d, v:d.t})),
    insight:"A tarefa que mais te trava é exatamente a primeira que a IA deveria fazer por você."},
   {id:"gasto", title:()=>"Quanto você gasta por mês com aplicativo, sistema ou freelancer?", sub:n=>"Ex.: "+n.gastoSub, opts:()=>GASTO,
