@@ -69,6 +69,8 @@ main,.progress,.topbar{position:relative;z-index:1}
 /* ---------- Faixa Black Friday ---------- */
 .topbar{display:flex;justify-content:center;align-items:center;gap:10px;padding:8px 14px;background:var(--gold-grad);color:var(--btn-ink);font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.3}
 .topbar svg{width:16px;height:16px;flex:none}
+.topbar.tb-free{gap:8px;font-size:13px;letter-spacing:.08em}
+.topbar.tb-free span{background:none;padding:0;font-size:16px;color:inherit}
 .topbar span{background:var(--btn-ink);color:var(--gold-hi);padding:3px 10px;border-radius:99px;font-size:11.5px;white-space:nowrap}
 
 /* ---------- Headline (igual à página) ---------- */
@@ -307,10 +309,11 @@ footer{width:100%;padding:24px 16px 30px;font-size:12px;color:var(--dim);border-
 <div class="glow" aria-hidden="true"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#F4DB8F"/><stop offset=".52" stop-color="#D6A329"/><stop offset="1" stop-color="#B8871A"/></linearGradient></defs></svg>
 
-<div class="topbar" id="topbar">
+<div class="topbar" id="topbar" hidden>
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor"/></svg>
   Desconto de Black Friday <span>62% OFF</span>
 </div>
+<div class="topbar tb-free" id="topbarFree"><span aria-hidden="true">🎁</span> 100% GRATUITO</div>
 
 <div id="prog" class="progress" hidden>
   <div class="col">
@@ -1013,7 +1016,9 @@ function trackStep(etapa){
 function updateChrome(){
   const inFlow = step >= 0 && step < RES_STEP;
   prog.hidden = !inFlow;
-  topbar.hidden = inFlow;
+  // capa: "100% GRATUITO" (o quiz é grátis); página de resultado (com o preço): faixa de Black Friday
+  topbar.hidden = step < RES_STEP;
+  document.getElementById("topbarFree").hidden = step >= 0;
   const pct = inFlow ? Math.round((step+1)/STEPS.length*100) : step < 0 ? 0 : 100;
   document.getElementById("tfill").style.width = Math.max(4,pct) + "%";
   track.setAttribute("aria-valuenow", pct);
