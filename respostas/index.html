@@ -51,6 +51,17 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 .seg{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
 .seg button{min-height:40px;border:0;border-radius:10px;background:none;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--muted)}
 .seg button[aria-pressed="true"]{background:var(--gold-grad);color:var(--btn-ink)}
+.seg.s3{grid-template-columns:repeat(3,1fr)}
+.dvs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dv{width:100%;padding:14px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card-2);color:inherit;font:inherit;text-align:left;cursor:pointer;display:grid;gap:6px}
+.dv.on{border-color:var(--gold);background:linear-gradient(180deg,rgba(214,163,41,.12),var(--card-2))}
+.dv h3{margin:0;font-size:15px}
+.dv .vz{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.dv .vz small{font-size:12px;font-weight:500;color:var(--muted);margin-left:4px}
+.dv .ln{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:12.5px;color:var(--muted)}
+.dv .ln b{color:var(--text);font-size:14px}
+.dv .ln .t{grid-column:1/-1;height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.dv .ln .t i{display:block;height:100%;border-radius:99px;background:linear-gradient(100deg,#F4DB8F,#D6A329 52%,#B8871A)}
 .diabar{display:grid;grid-template-columns:44px 1fr 44px;gap:6px;align-items:stretch}
 .diabar[hidden]{display:none}
 .diabar button{min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:20px;cursor:pointer}
@@ -237,6 +248,11 @@ button.callout::after{content:" →";color:#ff9b9b}
       <label class="diaIn"><span id="diaNome"></span><input type="date" id="inDia" aria-label="Escolher o dia"></label>
       <button type="button" id="diaNext" aria-label="Próximo dia">›</button>
     </div>
+    <div class="seg s3" role="group" aria-label="Dispositivo">
+      <button type="button" data-dv="" aria-pressed="true">Todos</button>
+      <button type="button" data-dv="celular" aria-pressed="false">📱 Celular</button>
+      <button type="button" data-dv="computador" aria-pressed="false">💻 Computador</button>
+    </div>
     <select class="sel" id="selNicho" aria-label="Nicho"></select>
   </div>
 
@@ -295,7 +311,7 @@ KEY = readKey();
 addEventListener("hashchange", () => { const k = readKey(); if (k){ KEY = k; funil = null; rows = []; respLoaded = false; booted = false; load(true); } });
 
 let funil = null, funErr = false, rows = [], respErr = false, respLoaded = false;
-let dia = "", periodo = "7", nichoF = "", booted = false, lastUpd = null, funTok = 0, respTok = 0;
+let dia = "", dispF = "", periodo = "7", nichoF = "", booted = false, lastUpd = null, funTok = 0, respTok = 0;
 const $ = id => document.getElementById(id);
 const top_ = $("top"), filters = $("filters"), dash = $("dash"), state = $("state"), upd = $("upd"), selNicho = $("selNicho");
 
@@ -351,7 +367,8 @@ function normFunil(d){   // o funil (quiz_funil_painel)
     porDia: arr(d.por_dia).map(obj).filter(r => /^\d{4}-\d{2}-\d{2}$/.test(S(r.dia, 10))).map(r => ({dia:S(r.dia,10), ...seg(r)})).sort((a,b)=>a.dia<b.dia?-1:1),
     porOrigem: arr(d.por_origem).map(obj).map(r => ({nome:S(r.origem, 100).trim() || "direto", ...seg(r)})),
     porNicho: arr(d.por_nicho).map(obj).map(r => ({nome:nichoLabel(S(r.nicho, 40)), key:S(r.nicho, 40), ...seg(r)})),
-    disp: entries(d.por_dispositivo).sort((a,b)=>b[1]-a[1])
+    disp: entries(d.por_dispositivo).sort((a,b)=>b[1]-a[1]),
+    dispositivos: arr(d.dispositivos).map(obj).slice(0,5).map(r => ({key:S(r.dispositivo, 20), visitas:I(r.visitas), iniciaram:I(r.iniciaram), resultado:I(r.resultado), clicaram:I(r.clicaram)}))
   };
 }
 
@@ -588,10 +605,22 @@ function tabela(title, sub, list){
       el("span", {class:"num", text:pct(r.resultado, r.visitas)}), el("span", {class:"num", text:pct(r.clicaram, r.visitas)})))
   ));
 }
+/* celular x computador lado a lado (sempre os dois, mesmo com o filtro de dispositivo ligado) */
+const DISP = {celular:"📱 Celular", computador:"💻 Computador"};
 function blocoDisp(F){
-  const tot = F.disp.reduce((s,e)=>s+e[1],0);
-  const nome = k => ({celular:"📱 Celular", computador:"💻 Computador"})[k] || "Não informado";
-  return box("Dispositivo", null, tot ? bars(F.disp, tot, 4, nome) : el("p", {class:"note", text:"Sem dados nesse período."}));
+  const lista = F.dispositivos.filter(d => hasOwn(DISP, d.key)).sort((a,b) => a.key < b.key ? -1 : 1);
+  if (!lista.length) return box("Celular x Computador", null, el("p", {class:"note", text:"Sem dados nesse período."}), true);
+  const total = lista.reduce((s,d) => s + d.visitas, 0);
+  const linha = (rot, v, t) => el("div", {class:"ln"}, el("span", {text:rot}), el("b", {text:pct(v, t)}),
+    el("span", {class:"t", "aria-hidden":"true"}, el("i", {style:`width:${t ? Math.min(100, v / t * 100) : 0}%`})));
+  return box("Celular x Computador", "toque num deles para ver o painel só daquele dispositivo", el("div", {class:"dvs"},
+    lista.map(d => el("button", {type:"button", class:"dv" + (dispF === d.key ? " on" : ""), "aria-pressed":String(dispF === d.key),
+        onclick:() => escolherDisp(dispF === d.key ? "" : d.key)},
+      el("h3", {text:DISP[d.key]}),
+      el("div", {class:"vz"}, fmtN(d.visitas), el("small", {text:`visitas · ${pct(d.visitas, total)}`})),
+      linha("Começaram o quiz", d.iniciaram, d.visitas),
+      linha("Foram até o final", d.resultado, d.visitas),
+      linha("Clicaram em comprar", d.clicaram, d.visitas)))), true);
 }
 
 /* ---------- respostas agregadas ---------- */
@@ -629,13 +658,15 @@ function render(){
   if (funErr || !F) dash.append(el("p", {class:"note err", text:"Não deu pra carregar o funil agora. Toque em Atualizar."}));
   else if (!F.visitas) dash.append(emptyIn("Ainda sem visitas nesse período", "Quando alguém abrir o quiz, o funil aparece aqui."));
   else {
-    dash.append(blocoEngajamento(F), blocoCards(F));
+    dash.append(blocoEngajamento(F), blocoCards(F), blocoDisp(F));
     const g = el("div", {class:"grid"});
     g.append(...[blocoFunil(F), blocoPerdas(F), blocoBotoes(F), blocoDias(F), blocoDiaADia(F)].filter(Boolean),
-      tabela("Origem", "utm_source", F.porOrigem), tabela("Nicho", null, F.porNicho), blocoDisp(F));
+      tabela("Origem", "utm_source", F.porOrigem), tabela("Nicho", null, F.porNicho));
     dash.append(g);
   }
-  dash.append(el("h2", {class:"sec", text:"O que as pessoas responderam"}), ...blocoRespostas());
+  dash.append(el("h2", {class:"sec", text:"O que as pessoas responderam"}),
+    ...(dispF ? [el("p", {class:"note", text:"Este resumo junta celular e computador. As respostas por dispositivo aparecem nas colunas do funil acima."})] : []),
+    ...blocoRespostas());
 }
 function fillNichos(){
   const keys = [...new Set([...Object.keys(NICHOS), ...rows.map(r=>r.nicho), ...(funil ? funil.porNicho.map(r=>r.key) : [])].filter(Boolean))];
@@ -690,7 +721,7 @@ async function load(all=true){
   const k = KEY, ft = ++funTok, rt = all ? ++respTok : 0;
   if (!booted) showState("loading"); else { upd.textContent = "Atualizando…"; dash.classList.add("busy"); }
   $("btnUpd").disabled = true;
-  const pf = rpc("quiz_funil_painel", periodo === "dia" ? {p_chave:k, p_dia:dia, p_nicho:nichoF || null} : {p_chave:k, p_dias:diasParam(), p_nicho:nichoF || null})
+  const pf = rpc("quiz_funil_painel", periodo === "dia" ? {p_chave:k, p_dia:dia, p_nicho:nichoF || null, p_dispositivo:dispF || null} : {p_chave:k, p_dias:diasParam(), p_nicho:nichoF || null, p_dispositivo:dispF || null})
     .then(d => { if (!d || typeof d !== "object" || Array.isArray(d)) throw new Error("formato"); return normFunil(d); });
   const pr = all ? rpc("quiz_respostas_painel", {p_chave:k})
     .then(d => { if (!Array.isArray(d)) throw new Error("formato"); return d.map(norm); }) : Promise.resolve(null);
@@ -736,6 +767,12 @@ filters.querySelectorAll("[data-p]").forEach(b => b.addEventListener("click", ()
 $("diaPrev").addEventListener("click", () => escolherDia(somaDia(dia || hojeSP(), -1)));
 $("diaNext").addEventListener("click", () => escolherDia(somaDia(dia || hojeSP(), +1)));
 inDia.addEventListener("change", () => escolherDia(inDia.value));
+function escolherDisp(v){
+  dispF = hasOwn(DISP, v) ? v : "";
+  filters.querySelectorAll("[data-dv]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.dv === dispF)));
+  load(false);
+}
+filters.querySelectorAll("[data-dv]").forEach(b => b.addEventListener("click", () => escolherDisp(b.dataset.dv)));
 selNicho.addEventListener("change", () => { nichoF = selNicho.value; load(false); });
 load(true);
 </script>
