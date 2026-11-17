@@ -45,13 +45,24 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 .btn:hover{border-color:rgba(214,163,41,.6)}
 .btn.pri{background:var(--gold-grad);color:var(--btn-ink);border-color:transparent}
 .btn:disabled{opacity:.5;cursor:default}
+@media (max-width:520px){.top .acts{display:grid;grid-template-columns:auto auto 1fr;width:100%}.top .btn{padding:10px 11px;font-size:13px}}
 
 /* filtros */
 .filters{display:grid;gap:10px;margin-bottom:18px}
-.seg{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.seg{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
 .seg button{min-height:40px;border:0;border-radius:10px;background:none;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--muted)}
 .seg button[aria-pressed="true"]{background:var(--gold-grad);color:var(--btn-ink)}
 .seg.s3{grid-template-columns:repeat(3,1fr)}
+@media (max-width:520px){.seg.sp{grid-template-columns:repeat(3,1fr)}}
+.testebar{display:grid;gap:6px;padding:10px;border-radius:14px;border:1px solid rgba(214,163,41,.5);background:var(--card)}
+.testebar[hidden]{display:none}
+.testebar .tinfo{margin:0;font-size:12.5px;color:var(--muted)}
+.testebar .tinfo b{color:var(--gold)}
+.confirm{margin:0 0 16px;padding:16px;border-radius:16px;border:1px solid var(--gold);background:linear-gradient(180deg,rgba(214,163,41,.10),var(--card));display:grid;gap:10px}
+.confirm[hidden]{display:none}
+.confirm h2{margin:0;font-size:17px}
+.confirm p{margin:0;font-size:14px;color:var(--muted)}
+.confirm .acts{justify-content:flex-end}
 .dvs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .dv{width:100%;padding:14px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card-2);color:inherit;font:inherit;text-align:left;cursor:pointer;display:grid;gap:6px}
 .dv.on{border-color:var(--gold);background:linear-gradient(180deg,rgba(214,163,41,.12),var(--card-2))}
@@ -74,7 +85,7 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 .dd{width:100%;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
 .dd:hover{background:rgba(214,163,41,.08)}
 .sel{width:100%;min-height:46px;border-radius:12px;border:1px solid var(--line-2);background:var(--card);padding:0 12px;font-weight:500}
-@media (min-width:760px){.filters{grid-template-columns:minmax(0,420px) minmax(0,320px)}}
+@media (min-width:760px){.filters{grid-template-columns:minmax(0,460px) minmax(0,320px)}}
 #dash.busy{opacity:.55;transition:opacity .2s}
 
 /* números do topo */
@@ -230,18 +241,34 @@ button.callout::after{content:" →";color:#ff9b9b}
       <p class="upd" id="upd" aria-live="polite"></p>
     </div>
     <div class="acts">
+      <button class="btn" id="btnTeste" type="button" title="Zerar a contagem e começar um novo teste">🔄 Zerar contagem</button>
       <button class="btn" id="btnCsv" type="button">Baixar CSV</button>
       <button class="btn pri" id="btnUpd" type="button">Atualizar</button>
     </div>
   </header>
 
+  <div class="confirm" id="confirmBox" role="dialog" aria-labelledby="cfT" hidden>
+    <h2 id="cfT">Zerar a contagem e começar um teste novo?</h2>
+    <p>A partir de agora o painel conta do zero no filtro <b>Teste</b>. Nada é apagado: os números antigos continuam em Hoje, 7/30 dias, Tudo e Dia, e os testes anteriores ficam na lista.</p>
+    <p class="note err" id="cfErr" hidden>Não deu pra iniciar o teste. Verifique a internet e tente de novo.</p>
+    <div class="acts">
+      <button class="btn" id="cfNao" type="button">Cancelar</button>
+      <button class="btn pri" id="cfSim" type="button">Começar do zero agora</button>
+    </div>
+  </div>
+
   <div class="filters" id="filters" hidden>
-    <div class="seg" role="group" aria-label="Período">
+    <div class="seg sp" role="group" aria-label="Período">
       <button type="button" data-p="hoje" aria-pressed="false">Hoje</button>
       <button type="button" data-p="7" aria-pressed="true">7 dias</button>
       <button type="button" data-p="30" aria-pressed="false">30 dias</button>
       <button type="button" data-p="tudo" aria-pressed="false">Tudo</button>
       <button type="button" data-p="dia" aria-pressed="false">Dia</button>
+      <button type="button" data-p="teste" aria-pressed="false">Teste</button>
+    </div>
+    <div class="testebar" id="testeBar" hidden>
+      <select class="sel" id="selTeste" aria-label="Qual teste"></select>
+      <p class="tinfo" id="testeInfo"></p>
     </div>
     <div class="diabar" id="diaBar" hidden>
       <button type="button" id="diaPrev" aria-label="Dia anterior">‹</button>
@@ -311,6 +338,7 @@ KEY = readKey();
 addEventListener("hashchange", () => { const k = readKey(); if (k){ KEY = k; funil = null; rows = []; respLoaded = false; booted = false; load(true); } });
 
 let funil = null, funErr = false, rows = [], respErr = false, respLoaded = false;
+let testes = [], testeId = 0, querTeste = false;
 let dia = "", dispF = "", periodo = "7", nichoF = "", booted = false, lastUpd = null, funTok = 0, respTok = 0;
 const $ = id => document.getElementById(id);
 const top_ = $("top"), filters = $("filters"), dash = $("dash"), state = $("state"), upd = $("upd"), selNicho = $("selNicho");
@@ -367,6 +395,8 @@ function normFunil(d){   // o funil (quiz_funil_painel)
     porDia: arr(d.por_dia).map(obj).filter(r => /^\d{4}-\d{2}-\d{2}$/.test(S(r.dia, 10))).map(r => ({dia:S(r.dia,10), ...seg(r)})).sort((a,b)=>a.dia<b.dia?-1:1),
     porOrigem: arr(d.por_origem).map(obj).map(r => ({nome:S(r.origem, 100).trim() || "direto", ...seg(r)})),
     porNicho: arr(d.por_nicho).map(obj).map(r => ({nome:nichoLabel(S(r.nicho, 40)), key:S(r.nicho, 40), ...seg(r)})),
+    testes: arr(d.testes).slice(0,50).map(obj).map(t => ({id:I(t.id), n:I(t.n), ini:new Date(t.inicio), fim:t.fim ? new Date(t.fim) : null}))
+      .filter(t => t.id > 0 && !isNaN(t.ini) && !(t.fim && isNaN(t.fim))),
     disp: entries(d.por_dispositivo).sort((a,b)=>b[1]-a[1]),
     dispositivos: arr(d.dispositivos).map(obj).slice(0,5).map(r => ({key:S(r.dispositivo, 20), visitas:I(r.visitas), iniciaram:I(r.iniciaram), resultado:I(r.resultado), clicaram:I(r.clicaram)}))
   };
@@ -391,7 +421,9 @@ function fmtDur(ms){
 const diaCurto = d => d.slice(8,10) + "/" + d.slice(5,7);
 const DSEM = ["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
 const diaLongo = d => { const [y,m,dd] = d.split("-").map(Number); return `${DSEM[new Date(Date.UTC(y,m-1,dd)).getUTCDay()]}, ${diaCurto(d)}`; };
-const periodoLabel = () => periodo === "dia" ? (dia ? diaLongo(dia) : "no dia") : ({hoje:"hoje", "7":"últimos 7 dias", "30":"últimos 30 dias", tudo:"desde o início"}[periodo]);
+const testeAtual = () => testes.find(t => t.id === testeId) || testes[0] || null;
+const testeNome = t => `Teste ${t.n}`;
+const periodoLabel = () => periodo === "teste" ? (testeAtual() ? "desde " + fDT.format(testeAtual().ini) : "no teste") : periodo === "dia" ? (dia ? diaLongo(dia) : "no dia") : ({hoje:"hoje", "7":"últimos 7 dias", "30":"últimos 30 dias", tudo:"desde o início"}[periodo]);
 const diasParam = () => ({hoje:0, "7":7, "30":30, tudo:null}[periodo]);
 
 /* respostas filtradas no navegador (período + nicho) */
@@ -401,6 +433,7 @@ function filtered(){
     if (nichoF && r.nicho !== nichoF) return false;
     if (periodo === "tudo") return true;
     if (!r.d) return false;
+    if (periodo === "teste"){ const t = testeAtual(); return !!t && r.d >= t.ini && (!t.fim || r.d < t.fim); }
     if (periodo === "hoje") return fDay.format(r.d) === today;
     if (periodo === "dia") return fDay.format(r.d) === dia;
     return now - r.d.getTime() <= (+periodo) * 86400000;
@@ -651,12 +684,14 @@ function blocoRespostas(){
 function render(){
   showDash();
   upd.textContent = lastUpd ? "Atualizado às " + fHM.format(lastUpd) : "";
-  fillNichos();
+  fillNichos(); pintaTeste();
   $("btnCsv").disabled = !filtered().length;
   dash.replaceChildren();
   const F = funil;
   if (funErr || !F) dash.append(el("p", {class:"note err", text:"Não deu pra carregar o funil agora. Toque em Atualizar."}));
-  else if (!F.visitas) dash.append(emptyIn("Ainda sem visitas nesse período", "Quando alguém abrir o quiz, o funil aparece aqui."));
+  else if (!F.visitas) dash.append(periodo === "teste"
+    ? emptyIn("Contagem zerada", "Ainda ninguém abriu o quiz desde o início deste teste. Toque em Atualizar daqui a pouco.")
+    : emptyIn("Ainda sem visitas nesse período", "Quando alguém abrir o quiz, o funil aparece aqui."));
   else {
     dash.append(blocoEngajamento(F), blocoCards(F), blocoDisp(F));
     const g = el("div", {class:"grid"});
@@ -721,7 +756,12 @@ async function load(all=true){
   const k = KEY, ft = ++funTok, rt = all ? ++respTok : 0;
   if (!booted) showState("loading"); else { upd.textContent = "Atualizando…"; dash.classList.add("busy"); }
   $("btnUpd").disabled = true;
-  const pf = rpc("quiz_funil_painel", periodo === "dia" ? {p_chave:k, p_dia:dia, p_nicho:nichoF || null, p_dispositivo:dispF || null} : {p_chave:k, p_dias:diasParam(), p_nicho:nichoF || null, p_dispositivo:dispF || null})
+  if (periodo === "teste" && !testeAtual()){ periodo = "7"; pintaPeriodo(); }
+  const filtro = {p_chave:k, p_nicho:nichoF || null, p_dispositivo:dispF || null};
+  if (periodo === "teste") filtro.p_teste = testeAtual().id;
+  else if (periodo === "dia") filtro.p_dia = dia;
+  else filtro.p_dias = diasParam();
+  const pf = rpc("quiz_funil_painel", filtro)
     .then(d => { if (!d || typeof d !== "object" || Array.isArray(d)) throw new Error("formato"); return normFunil(d); });
   const pr = all ? rpc("quiz_respostas_painel", {p_chave:k})
     .then(d => { if (!Array.isArray(d)) throw new Error("formato"); return d.map(norm); }) : Promise.resolve(null);
@@ -734,10 +774,12 @@ async function load(all=true){
     if (r.status === "fulfilled"){ rows = r.value; respErr = false; respLoaded = true; } else respErr = true;
   }
   if (ft !== funTok) return;   // tem um pedido do funil mais novo a caminho
-  if (f.status === "fulfilled"){ funil = f.value; funErr = false; } else { funil = null; funErr = true; }
+  if (f.status === "fulfilled"){ funil = f.value; funErr = false; testes = funil.testes; } else { funil = null; funErr = true; }
   $("btnUpd").disabled = false; dash.classList.remove("busy");
   if (!funil && !respLoaded){ booted = false; showState("error"); return; }
-  booted = true; lastUpd = new Date(); render();
+  booted = true; lastUpd = new Date();
+  if (querTeste){ querTeste = false; if (testes.length){ periodo = "teste"; pintaPeriodo(); render(); load(false); return; } }
+  render();
 }
 
 /* ---------- eventos ---------- */
@@ -750,6 +792,8 @@ const somaDia = (d, n) => { const [y,m,dd] = d.split("-").map(Number); return ne
 function pintaPeriodo(){
   filters.querySelectorAll("[data-p]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.p === periodo)));
   diaBar.hidden = periodo !== "dia";
+  pintaTeste();
+  try { if (periodo !== "dia") localStorage.setItem("qb_painel_periodo", periodo); } catch(e) {}
   if (periodo === "dia"){
     inDia.max = hojeSP(); inDia.value = dia; diaNome.textContent = diaLongo(dia);
     $("diaNext").disabled = dia >= hojeSP();
@@ -762,6 +806,7 @@ function escolherDia(d){
 }
 filters.querySelectorAll("[data-p]").forEach(b => b.addEventListener("click", () => {
   if (b.dataset.p === "dia"){ escolherDia(dia || hojeSP()); return; }
+  if (b.dataset.p === "teste" && !testes.length){ abrirConfirm(); return; }
   periodo = b.dataset.p; pintaPeriodo(); load(false);
 }));
 $("diaPrev").addEventListener("click", () => escolherDia(somaDia(dia || hojeSP(), -1)));
@@ -774,6 +819,44 @@ function escolherDisp(v){
 }
 filters.querySelectorAll("[data-dv]").forEach(b => b.addEventListener("click", () => escolherDisp(b.dataset.dv)));
 selNicho.addEventListener("change", () => { nichoF = selNicho.value; load(false); });
+
+/* testes de engajamento: zera a contagem a partir de agora, sem apagar nada */
+const testeBar = $("testeBar"), selTeste = $("selTeste"), testeInfo = $("testeInfo"), confirmBox = $("confirmBox");
+const fDM = new Intl.DateTimeFormat("pt-BR", {timeZone:TZ, day:"2-digit", month:"2-digit"});
+const fH = new Intl.DateTimeFormat("pt-BR", {timeZone:TZ, hour:"2-digit", minute:"2-digit"});
+const quando = d => `${fDM.format(d)} às ${fH.format(d)}`;
+function pintaTeste(){
+  testeBar.hidden = periodo !== "teste";
+  if (periodo !== "teste") return;
+  const t = testeAtual(); if (!t) return;
+  selTeste.replaceChildren(...testes.map((x, i) => el("option", {value:String(x.id),
+    text: i === 0 && !x.fim ? `${testeNome(x)} · atual · desde ${quando(x.ini)}` : `${testeNome(x)} · ${quando(x.ini)} → ${x.fim ? quando(x.fim) : "agora"}`})));
+  selTeste.value = String(t.id);
+  const ate = t.fim || new Date(Math.max(Date.now(), +t.ini));
+  testeInfo.replaceChildren(t.fim ? "Encerrado. Durou " : "Contando do zero desde ", el("b", {text: t.fim ? fmtDur(ate - t.ini) : quando(t.ini)}),
+    t.fim ? ` (${quando(t.ini)} → ${quando(t.fim)}).` : ` · há ${fmtDur(ate - t.ini)}.`);
+}
+selTeste.addEventListener("change", () => { testeId = +selTeste.value || 0; load(false); });
+function abrirConfirm(){ $("cfErr").hidden = true; confirmBox.hidden = false; $("cfSim").focus(); confirmBox.scrollIntoView({block:"nearest", behavior:"smooth"}); }
+$("btnTeste").addEventListener("click", abrirConfirm);
+$("cfNao").addEventListener("click", () => { confirmBox.hidden = true; });
+$("cfSim").addEventListener("click", async () => {
+  const b = $("cfSim"); b.disabled = true; $("cfErr").hidden = true;
+  try {
+    const t = obj(await rpc("quiz_novo_teste", {p_chave:KEY}));
+    const id = I(t.id), ini = new Date(t.iniciado_em);
+    if (!id || isNaN(ini)) throw new Error("formato");
+    if (!testes.some(x => x.id === id)){
+      if (testes[0] && !testes[0].fim) testes[0].fim = ini;
+      testes.unshift({id, n:(testes[0] ? testes[0].n : 0) + 1, ini, fim:null});
+    }
+    testeId = id; periodo = "teste"; confirmBox.hidden = true; pintaPeriodo(); load(false);
+  } catch(e){
+    if (e && e.invalid){ KEY = ""; showState("invalid"); return; }
+    $("cfErr").hidden = false;
+  } finally { b.disabled = false; }
+});
+try { if (localStorage.getItem("qb_painel_periodo") === "teste") querTeste = true; else { const p = localStorage.getItem("qb_painel_periodo"); if (["hoje","7","30","tudo"].includes(p)){ periodo = p; pintaPeriodo(); } } } catch(e) {}
 load(true);
 </script>
 </body>
