@@ -56,6 +56,9 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 @media (max-width:520px){.seg.sp{grid-template-columns:repeat(3,1fr)}}
 .testebar{display:grid;gap:6px;padding:10px;border-radius:14px;border:1px solid rgba(214,163,41,.5);background:var(--card)}
 .testebar[hidden]{display:none}
+.hojeinfo{margin:0;padding:10px 12px;border-radius:12px;border:1px solid rgba(214,163,41,.5);background:var(--card);font-size:12.5px;color:var(--muted)}
+.hojeinfo[hidden]{display:none}
+.hojeinfo b{color:var(--gold)}
 .testebar .tinfo{margin:0;font-size:12.5px;color:var(--muted)}
 .testebar .tinfo b{color:var(--gold)}
 .confirm{margin:0 0 16px;padding:16px;border-radius:16px;border:1px solid var(--gold);background:linear-gradient(180deg,rgba(214,163,41,.10),var(--card));display:grid;gap:10px}
@@ -241,19 +244,19 @@ button.callout::after{content:" →";color:#ff9b9b}
       <p class="upd" id="upd" aria-live="polite"></p>
     </div>
     <div class="acts">
-      <button class="btn" id="btnTeste" type="button" title="Zerar a contagem e começar um novo teste">🔄 Zerar contagem</button>
+      <button class="btn" id="btnTeste" type="button" title="Zerar os números de hoje">🔄 Zerar o dia</button>
       <button class="btn" id="btnCsv" type="button">Baixar CSV</button>
       <button class="btn pri" id="btnUpd" type="button">Atualizar</button>
     </div>
   </header>
 
   <div class="confirm" id="confirmBox" role="dialog" aria-labelledby="cfT" hidden>
-    <h2 id="cfT">Zerar a contagem e começar um teste novo?</h2>
-    <p>A partir de agora o painel conta do zero no filtro <b>Teste</b>. Nada é apagado: os números antigos continuam em Hoje, 7/30 dias, Tudo e Dia, e os testes anteriores ficam na lista.</p>
+    <h2 id="cfT">Zerar os números de hoje?</h2>
+    <p>O filtro <b>Hoje</b> passa a contar do zero a partir de agora. Só o dia de hoje é zerado: <b>7 dias, 30 dias, Tudo e Dia continuam com todos os dados</b>, nada é apagado. Cada vez que você zera, começa também um novo <b>Teste</b>, que fica guardado na lista para comparar depois.</p>
     <p class="note err" id="cfErr" hidden>Não deu pra iniciar o teste. Verifique a internet e tente de novo.</p>
     <div class="acts">
       <button class="btn" id="cfNao" type="button">Cancelar</button>
-      <button class="btn pri" id="cfSim" type="button">Começar do zero agora</button>
+      <button class="btn pri" id="cfSim" type="button">Zerar hoje agora</button>
     </div>
   </div>
 
@@ -266,6 +269,7 @@ button.callout::after{content:" →";color:#ff9b9b}
       <button type="button" data-p="dia" aria-pressed="false">Dia</button>
       <button type="button" data-p="teste" aria-pressed="false">Teste</button>
     </div>
+    <p class="hojeinfo" id="hojeInfo" hidden></p>
     <div class="testebar" id="testeBar" hidden>
       <select class="sel" id="selTeste" aria-label="Qual teste"></select>
       <p class="tinfo" id="testeInfo"></p>
@@ -338,7 +342,7 @@ KEY = readKey();
 addEventListener("hashchange", () => { const k = readKey(); if (k){ KEY = k; funil = null; rows = []; respLoaded = false; booted = false; load(true); } });
 
 let funil = null, funErr = false, rows = [], respErr = false, respLoaded = false;
-let testes = [], testeId = 0, querTeste = false;
+let testes = [], testeId = 0, querTeste = false, primeira = true;
 let dia = "", dispF = "", periodo = "7", nichoF = "", booted = false, lastUpd = null, funTok = 0, respTok = 0;
 const $ = id => document.getElementById(id);
 const top_ = $("top"), filters = $("filters"), dash = $("dash"), state = $("state"), upd = $("upd"), selNicho = $("selNicho");
@@ -421,9 +425,10 @@ function fmtDur(ms){
 const diaCurto = d => d.slice(8,10) + "/" + d.slice(5,7);
 const DSEM = ["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
 const diaLongo = d => { const [y,m,dd] = d.split("-").map(Number); return `${DSEM[new Date(Date.UTC(y,m-1,dd)).getUTCDay()]}, ${diaCurto(d)}`; };
+const zeroHoje = () => { const t = testes[0]; return t && !t.fim && fDay.format(t.ini) === fDay.format(new Date()) ? t : null; };
 const testeAtual = () => testes.find(t => t.id === testeId) || testes[0] || null;
 const testeNome = t => `Teste ${t.n}`;
-const periodoLabel = () => periodo === "teste" ? (testeAtual() ? "desde " + fDT.format(testeAtual().ini) : "no teste") : periodo === "dia" ? (dia ? diaLongo(dia) : "no dia") : ({hoje:"hoje", "7":"últimos 7 dias", "30":"últimos 30 dias", tudo:"desde o início"}[periodo]);
+const periodoLabel = () => periodo === "teste" ? (testeAtual() ? "desde " + fDT.format(testeAtual().ini) : "no teste") : periodo === "dia" ? (dia ? diaLongo(dia) : "no dia") : ({hoje: zeroHoje() ? "hoje desde " + fH.format(zeroHoje().ini) : "hoje", "7":"últimos 7 dias", "30":"últimos 30 dias", tudo:"desde o início"}[periodo]);
 const diasParam = () => ({hoje:0, "7":7, "30":30, tudo:null}[periodo]);
 
 /* respostas filtradas no navegador (período + nicho) */
@@ -434,7 +439,7 @@ function filtered(){
     if (periodo === "tudo") return true;
     if (!r.d) return false;
     if (periodo === "teste"){ const t = testeAtual(); return !!t && r.d >= t.ini && (!t.fim || r.d < t.fim); }
-    if (periodo === "hoje") return fDay.format(r.d) === today;
+    if (periodo === "hoje"){ const z = zeroHoje(); return fDay.format(r.d) === today && (!z || r.d >= z.ini); }
     if (periodo === "dia") return fDay.format(r.d) === dia;
     return now - r.d.getTime() <= (+periodo) * 86400000;
   });
@@ -684,13 +689,13 @@ function blocoRespostas(){
 function render(){
   showDash();
   upd.textContent = lastUpd ? "Atualizado às " + fHM.format(lastUpd) : "";
-  fillNichos(); pintaTeste();
+  fillNichos(); pintaTeste(); pintaHoje();
   $("btnCsv").disabled = !filtered().length;
   dash.replaceChildren();
   const F = funil;
   if (funErr || !F) dash.append(el("p", {class:"note err", text:"Não deu pra carregar o funil agora. Toque em Atualizar."}));
-  else if (!F.visitas) dash.append(periodo === "teste"
-    ? emptyIn("Contagem zerada", "Ainda ninguém abriu o quiz desde o início deste teste. Toque em Atualizar daqui a pouco.")
+  else if (!F.visitas) dash.append(periodo === "teste" || (periodo === "hoje" && zeroHoje())
+    ? emptyIn("Contagem zerada", "Ainda ninguém abriu o quiz desde que você zerou. Toque em Atualizar daqui a pouco.")
     : emptyIn("Ainda sem visitas nesse período", "Quando alguém abrir o quiz, o funil aparece aqui."));
   else {
     dash.append(blocoEngajamento(F), blocoCards(F), blocoDisp(F));
@@ -759,6 +764,7 @@ async function load(all=true){
   if (periodo === "teste" && !testeAtual()){ periodo = "7"; pintaPeriodo(); }
   const filtro = {p_chave:k, p_nicho:nichoF || null, p_dispositivo:dispF || null};
   if (periodo === "teste") filtro.p_teste = testeAtual().id;
+  else if (periodo === "hoje" && zeroHoje()) filtro.p_teste = zeroHoje().id;   // hoje, a partir do último zerar
   else if (periodo === "dia") filtro.p_dia = dia;
   else filtro.p_dias = diasParam();
   const pf = rpc("quiz_funil_painel", filtro)
@@ -778,7 +784,11 @@ async function load(all=true){
   $("btnUpd").disabled = false; dash.classList.remove("busy");
   if (!funil && !respLoaded){ booted = false; showState("error"); return; }
   booted = true; lastUpd = new Date();
-  if (querTeste){ querTeste = false; if (testes.length){ periodo = "teste"; pintaPeriodo(); render(); load(false); return; } }
+  if (primeira){   // 1ª carga: só agora sabemos se hoje foi zerado / se há testes
+    primeira = false;
+    if (querTeste && testes.length){ periodo = "teste"; pintaPeriodo(); render(); load(false); return; }
+    if (periodo === "hoje" && zeroHoje()){ pintaPeriodo(); render(); load(false); return; }
+  }
   render();
 }
 
@@ -792,7 +802,7 @@ const somaDia = (d, n) => { const [y,m,dd] = d.split("-").map(Number); return ne
 function pintaPeriodo(){
   filters.querySelectorAll("[data-p]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.p === periodo)));
   diaBar.hidden = periodo !== "dia";
-  pintaTeste();
+  pintaTeste(); pintaHoje();
   try { if (periodo !== "dia") localStorage.setItem("qb_painel_periodo", periodo); } catch(e) {}
   if (periodo === "dia"){
     inDia.max = hojeSP(); inDia.value = dia; diaNome.textContent = diaLongo(dia);
@@ -825,6 +835,11 @@ const testeBar = $("testeBar"), selTeste = $("selTeste"), testeInfo = $("testeIn
 const fDM = new Intl.DateTimeFormat("pt-BR", {timeZone:TZ, day:"2-digit", month:"2-digit"});
 const fH = new Intl.DateTimeFormat("pt-BR", {timeZone:TZ, hour:"2-digit", minute:"2-digit"});
 const quando = d => `${fDM.format(d)} às ${fH.format(d)}`;
+function pintaHoje(){
+  const z = periodo === "hoje" ? zeroHoje() : null, h = $("hojeInfo");
+  h.hidden = !z; if (!z) return;
+  h.replaceChildren("Hoje zerado às ", el("b", {text: fH.format(z.ini)}), ". O dia inteiro continua em Dia, 7 dias, 30 dias e Tudo.");
+}
 function pintaTeste(){
   testeBar.hidden = periodo !== "teste";
   if (periodo !== "teste") return;
@@ -850,7 +865,7 @@ $("cfSim").addEventListener("click", async () => {
       if (testes[0] && !testes[0].fim) testes[0].fim = ini;
       testes.unshift({id, n:(testes[0] ? testes[0].n : 0) + 1, ini, fim:null});
     }
-    testeId = id; periodo = "teste"; confirmBox.hidden = true; pintaPeriodo(); load(false);
+    testeId = 0; periodo = "hoje"; confirmBox.hidden = true; pintaPeriodo(); load(false);
   } catch(e){
     if (e && e.invalid){ KEY = ""; showState("invalid"); return; }
     $("cfErr").hidden = false;
