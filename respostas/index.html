@@ -48,9 +48,20 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 
 /* filtros */
 .filters{display:grid;gap:10px;margin-bottom:18px}
-.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.seg{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
 .seg button{min-height:40px;border:0;border-radius:10px;background:none;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--muted)}
 .seg button[aria-pressed="true"]{background:var(--gold-grad);color:var(--btn-ink)}
+.diabar{display:grid;grid-template-columns:44px 1fr 44px;gap:6px;align-items:stretch}
+.diabar[hidden]{display:none}
+.diabar button{min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:20px;cursor:pointer}
+.diabar button:disabled{opacity:.35;cursor:default}
+.diaIn{display:flex;flex-direction:column;justify-content:center;gap:2px;padding:6px 12px;border-radius:12px;border:1px solid rgba(214,163,41,.5);background:var(--card);cursor:pointer;min-width:0}
+.diaIn span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.diaIn input{width:100%;min-width:0;border:0;background:none;color:var(--text);font:600 15px var(--f,inherit);color-scheme:dark;padding:0}
+.day{cursor:pointer}
+.day:hover i{filter:brightness(1.25)}
+.dd{width:100%;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.dd:hover{background:rgba(214,163,41,.08)}
 .sel{width:100%;min-height:46px;border-radius:12px;border:1px solid var(--line-2);background:var(--card);padding:0 12px;font-weight:500}
 @media (min-width:760px){.filters{grid-template-columns:minmax(0,420px) minmax(0,320px)}}
 #dash.busy{opacity:.55;transition:opacity .2s}
@@ -219,6 +230,12 @@ button.callout::after{content:" →";color:#ff9b9b}
       <button type="button" data-p="7" aria-pressed="true">7 dias</button>
       <button type="button" data-p="30" aria-pressed="false">30 dias</button>
       <button type="button" data-p="tudo" aria-pressed="false">Tudo</button>
+      <button type="button" data-p="dia" aria-pressed="false">Dia</button>
+    </div>
+    <div class="diabar" id="diaBar" hidden>
+      <button type="button" id="diaPrev" aria-label="Dia anterior">‹</button>
+      <label class="diaIn"><span id="diaNome"></span><input type="date" id="inDia" aria-label="Escolher o dia"></label>
+      <button type="button" id="diaNext" aria-label="Próximo dia">›</button>
     </div>
     <select class="sel" id="selNicho" aria-label="Nicho"></select>
   </div>
@@ -278,7 +295,7 @@ KEY = readKey();
 addEventListener("hashchange", () => { const k = readKey(); if (k){ KEY = k; funil = null; rows = []; respLoaded = false; booted = false; load(true); } });
 
 let funil = null, funErr = false, rows = [], respErr = false, respLoaded = false;
-let periodo = "7", nichoF = "", booted = false, lastUpd = null, funTok = 0, respTok = 0;
+let dia = "", periodo = "7", nichoF = "", booted = false, lastUpd = null, funTok = 0, respTok = 0;
 const $ = id => document.getElementById(id);
 const top_ = $("top"), filters = $("filters"), dash = $("dash"), state = $("state"), upd = $("upd"), selNicho = $("selNicho");
 
@@ -355,7 +372,9 @@ function fmtDur(ms){
   return mm ? `${h} h ${mm} min` : `${h} h`;
 }
 const diaCurto = d => d.slice(8,10) + "/" + d.slice(5,7);
-const periodoLabel = () => ({hoje:"hoje", "7":"últimos 7 dias", "30":"últimos 30 dias", tudo:"desde o início"}[periodo]);
+const DSEM = ["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
+const diaLongo = d => { const [y,m,dd] = d.split("-").map(Number); return `${DSEM[new Date(Date.UTC(y,m-1,dd)).getUTCDay()]}, ${diaCurto(d)}`; };
+const periodoLabel = () => periodo === "dia" ? (dia ? diaLongo(dia) : "no dia") : ({hoje:"hoje", "7":"últimos 7 dias", "30":"últimos 30 dias", tudo:"desde o início"}[periodo]);
 const diasParam = () => ({hoje:0, "7":7, "30":30, tudo:null}[periodo]);
 
 /* respostas filtradas no navegador (período + nicho) */
@@ -366,6 +385,7 @@ function filtered(){
     if (periodo === "tudo") return true;
     if (!r.d) return false;
     if (periodo === "hoje") return fDay.format(r.d) === today;
+    if (periodo === "dia") return fDay.format(r.d) === dia;
     return now - r.d.getTime() <= (+periodo) * 86400000;
   });
 }
@@ -543,12 +563,21 @@ function blocoDias(F){
   const h = v => `height:${v ? Math.max(2, v / top * 100) : 0}%`;
   return box("Por dia", F.porDia.length > 14 ? "últimos 14 dias" : null, [
     el("div", {class:"legend"}, el("span", {class:"cV", text:"Visitas"}), el("span", {class:"cR", text:"Resultado"}), el("span", {class:"cC", text:"Clicaram"})),
-    el("div", {class:"chart"}, dias.map(d => el("div", {class:"day", role:"img",
+    el("div", {class:"chart"}, dias.map(d => el("div", {class:"day", role:"button", tabindex:"0", onclick:() => escolherDia(d.dia),
         "aria-label":`${diaCurto(d.dia)}: ${d.visitas} visitas, ${d.resultado} no resultado, ${d.clicaram} cliques`,
         title:`${diaCurto(d.dia)} · ${d.visitas} visitas · ${d.resultado} resultado · ${d.clicaram} cliques`},
       el("i", {class:"cV", style:h(d.visitas)}), el("i", {class:"cR", style:h(d.resultado)}), el("i", {class:"cC", style:h(d.clicaram)})))),
     el("div", {class:"days", "aria-hidden":"true"}, dias.map((d,i) => el("span", {text: dias.length <= 7 ? diaCurto(d.dia) : (i % 2 === dias.length % 2 ? "" : d.dia.slice(8,10))})))
   ]);
+}
+function blocoDiaADia(F){
+  if (periodo === "dia" || F.porDia.length < 2) return null;
+  const lista = F.porDia.slice().reverse().slice(0, 31);
+  return box("Dia a dia", "toque num dia para ver o funil completo dele", el("div", {class:"tb"},
+    el("div", {class:"tr h"}, el("span", {text:"Dia"}), el("span", {class:"num", text:"Visitas"}), el("span", {class:"num", text:"Concluiu"}), el("span", {class:"num", text:"Clicou"})),
+    lista.map(r => el("button", {type:"button", class:"tr dd", onclick:() => escolherDia(r.dia), "aria-label":`Ver o funil de ${diaLongo(r.dia)}`},
+      el("span", {class:"nm", text:diaLongo(r.dia)}), el("span", {class:"num", text:fmtN(r.visitas)}),
+      el("span", {class:"num", text:pct(r.resultado, r.visitas)}), el("span", {class:"num", text:pct(r.clicaram, r.visitas)})))));
 }
 function tabela(title, sub, list){
   if (!list.length) return box(title, sub, el("p", {class:"note", text:"Sem dados nesse período."}));
@@ -602,7 +631,7 @@ function render(){
   else {
     dash.append(blocoEngajamento(F), blocoCards(F));
     const g = el("div", {class:"grid"});
-    g.append(blocoFunil(F), blocoPerdas(F), blocoBotoes(F), blocoDias(F),
+    g.append(...[blocoFunil(F), blocoPerdas(F), blocoBotoes(F), blocoDias(F), blocoDiaADia(F)].filter(Boolean),
       tabela("Origem", "utm_source", F.porOrigem), tabela("Nicho", null, F.porNicho), blocoDisp(F));
     dash.append(g);
   }
@@ -661,7 +690,7 @@ async function load(all=true){
   const k = KEY, ft = ++funTok, rt = all ? ++respTok : 0;
   if (!booted) showState("loading"); else { upd.textContent = "Atualizando…"; dash.classList.add("busy"); }
   $("btnUpd").disabled = true;
-  const pf = rpc("quiz_funil_painel", {p_chave:k, p_dias:diasParam(), p_nicho:nichoF || null})
+  const pf = rpc("quiz_funil_painel", periodo === "dia" ? {p_chave:k, p_dia:dia, p_nicho:nichoF || null} : {p_chave:k, p_dias:diasParam(), p_nicho:nichoF || null})
     .then(d => { if (!d || typeof d !== "object" || Array.isArray(d)) throw new Error("formato"); return normFunil(d); });
   const pr = all ? rpc("quiz_respostas_painel", {p_chave:k})
     .then(d => { if (!Array.isArray(d)) throw new Error("formato"); return d.map(norm); }) : Promise.resolve(null);
@@ -683,11 +712,30 @@ async function load(all=true){
 /* ---------- eventos ---------- */
 $("btnUpd").addEventListener("click", () => load(true));
 $("btnCsv").addEventListener("click", downloadCsv);
+/* um dia específico: botão "Dia", seletor de data, setas ‹ › e clique no gráfico/tabela */
+const diaBar = $("diaBar"), inDia = $("inDia"), diaNome = $("diaNome");
+const hojeSP = () => fDay.format(new Date());
+const somaDia = (d, n) => { const [y,m,dd] = d.split("-").map(Number); return new Date(Date.UTC(y, m-1, dd + n)).toISOString().slice(0,10); };
+function pintaPeriodo(){
+  filters.querySelectorAll("[data-p]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.p === periodo)));
+  diaBar.hidden = periodo !== "dia";
+  if (periodo === "dia"){
+    inDia.max = hojeSP(); inDia.value = dia; diaNome.textContent = diaLongo(dia);
+    $("diaNext").disabled = dia >= hojeSP();
+  }
+}
+function escolherDia(d){
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d || "")) return;
+  dia = d > hojeSP() ? hojeSP() : d; periodo = "dia"; pintaPeriodo(); load(false);
+  filters.scrollIntoView({block:"start", behavior:"smooth"});
+}
 filters.querySelectorAll("[data-p]").forEach(b => b.addEventListener("click", () => {
-  periodo = b.dataset.p;
-  filters.querySelectorAll("[data-p]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-  load(false);
+  if (b.dataset.p === "dia"){ escolherDia(dia || hojeSP()); return; }
+  periodo = b.dataset.p; pintaPeriodo(); load(false);
 }));
+$("diaPrev").addEventListener("click", () => escolherDia(somaDia(dia || hojeSP(), -1)));
+$("diaNext").addEventListener("click", () => escolherDia(somaDia(dia || hojeSP(), +1)));
+inDia.addEventListener("change", () => escolherDia(inDia.value));
 selNicho.addEventListener("change", () => { nichoF = selNicho.value; load(false); });
 load(true);
 </script>
