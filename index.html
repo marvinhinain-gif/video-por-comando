@@ -300,6 +300,20 @@ main,.progress,.topbar{position:relative;z-index:1}
 .res-flow .flow{height:clamp(260px,54svh,460px)}
 footer{width:100%;padding:24px 16px 30px;font-size:12px;color:var(--dim);border-top:1px solid var(--line)}
 
+/* ---------- PERFIL (profissão vinda do anúncio); só aparece quando há perfil ---------- */
+.pfx{margin:0 0 -4px;font:600 11px/1.3 var(--f);letter-spacing:.18em;text-transform:uppercase;color:var(--gold);text-wrap:balance}
+.ngrid .opt.pv-on{border-color:rgba(214,163,41,.75)}
+.ngrid .opt.pv-on.sel{border-color:var(--gold)}
+.pv{position:absolute;top:-8px;left:10px;padding:2px 7px;border-radius:99px;background:var(--gold-grad);color:var(--btn-ink);font:700 9px/1.3 var(--f);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;pointer-events:none}
+.falta{margin:-4px 0 0;font-size:13px;line-height:1.4;color:var(--muted);max-width:36ch;text-wrap:balance}
+.tiny.pfp{margin:0 0 -8px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.pfs{margin:16px 0 0;padding:14px;border-radius:14px;background:var(--gold-soft);border:1px solid rgba(214,163,41,.35)}
+.pfs b{display:block;color:#fff;font-size:14px;line-height:1.35;margin-bottom:10px}
+.pfs ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.pfs li{display:flex;align-items:center;gap:10px;font-size:13.5px;line-height:1.3;color:var(--text)}
+.pfs .ti{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--gold-tile);color:var(--btn-ink)}
+.pfs .ti svg{width:14px;height:14px}
+
 @media (min-width:760px){.cover{padding-block:28px 32px}}
 @media (max-width:360px){.ngrid .opt{font-size:12.5px}.opt{padding:12px 34px;font-size:15px}.topbar{font-size:11.5px;gap:8px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
@@ -482,6 +496,67 @@ const NICHES = {
     carrossel:["v3","v8","v2","v14","v13","v12"]}
 };
 
+/* =========================================================
+   PERFIS — profissão vinda do anúncio (UTM ou ?perfil=chave).
+   Muda só textos e ordem de exibição; etapas, respostas salvas e checkout continuam iguais.
+   Sem perfil detectado, o quiz fica exatamente como sempre foi.
+   nicho = chave de NICHES destacada na P1 · destaque = mostra esse nicho primeiro com "Para você"
+   ordemDor = ordem de exibição das opções da P2 (índices originais) quando o nicho escolhido for o do perfil
+   re = regex testada no texto das UTMs (sem acento, minúsculas); a 1ª que bater vence
+   ========================================================= */
+const PERFIS = {
+  corretor:{re:/corretor|imobiliari/, nicho:"imoveis", destaque:true, ordemDor:null,
+    eyebrow:"Para corretores de imóveis", h1:["A IA faz o vídeo","do imóvel por você"],
+    sub:"E responde seus leads a qualquer hora. Veja em 60 segundos o que ela já faz pelos seus imóveis.",
+    capa:["v1","v6","v5","v7","v11","v12"], para:"corretores de imóveis", curtoPara:"corretores",
+    perde:"Como corretor, você perde", botao:"Quero a biblioteca do corretor", semana:"O que um corretor já faz na primeira semana:"},
+  professora:{re:/professor/, nicho:"criador", destaque:true, ordemDor:null,
+    eyebrow:"Para professoras e professores", h1:["Aula e material","prontos em minutos"],
+    sub:"Com IA você cria vídeo explicativo, material e conteúdo da aula sem passar a noite editando.",
+    capa:["v8","v9","v3","v2","v13","v12"], para:"professoras e professores", curtoPara:"professoras",
+    perde:"Como professora, você perde", botao:"Quero a biblioteca da professora", semana:"O que uma professora já faz na primeira semana:"},
+  esteticista:{re:/estetic|beleza|salao/, nicho:"beleza", destaque:true, ordemDor:null,
+    eyebrow:"Para estética e beleza", h1:["Agenda cheia com","a IA atendendo"],
+    sub:"Ela responde suas clientes no WhatsApp e cria seus posts. Veja em 60 segundos o que ela já faz pelo seu espaço.",
+    capa:["v16","v2","v3","v9","v14","v12"], para:"estética e beleza", curtoPara:"esteticistas",
+    perde:"Como esteticista, você perde", botao:"Quero a biblioteca da esteticista", semana:"O que uma esteticista já faz na primeira semana:"},
+  anunciante:{re:/anunciante/, nicho:"loja", destaque:true, ordemDor:null,
+    eyebrow:"Para quem anuncia na internet", h1:["Anúncios prontos","com IA em minutos"],
+    sub:"Vídeo, criativo e página de vendas sem depender de editor. Veja em 60 segundos o que a IA já faz por você.",
+    capa:["v15","v3","v13","v2","v12","v11"], para:"quem anuncia na internet", curtoPara:"anunciantes",
+    perde:"Como anunciante, você perde", botao:"Quero a biblioteca do anunciante", semana:"O que um anunciante já faz na primeira semana:"},
+  comercio:{re:/comercio|lojista/, nicho:"loja", destaque:true, ordemDor:[2,0,1,3],   // "Atender no WhatsApp e no direct" primeiro
+    eyebrow:"Para comércio e lojas", h1:["Seu comércio vendendo","no automático"],
+    sub:"WhatsApp que responde sozinho, página de produto e controle do caixa. Veja em 60 segundos como a IA faz isso.",
+    capa:["v16","v13","v14","relatorio","v3","v11"], para:"comércio e lojas", curtoPara:"o seu comércio",
+    perde:"No seu comércio, você perde", botao:"Quero a biblioteca do meu comércio", semana:"O que o seu comércio já ganha na primeira semana:"},
+  emprego:{re:/emprego|carreira/, nicho:"outro", destaque:false, ordemDor:null,
+    eyebrow:"Para quem quer crescer na carreira", h1:["Saia na frente","usando IA"],
+    sub:"Relatórios, sites, vídeos e conteúdo feitos em minutos: o tipo de coisa que faz você se destacar.",
+    capa:["relatorio","v12","v13","v8","v3","v11"], para:"quem quer crescer na carreira", curtoPara:"a sua carreira",
+    perde:"No seu trabalho, você perde", botao:"Quero sair na frente com IA", semana:"O que você já faz na primeira semana:"},
+  arquiteto:{re:/arquitet|engenheir/, nicho:"arq", destaque:true, ordemDor:null,
+    eyebrow:"Para arquitetura e engenharia", h1:["Seu projeto em 3D","antes de construir"],
+    sub:"Mostre a obra andar por andar pro cliente entender e fechar. Veja em 60 segundos o que a IA já faz pelos seus projetos.",
+    capa:["v4","v7","v5","v6","v12","relatorio"], para:"arquitetura e engenharia", curtoPara:"arquitetos",
+    perde:"Nos seus projetos, você perde", botao:"Quero a biblioteca do arquiteto", semana:"O que um arquiteto já faz na primeira semana:"}
+};
+/* ?perfil=chave vence; senão procura a profissão em utm_campaign + utm_content + utm_medium. Qualquer falha = sem perfil */
+function detectPerfil(search){
+  try {
+    const q = new URLSearchParams(search);
+    const f = (q.get("perfil") || "").trim().toLowerCase();
+    if (f && Object.prototype.hasOwnProperty.call(PERFIS, f)) return PERFIS[f];
+    const txt = ["utm_campaign","utm_content","utm_medium"].map(k=>q.get(k) || "").join(" ")
+      .normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+    if (!txt.trim() || txt.includes("{{")) return null;
+    for (const k of Object.keys(PERFIS)) if (PERFIS[k].re.test(txt)) return PERFIS[k];
+  } catch(e) {}
+  return null;
+}
+const perfil = detectPerfil(location.search);
+if (perfil) document.title = "Quiz para " + perfil.curtoPara + " · Biblioteca de Skills";
+
 /* Perguntas iguais pra todos */
 const GASTO = [{t:"Nada, faço tudo na mão",v:0},{t:"Até R$ 100",v:80},{t:"De R$ 100 a R$ 300",v:200},{t:"De R$ 300 a R$ 600",v:450},{t:"Mais de R$ 600",v:800}];
 const HORAS = [{t:"Até 3 horas",v:3},{t:"De 4 a 7 horas",v:6},{t:"De 8 a 15 horas",v:12},{t:"Mais de 15 horas",v:20}];
@@ -560,6 +635,8 @@ const brl = n => "R$ " + Math.round(n).toLocaleString("pt-BR");
 const NICHE_KEYS = Object.keys(NICHES);
 const nicheKey = () => NICHE_KEYS[answers.nicho] || "outro";   // P1 guarda a posição da opção escolhida
 const niche = () => NICHES[nicheKey()];
+/* resultado/oferta só falam da profissão se a pessoa escolheu o nicho do perfil na P1 (ou se o perfil não tem nicho em destaque) */
+const perfilRes = () => perfil && (!perfil.destaque || nicheKey() === perfil.nicho) ? perfil : null;
 const pick = id => { const q = STEPS.find(s=>s.id===id); return q.opts(niche())[answers[id]]; };
 const horasMes = () => Math.round(((pick("horas")||{v:0}).v) * 4.3);
 const gastoMes = () => (pick("gasto")||{v:0}).v;
@@ -662,17 +739,24 @@ function countUp(el, to, fmt){
 
 /* ---------- CAPA ---------- */
 function renderCover(){
+  // com perfil: eyebrow, headline, subtítulo, botão, linha 🔓 e ordem do carrossel da profissão; sem perfil, tudo como sempre
+  const pfx = perfil ? `<p class="pfx">${esc(perfil.eyebrow)}</p>\n    ` : "";
+  const l1 = perfil ? esc(perfil.h1[0]) : "250 skills pra sua IA", l2 = perfil ? esc(perfil.h1[1]) : "trabalhar por você";
+  const sub = perfil ? esc(perfil.sub) : "Responda e descubra quais skills resolvem o seu trabalho.";
+  const btn = perfil ? "Ver o que a IA faz por mim" : "Descobrir minhas skills";
+  const unl = perfil ? "Sem cadastro · leva 60 segundos" : "Responda um quiz rápido de 60 segundos para liberar suas skills.";
+  const order = perfil ? [...perfil.capa, ...COVER_ORDER.filter(k=>!perfil.capa.includes(k))] : COVER_ORDER;
   app.innerHTML = `<section class="col cover" id="cover">
-    <h1 class="h1" id="qt"><span class="ln">250 skills pra sua IA</span><span class="ln"><span class="ul">trabalhar por você</span><span class="ball"></span></span></h1>
-    <p class="sub">Responda e descubra quais skills resolvem o seu trabalho.</p>
+    ${pfx}<h1 class="h1" id="qt"><span class="ln">${l1}</span><span class="ln"><span class="ul">${l2}</span><span class="ball"></span></span></h1>
+    <p class="sub">${sub}</p>
     <div class="fwrap"><div class="flow" id="coverFlow" aria-label="Exemplos do que as skills fazem"></div><div class="dots" id="coverDots" aria-hidden="true"></div></div>
     <div class="cta-box">
-      <button class="cta" id="start" type="button">Descobrir minhas skills <span class="arr">→</span></button>
-      <p class="unlock" id="unlock"><span aria-hidden="true">🔓</span> Responda um quiz rápido de 60 segundos para liberar suas skills.</p>
+      <button class="cta" id="start" type="button">${btn} <span class="arr">→</span></button>
+      <p class="unlock" id="unlock"><span aria-hidden="true">🔓</span> ${unl}</p>
     </div>
   </section>`;
   fitCover();
-  cleanups.push(makeFlow(document.getElementById("coverFlow"), document.getElementById("coverDots"), COVER_ORDER));
+  cleanups.push(makeFlow(document.getElementById("coverFlow"), document.getElementById("coverDots"), order));
   document.getElementById("start").addEventListener("click", ()=>go(0));
   let lastW = innerWidth;
   const onR = () => { if (innerWidth !== lastW){ lastW = innerWidth; fitCover(); } };
@@ -699,12 +783,24 @@ function fitCover(){
 function renderQuestion(){
   const q = STEPS[step], n = niche(), opts = q.opts(n), chosen = answers[q.id];
   const sub = q.sub ? q.sub(n) : "";
+  // ordem de EXIBIÇÃO (com perfil); data-i continua sendo o índice original, que é o que fica salvo em answers
+  let ord = opts.map((_,i)=>i);
+  const pvKey = perfil && perfil.destaque && q.id === "nicho" ? perfil.nicho : null;
+  if (pvKey){ const pi = NICHE_KEYS.indexOf(pvKey); if (pi >= 0) ord = [pi, ...ord.filter(i=>i!==pi)]; }
+  if (perfil && perfil.ordemDor && q.id === "dor" && nicheKey() === perfil.nicho && perfil.ordemDor.length === opts.length) ord = perfil.ordemDor.slice();
+  const pv = i => pvKey && NICHE_KEYS[i] === pvKey;
   const body = q.grid
-    ? `<div class="ngrid">${opts.map((o,i)=>`<button type="button" class="opt${chosen===i?" sel":""}" data-i="${i}"><span class="em" aria-hidden="true">${o.e}</span><span>${o.t}</span></button>`).join("")}</div>`
-    : `<div class="opts">${opts.map((o,i)=>`<button type="button" class="opt${chosen===i?" sel":""}" data-i="${i}">${o.t}</button>`).join("")}</div>`;
+    ? `<div class="ngrid">${ord.map(i=>{ const o = opts[i]; return `<button type="button" class="opt${pv(i)?" pv-on":""}${chosen===i?" sel":""}" data-i="${i}"><span class="em" aria-hidden="true">${o.e}</span><span>${o.t}</span>${pv(i)?`<span class="pv">Para você</span>`:""}</button>`; }).join("")}</div>`
+    : `<div class="opts">${ord.map(i=>{ const o = opts[i]; return `<button type="button" class="opt${chosen===i?" sel":""}" data-i="${i}">${o.t}</button>`; }).join("")}</div>`;
+  // com perfil: "Faltam N perguntas…" (conta só as perguntas que vêm depois desta)
+  let falta = "";
+  if (perfil){
+    const rest = STEPS.slice(step+1).filter(s=>!s.pause && !s.capture && !s.loading).length, para = esc(perfil.curtoPara);
+    falta = `\n    <p class="falta">${rest > 1 ? `Faltam ${rest} perguntas para ver as IAs para ${para}` : rest === 1 ? `Falta 1 pergunta para ver as IAs para ${para}` : `Última pergunta antes de ver as IAs para ${para}`}</p>`;
+  }
   app.innerHTML = `<section class="col"><div class="q">
     <h2 id="qt">${q.title(n)}</h2>${sub?`<p class="qsub">${sub}</p>`:""}
-    <div role="group" aria-labelledby="qt" style="width:100%;display:flex;justify-content:center">${body}</div>
+    <div role="group" aria-labelledby="qt" style="width:100%;display:flex;justify-content:center">${body}</div>${falta}
     <p class="insight">${q.insight}</p></div></section>`;
   app.querySelectorAll("[data-i]").forEach(b=>b.addEventListener("click", ()=>{
     if (app.dataset.busy) return; app.dataset.busy = "1";
@@ -721,8 +817,9 @@ function renderPause(){
   const media = m.img
     ? `<div class="pmedia fx-${m.fx}"><img src="${mediaPoster(n.pausa)}" alt="${esc(m.t)}"></div>`
     : `<div class="pmedia"><video data-src="m/${n.pausa}.mp4" poster="${mediaPoster(n.pausa)}" muted loop playsinline preload="none"></video>${m.som?`<button class="sound" type="button" aria-pressed="false">🔇 Ouvir</button>`:""}</div>`;
+  const pfp = perfil ? `<p class="tiny pfp">${esc(perfil.perde)}:</p>\n    ` : "";
   app.innerHTML = `<section class="col"><div class="q">
-    <div class="clock"><strong class="gold" id="cnt">0</strong><span>horas por mês</span></div>
+    ${pfp}<div class="clock"><strong class="gold" id="cnt">0</strong><span>horas por mês</span></div>
     <p class="clock2">${g > 0 ? `e <b>${brl(g*12)} por ano</b> em aplicativo` : "e tudo isso feito na mão"}</p>
     <p class="tiny">Estimativa com as suas respostas.</p>
     <h2 id="qt">Olha uma skill trabalhando ${pra(n.curto)}</h2>
@@ -811,8 +908,8 @@ function renderLoading(){
   sendAnswers();
   app.innerHTML = `<section class="col"><div class="loading">
     <div class="ring"><svg viewBox="0 0 110 110"><circle class="bgc" cx="55" cy="55" r="48"/><circle class="fgc" cx="55" cy="55" r="48"/></svg><b id="pct">0%</b></div>
-    <h2 id="qt">Separando as skills ${pra(n.curto)}${firstName() ? ", " + esc(firstName()) : ""}…</h2>
-    <ul class="checks"><li><i>✓</i>Lendo as suas respostas</li><li><i>✓</i>Escolhendo as skills do seu nicho</li><li><i>✓</i>Montando seu plano</li></ul>
+    <h2 id="qt">${perfil ? "Separando as IAs para " + esc(perfil.para) : "Separando as skills " + pra(n.curto)}${firstName() ? ", " + esc(firstName()) : ""}…</h2>
+    <ul class="checks"><li><i>✓</i>Lendo as suas respostas</li><li><i>✓</i>Escolhendo as skills ${perfil ? "para " + esc(perfil.curtoPara) : "do seu nicho"}</li><li><i>✓</i>Montando seu plano</li></ul>
   </div></section>`;
   const pct = document.getElementById("pct"), lis = app.querySelectorAll(".checks li"), t0 = performance.now(); let live = true;
   (function f(t){ if (!live) return; const p = Math.min(1,(t-t0)/3000); pct.textContent = Math.round(p*100) + "%"; if (p < 1) requestAnimationFrame(f); })(t0);
@@ -828,8 +925,16 @@ function renderResult(){
   const conta = g > 0
     ? `<p>Você gasta cerca de <b>${brl(g)}/mês</b> = <b>${brl(g*12)} por ano</b>.</p>`
     : `<p>Você faz tudo na mão: cerca de <b>${h} horas por mês</b>.</p>`;
+  // com perfil (e nicho do perfil): título, "Feitas para…", bloco da primeira semana e texto do botão da oferta (link e atributos iguais)
+  const pr = perfilRes();
+  const hero = pr
+    ? `${firstName() ? esc(firstName()) + ", sua" : "Sua"} biblioteca de IA <span class="gold">para ${esc(pr.curtoPara)}.</span>`
+    : `${firstName() ? esc(firstName()) + ", sua" : "Sua"} IA pronta <span class="gold">${pra(n.curto)}.</span>`;
+  const pfs = pr
+    ? `<div class="pfs"><b>${esc(pr.semana)}</b><ul>${n.skills.slice(0,3).map(([t,i])=>`<li><span class="ti">${ic(i)}</span>${esc(t)}</li>`).join("")}</ul></div>\n        `
+    : "";
   app.innerHTML = `<section class="col"><div class="sales">
-    <h2 class="hero2" id="qt">${firstName() ? esc(firstName()) + ", sua" : "Sua"} IA pronta <span class="gold">${pra(n.curto)}.</span></h2>
+    <h2 class="hero2" id="qt">${hero}</h2>
     <div class="vsl" id="vslBox"></div>
 
     <div class="after" id="afterVsl" hidden>
@@ -861,7 +966,7 @@ function renderResult(){
       </div>
 
       <div class="blk">
-        <span class="eyebrow">Feitas ${pra(n.curto)}</span>
+        <span class="eyebrow">Feitas ${pr ? "para " + esc(pr.curtoPara) : pra(n.curto)}</span>
         <h3>Skills que você vai usar <span class="gold">primeiro</span></h3>
         <div class="skills">${n.skills.map(([t,i])=>`<div class="sk"><span class="ti">${ic(i)}</span>${t}</div>`).join("")}</div>
       </div>
@@ -887,13 +992,13 @@ function renderResult(){
         <div class="bonus-h">+2 BÔNUS</div>
         <div class="bonus"><span><span class="bi">${ic("play")}</span>Aula: como instalar</span><span class="pr"><s>R$ 47,00</s>grátis</span></div>
         <div class="bonus"><span><span class="bi">${WA}</span>Grupo de avisos no WhatsApp</span><span class="pr"><s>R$ 47,00</s>grátis</span></div>
-        <div class="price">
+        ${pfs}<div class="price">
           <span class="off">62% OFF</span>
           <span class="from">de <s>R$ 97,00</s> por</span>
           <div class="val"><small>R$</small><b>37</b><small>,00</small></div>
           <span class="once">PAGAMENTO ÚNICO</span>
         </div>
-        <a class="cta buy" data-botao="oferta" ${buyAttrs()}>Quero minhas skills <span class="arr">→</span></a>
+        <a class="cta buy" data-botao="oferta" ${buyAttrs()}>${pr ? esc(pr.botao) : "Quero minhas skills"} <span class="arr">→</span></a>
         <div class="trust"><span>🔒 Compra segura</span><span class="wa">${WA}Chega no WhatsApp</span></div>
       </div></div>
 
