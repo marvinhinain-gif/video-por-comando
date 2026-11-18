@@ -331,7 +331,7 @@ const LEAD_WEBHOOK = "";       // URL que recebe o lead em POST JSON; vazio = n�
    Para desligar o envio, deixe url vazio. */
 const SUPABASE = {url:"https://ritjeqziygxnywznwhsc.supabase.co", key:"sb_publishable_6xr50iEvbMHEYcyE6F9pEg_xkrTpZkS", tabela:"quiz_respostas"};
 const VSL = {vturb:false, src:"m/vsl.mp4", poster:"m/vsl.webp", vturbId:"", vturbJs:""};
-const VSL_DELAY = 0;           // segundos até liberar o que fica abaixo do vídeo (0 = aparece na hora)
+const VSL_DELAY = 10;          // segundos até liberar o que fica abaixo do vídeo (botão + oferta)
 
 /* =========================================================
    MÍDIAS (pasta m/) — vídeos têm poster .webp com o mesmo nome
@@ -831,9 +831,9 @@ function renderResult(){
   app.innerHTML = `<section class="col"><div class="sales">
     <h2 class="hero2" id="qt">${firstName() ? esc(firstName()) + ", sua" : "Sua"} IA pronta <span class="gold">${pra(n.curto)}.</span></h2>
     <div class="vsl" id="vslBox"></div>
-    <a class="cta jump" id="irOferta" href="#oferta">Quero por R$ 37 <span class="arr" aria-hidden="true">↓</span></a>
 
     <div class="after" id="afterVsl" hidden>
+      <a class="cta jump" id="irOferta" href="#oferta">Quero a minha biblioteca agora <span class="arr" aria-hidden="true">↓</span></a>
       <div class="prof">
         <span class="badge"><span aria-hidden="true">${n.emoji}</span> ${n.label}</span>
         <small>Sua maior trava hoje</small>
