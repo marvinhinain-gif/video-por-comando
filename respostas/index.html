@@ -40,6 +40,9 @@ button,select{font-family:inherit;font-size:inherit;color:inherit}
 .top h1{margin:0;font-size:24px;line-height:1.15;letter-spacing:-.02em;font-weight:700}
 .top h1 .mk{margin-right:6px}
 .upd{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+.upd .vivo{color:var(--ok);font-weight:600}
+.upd .vivo .dot{width:7px;height:7px;margin-right:6px;vertical-align:1px}
+.upd.off .vivo{color:#ff9b9b}.upd.off .dot{background:#ff6b6b;animation:none}
 .acts{display:flex;gap:8px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border-radius:12px;border:1px solid var(--line-2);background:var(--card);font-weight:600;font-size:14px;cursor:pointer}
 .btn:hover{border-color:rgba(214,163,41,.6)}
@@ -242,7 +245,7 @@ button.callout::after{content:" →";color:#ff9b9b}
   <header class="top" id="top" hidden>
     <div>
       <h1><span class="mk gold" aria-hidden="true">A.</span>Funil do quiz</h1>
-      <p class="upd" id="upd" aria-live="polite"></p>
+      <p class="upd" id="upd"></p>
     </div>
     <div class="acts">
       <button class="btn" id="btnTeste" type="button" title="Zerar os números de hoje">🔄 Zerar o dia</button>
@@ -329,15 +332,24 @@ const DESEJOS = {
 };
 const desejoLabel = k => hasOwn(DESEJOS,k) ? DESEJOS[k] : nichoLabel(k);
 
-/* chave: lê do hash, guarda só na memória e limpa a barra de endereço */
+/* chave: lê do hash e guarda neste aparelho (localStorage), assim recarregar a página não perde o acesso.
+   Se o aparelho não deixar guardar, a chave fica no hash para o refresh continuar funcionando. */
+const KEY_LS = "qb_painel_k";
 let KEY = "";
 function readKey(){
   const m = location.hash.match(/(?:^#|&)k=([^&]*)/);
   let k = "";
   if (m){ try { k = decodeURIComponent(m[1]).trim(); } catch(e){ k = ""; } }
-  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  if (k){
+    let salvou = false;
+    try { localStorage.setItem(KEY_LS, k); salvou = localStorage.getItem(KEY_LS) === k; } catch(e) {}
+    if (salvou) history.replaceState(null, "", location.pathname + location.search);
+    return k;
+  }
+  try { k = (localStorage.getItem(KEY_LS) || "").trim(); } catch(e) {}
   return k;
 }
+function esqueceKey(){ try { localStorage.removeItem(KEY_LS); } catch(e) {} }
 KEY = readKey();
 // link colado numa aba que já está no painel: só o hash muda, sem recarregar
 addEventListener("hashchange", () => { const k = readKey(); if (k){ KEY = k; funil = null; rows = []; respLoaded = false; booted = false; load(true); } });
@@ -698,16 +710,19 @@ function blocoRespostas(){
 }
 
 /* ---------- tela ---------- */
-function render(){
+function render(keep=false){
   showDash();
-  upd.textContent = lastUpd ? "Atualizado às " + fHM.format(lastUpd) : "";
+  pintaUpd();
+  // atualização automática: guarda onde a pessoa está (página e faixa do funil) para nada pular
+  const velha = dash.querySelector(".fstrip"), sx = velha ? velha.scrollLeft : 0, y = scrollY;
+  if (keep) dash.style.minHeight = dash.offsetHeight + "px";
   fillNichos(); pintaTeste(); pintaHoje();
   $("btnCsv").disabled = !filtered().length;
   dash.replaceChildren();
   const F = funil;
   if (funErr || !F) dash.append(el("p", {class:"note err", text:"Não deu pra carregar o funil agora. Toque em Atualizar."}));
   else if (!F.visitas) dash.append(periodo === "teste" || (periodo === "hoje" && zeroHoje())
-    ? emptyIn("Contagem zerada", "Ainda ninguém abriu o quiz desde que você zerou. Toque em Atualizar daqui a pouco.")
+    ? emptyIn("Contagem zerada", "Ainda ninguém abriu o quiz desde que você zerou. Os números aparecem aqui sozinhos assim que alguém entrar.")
     : emptyIn("Ainda sem visitas nesse período", "Quando alguém abrir o quiz, o funil aparece aqui."));
   else {
     dash.append(blocoEngajamento(F), blocoCards(F), blocoDisp(F));
@@ -719,6 +734,12 @@ function render(){
   dash.append(el("h2", {class:"sec", text:"O que as pessoas responderam"}),
     ...(dispF ? [el("p", {class:"note", text:"Este resumo junta celular e computador. As respostas por dispositivo aparecem nas colunas do funil acima."})] : []),
     ...blocoRespostas());
+  if (keep){
+    const nova = dash.querySelector(".fstrip");
+    if (nova && sx) nova.scrollLeft = sx;
+    scrollTo(0, y);
+    requestAnimationFrame(() => { dash.style.minHeight = ""; });
+  }
 }
 function fillNichos(){
   const keys = [...new Set([...Object.keys(NICHOS), ...rows.map(r=>r.nicho), ...(funil ? funil.porNicho.map(r=>r.key) : [])].filter(Boolean))];
@@ -767,12 +788,18 @@ async function rpc(name, body){
   if (!res.ok) throw new Error("http " + res.status);
   return data;
 }
-/* all=true: funil + respostas (Atualizar); all=false: só o funil (trocou período ou nicho) */
-async function load(all=true){
+/* all=true: funil + respostas (Atualizar); all=false: só o funil (trocou período ou nicho).
+   silent=true: atualização automática — não mostra "Atualizando…", não pisca e só redesenha se algo mudou. */
+let carregando = false;
+async function load(all=true, silent=false){
   if (!KEY){ showState("invalid"); return; }
   const k = KEY, ft = ++funTok, rt = all ? ++respTok : 0;
-  if (!booted) showState("loading"); else { upd.textContent = "Atualizando…"; dash.classList.add("busy"); }
-  $("btnUpd").disabled = true;
+  if (!booted) showState("loading"); else if (!silent){ upd.textContent = "Atualizando…"; dash.classList.add("busy"); }
+  if (!silent) $("btnUpd").disabled = true;
+  carregando = true;
+  try { await carrega(k, ft, rt, all, silent); } finally { if (ft === funTok) carregando = false; agendaVivo(); }
+}
+async function carrega(k, ft, rt, all, silent){
   if (periodo === "teste" && !testeAtual()){ periodo = "7"; pintaPeriodo(); }
   const filtro = {p_chave:k, p_nicho:nichoF || null, p_dispositivo:dispF || null};
   if (periodo === "teste") filtro.p_teste = testeAtual().id;
@@ -780,28 +807,58 @@ async function load(all=true){
   else if (periodo === "dia") filtro.p_dia = dia;
   else filtro.p_dias = diasParam();
   const pf = rpc("quiz_funil_painel", filtro)
-    .then(d => { if (!d || typeof d !== "object" || Array.isArray(d)) throw new Error("formato"); return normFunil(d); });
+    .then(d => { if (!d || typeof d !== "object" || Array.isArray(d)) throw new Error("formato");
+      const n = normFunil(d); n.sig = JSON.stringify(filtro) + JSON.stringify({...d, gerado_em:0}); return n; });
   const pr = all ? rpc("quiz_respostas_painel", {p_chave:k})
-    .then(d => { if (!Array.isArray(d)) throw new Error("formato"); return d.map(norm); }) : Promise.resolve(null);
+    .then(d => { if (!Array.isArray(d)) throw new Error("formato"); const r = d.map(norm); r.sig = JSON.stringify(d); return r; }) : Promise.resolve(null);
   const [f, r] = await Promise.allSettled([pf, pr]);
   if (k !== KEY) return;   // chegou outra chave no meio do caminho
   if ([f, r].some(x => x.status === "rejected" && x.reason && x.reason.invalid)){
-    KEY = ""; funil = null; rows = []; respLoaded = false; booted = false; showState("invalid"); return;
+    KEY = ""; esqueceKey(); funil = null; rows = []; respLoaded = false; booted = false; showState("invalid"); return;
   }
+  if (silent && booted && f.status === "rejected"){   // sem internet por um instante: mantém o que está na tela
+    if (ft === funTok){ offline = true; pintaUpd(); }
+    return;
+  }
+  let mudou = !silent;
   if (all && rt === respTok){
-    if (r.status === "fulfilled"){ rows = r.value; respErr = false; respLoaded = true; } else respErr = true;
+    if (r.status === "fulfilled"){ if (!respLoaded || rows.sig !== r.value.sig) mudou = true; rows = r.value; respErr = false; respLoaded = true; }
+    else if (!silent) respErr = true;
   }
   if (ft !== funTok) return;   // tem um pedido do funil mais novo a caminho
-  if (f.status === "fulfilled"){ funil = f.value; funErr = false; testes = funil.testes; } else { funil = null; funErr = true; }
+  if (f.status === "fulfilled"){ if (!funil || funil.sig !== f.value.sig) mudou = true; funil = f.value; funErr = false; testes = funil.testes; } else { funil = null; funErr = true; }
   $("btnUpd").disabled = false; dash.classList.remove("busy");
   if (!funil && !respLoaded){ booted = false; showState("error"); return; }
-  booted = true; lastUpd = new Date();
+  booted = true; lastUpd = new Date(); offline = false;
+  if (silent && !mudou){ pintaUpd(); return; }   // nada novo: só atualiza o horário
   if (primeira){   // 1ª carga: só agora sabemos se hoje foi zerado / se há testes
     primeira = false;
     if (querTeste && testes.length){ periodo = "teste"; pintaPeriodo(); render(); load(false); return; }
     if (periodo === "hoje" && zeroHoje()){ pintaPeriodo(); render(); load(false); return; }
   }
-  render();
+  render(silent);
+}
+
+/* ---------- tempo real: busca os números sozinho a cada poucos segundos enquanto a aba está aberta ---------- */
+const VIVO_MS = 3000, RESP_MS = 30000;   // funil a cada 3 s; respostas (mais pesadas) a cada 30 s
+let vivoT = 0, mexeu = 0, ultResp = Date.now(), offline = false;
+["pointerdown","touchstart","wheel","keydown","scroll"].forEach(t => addEventListener(t, () => { mexeu = Date.now(); }, {passive:true, capture:true}));
+function agendaVivo(ms = VIVO_MS){ clearTimeout(vivoT); vivoT = setTimeout(tickVivo, ms); }
+function tickVivo(){
+  if (document.hidden || !KEY || !booted) return;   // aba escondida: para; volta sozinho ao reabrir
+  const el_ = document.activeElement;
+  // não redesenha no meio de um toque/rolagem, com um seletor aberto ou com a caixa de zerar aberta
+  if (carregando || Date.now() - mexeu < 1500 || (el_ && /^(SELECT|INPUT)$/.test(el_.tagName)) || !confirmBox.hidden){ agendaVivo(800); return; }
+  const all = Date.now() - ultResp >= RESP_MS;
+  if (all) ultResp = Date.now();
+  load(all, true);
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden && booted && KEY){ clearTimeout(vivoT); tickVivo(); } });
+addEventListener("online", () => { if (booted && KEY){ clearTimeout(vivoT); tickVivo(); } });
+function pintaUpd(){
+  upd.classList.toggle("off", offline);
+  upd.replaceChildren(el("span", {class:"vivo"}, el("i", {class:"dot", "aria-hidden":"true"}), offline ? "Sem conexão, tentando de novo" : "Ao vivo"),
+    lastUpd ? ` · atualizado às ${fHM.format(lastUpd)}` : "");
 }
 
 /* ---------- eventos ---------- */
@@ -879,7 +936,7 @@ $("cfSim").addEventListener("click", async () => {
     }
     testeId = 0; periodo = "hoje"; confirmBox.hidden = true; pintaPeriodo(); load(false);
   } catch(e){
-    if (e && e.invalid){ KEY = ""; showState("invalid"); return; }
+    if (e && e.invalid){ KEY = ""; esqueceKey(); showState("invalid"); return; }
     $("cfErr").hidden = false;
   } finally { b.disabled = false; }
 });
