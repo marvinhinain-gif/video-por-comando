@@ -200,6 +200,7 @@ button.callout::after{content:" →";color:#ff9b9b}
 .chip{font-size:11.5px;line-height:1.3;padding:3px 8px;border-radius:99px;background:var(--card-2);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
 .chip.bad{background:rgba(255,107,107,.14);border-color:rgba(255,107,107,.45);color:#ff9b9b;font-weight:600}
 .chip.live{color:var(--ok);border-color:rgba(79,209,139,.45)}
+.chip.orig{max-width:100%;overflow:hidden;text-overflow:ellipsis;color:var(--ok);border-style:dashed;border-color:rgba(79,209,139,.35)}
 
 /* minicards dos botões */
 .mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
@@ -392,6 +393,8 @@ function normFunil(d){   // o funil (quiz_funil_painel)
     clicaram:I(d.clicaram), cliquesTotal:I(d.cliques_total), durMed:MS(d.duracao_mediana_ms),
     porBotao: entries(d.cliques_por_botao).sort((a,b)=>b[1]-a[1]),
     aoVivo: new Map(entries(d.ao_vivo)),
+    aoVivoOrig: new Map(Object.keys(obj(d.ao_vivo_origem)).slice(0, 30).map(k => [S(k, 40),
+      arr(obj(d.ao_vivo_origem)[k]).slice(0, 20).map(obj).map(r => [S(r.o, 100).trim() || "direto", I(r.n)]).filter(r => r[1] > 0).sort((a,b) => b[1] - a[1])])),
     etapas: arr(d.funil).slice(0,20).map(f => { f = obj(f); const e = S(f.etapa, 20); return {
       etapa:e, nome: hasOwn(ETAPAS,e) ? ETAPAS[e] : (S(f.nome, 60) || e), sessoes:I(f.sessoes),
       pctTopo:PC(f.pct_topo), saida:PC(f.saida_pct), pararam:I(f.pararam_aqui), med:MS(f.mediana_ms),
@@ -534,6 +537,14 @@ function blocoPerdas(F){
       el("span", {class:"pt", "aria-hidden":"true"}, el("i", {style:`width:${l.pc == null ? 0 : Math.max(l.pc ? 1.5 : 0, Math.min(100, l.pc))}%`})),
       el("small", {text: l.pc == null ? "ninguém chegou na etapa anterior" : `${fmtN(l.de)} → ${fmtN(l.para)} · perdeu ${fmtN(l.perdeu)} ${l.perdeu === 1 ? "pessoa" : "pessoas"}${k === pior ? " · maior perda do quiz" : ""}`})))), true);
 }
+/* de onde veio (utm_source) quem está na etapa agora, em versão curta: "facebook 2 · direto 1 · +2" */
+const curto = (t, n=12) => t.length > n ? t.slice(0, n - 1) + "…" : t;
+function chipOrigem(lista){
+  if (!lista || !lista.length) return null;
+  const vis = lista.slice(0, 2).map(([o, n]) => `${curto(o)} ${fmtN(n)}`).join(" · ") + (lista.length > 2 ? ` · +${lista.length - 2}` : "");
+  return el("span", {class:"chip orig", title:"De onde vieram (UTM): " + lista.map(([o, n]) => `${o}: ${fmtN(n)}`).join(", "),
+    "aria-label":"Origem de quem está aqui agora: " + lista.map(([o, n]) => `${o} ${fmtN(n)}`).join(", "), text:"via " + vis});
+}
 function colunaFunil(F, e, i, total, worst){
   const vivo = F.aoVivo.get(e.etapa) || 0, w = e.pctTopo == null ? 0 : e.pctTopo;
   let ans;
@@ -551,7 +562,8 @@ function colunaFunil(F, e, i, total, worst){
     el("div", {class:"fm"},
       i ? el("span", {class:"chip" + (e.saida != null && e.saida > 30 ? " bad" : ""), text:e.saida == null ? "saída –" : `${fmtPc(e.saida)} saíram aqui`}) : null,
       e.etapa !== "clique" ? el("span", {class:"chip", text:`pararam aqui: ${fmtN(e.pararam)}`}) : null,
-      vivo > 0 ? el("span", {class:"chip live", text:`● ${fmtN(vivo)} agora`}) : null),
+      vivo > 0 ? el("span", {class:"chip live", text:`● ${fmtN(vivo)} agora`}) : null,
+      vivo > 0 ? chipOrigem(F.aoVivoOrig.get(e.etapa)) : null),
     e.etapa !== "clique" ? el("p", {class:"tm", style:"margin:0"}, "Tempo mediano na etapa: ", el("b", {text:fmtDur(e.med)})) : null,
     el("div", {class:"fans"}, el("h4", {text:"O que responderam"}), ans)
   );
