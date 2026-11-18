@@ -285,6 +285,7 @@ button.callout::after{content:" →";color:#ff9b9b}
       <p class="upd" id="upd"></p>
     </div>
     <div class="acts">
+      <button class="btn" id="btnLink" type="button" title="Copiar o link do painel para mandar a outra pessoa">🔗 Copiar link</button>
       <button class="btn" id="btnTeste" type="button" title="Zerar os números de hoje">🔄 Zerar o dia</button>
       <button class="btn" id="btnCsv" type="button">Baixar CSV</button>
       <button class="btn pri" id="btnUpd" type="button">Atualizar</button>
@@ -371,20 +372,21 @@ const DESEJOS = {
 const desejoLabel = k => hasOwn(DESEJOS,k) ? DESEJOS[k] : nichoLabel(k);
 
 /* chave: lê do hash e guarda neste aparelho (localStorage), assim recarregar a página não perde o acesso.
-   Se o aparelho não deixar guardar, a chave fica no hash para o refresh continuar funcionando. */
+   A chave fica SEMPRE no endereço (#k=…), para que copiar a barra de endereço gere um link que funciona
+   para qualquer pessoa. O hash não vai para o servidor. */
 const KEY_LS = "qb_painel_k";
 let KEY = "";
+const linkPainel = k => location.origin + location.pathname + location.search + "#k=" + encodeURIComponent(k);
 function readKey(){
   const m = location.hash.match(/(?:^#|&)k=([^&]*)/);
   let k = "";
   if (m){ try { k = decodeURIComponent(m[1]).trim(); } catch(e){ k = ""; } }
   if (k){
-    let salvou = false;
-    try { localStorage.setItem(KEY_LS, k); salvou = localStorage.getItem(KEY_LS) === k; } catch(e) {}
-    if (salvou) history.replaceState(null, "", location.pathname + location.search);
+    try { localStorage.setItem(KEY_LS, k); } catch(e) {}
     return k;
   }
   try { k = (localStorage.getItem(KEY_LS) || "").trim(); } catch(e) {}
+  if (k){ try { history.replaceState(null, "", linkPainel(k)); } catch(e) {} }   // devolve a chave ao endereço
   return k;
 }
 function esqueceKey(){ try { localStorage.removeItem(KEY_LS); } catch(e) {} }
@@ -1045,6 +1047,16 @@ function pintaUpd(){
 
 /* ---------- eventos ---------- */
 $("btnUpd").addEventListener("click", () => load(true));
+/* copiar link: gera o endereço com a chave, pronto para mandar a outra pessoa */
+$("btnLink").addEventListener("click", async () => {
+  if (!KEY) return;
+  const b = $("btnLink"), url = linkPainel(KEY);
+  let ok = false;
+  try { await navigator.clipboard.writeText(url); ok = true; } catch(e) {}
+  if (!ok){ window.prompt("Copie o link do painel:", url); return; }
+  b.textContent = "✓ Link copiado";
+  clearTimeout(b._t); b._t = setTimeout(() => { b.textContent = "🔗 Copiar link"; }, 2200);
+});
 $("btnCsv").addEventListener("click", downloadCsv);
 /* um dia específico: botão "Dia", seletor de data, setas ‹ › e clique no gráfico/tabela */
 const diaBar = $("diaBar"), inDia = $("inDia"), diaNome = $("diaNome");
