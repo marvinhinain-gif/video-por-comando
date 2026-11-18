@@ -256,8 +256,8 @@ main,.progress,.topbar{position:relative;z-index:1}
 @property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
 @keyframes orbit{to{--ang:360deg}}
 .offer-in{border-radius:24px;background:#0b0b0c;padding:24px 18px;text-align:left}
-.offer-bf{display:flex;justify-content:center;margin-bottom:14px}
-.offer-bf span{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:99px;background:rgba(214,163,41,.12);border:1px solid rgba(214,163,41,.45);color:var(--gold-hi);font-size:11px;font-weight:700;letter-spacing:.1em}
+.cta.jump{max-width:460px}
+#oferta{scroll-margin-top:16px}
 .offer-in h3{margin:0;font-size:20px;color:#fff;text-align:center}
 .inc{list-style:none;display:grid;gap:12px;margin:18px 0;padding:0}
 .inc li{display:flex;gap:12px;font-size:14px}
@@ -309,10 +309,6 @@ footer{width:100%;padding:24px 16px 30px;font-size:12px;color:var(--dim);border-
 <div class="glow" aria-hidden="true"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#F4DB8F"/><stop offset=".52" stop-color="#D6A329"/><stop offset="1" stop-color="#B8871A"/></linearGradient></defs></svg>
 
-<div class="topbar" id="topbar" hidden>
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor"/></svg>
-  Desconto de Black Friday <span>62% OFF</span>
-</div>
 <div class="topbar tb-free" id="topbarFree"><span aria-hidden="true">🎁</span> 100% GRATUITO</div>
 
 <div id="prog" class="progress" hidden>
@@ -335,7 +331,7 @@ const LEAD_WEBHOOK = "";       // URL que recebe o lead em POST JSON; vazio = n�
    Para desligar o envio, deixe url vazio. */
 const SUPABASE = {url:"https://ritjeqziygxnywznwhsc.supabase.co", key:"sb_publishable_6xr50iEvbMHEYcyE6F9pEg_xkrTpZkS", tabela:"quiz_respostas"};
 const VSL = {vturb:false, src:"m/vsl.mp4", poster:"m/vsl.webp", vturbId:"", vturbJs:""};
-const VSL_DELAY = 30;          // segundos até liberar tudo que fica abaixo do vídeo principal
+const VSL_DELAY = 0;           // segundos até liberar o que fica abaixo do vídeo (0 = aparece na hora)
 
 /* =========================================================
    MÍDIAS (pasta m/) — vídeos têm poster .webp com o mesmo nome
@@ -551,7 +547,7 @@ const WA = `<i class="si" style="--u:url(https://cdn.jsdelivr.net/npm/simple-ico
    MOTOR
    ========================================================= */
 let step = -1, answers = {}, lead = {nome:"", whatsapp:""}, cleanups = [];
-const app = document.getElementById("app"), prog = document.getElementById("prog"), track = document.getElementById("track"), topbar = document.getElementById("topbar");
+const app = document.getElementById("app"), prog = document.getElementById("prog"), track = document.getElementById("track");
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const tryPlay = v => { const p = v.play(); if (p && p.catch) p.catch(()=>{}); };
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -835,6 +831,7 @@ function renderResult(){
   app.innerHTML = `<section class="col"><div class="sales">
     <h2 class="hero2" id="qt">${firstName() ? esc(firstName()) + ", sua" : "Sua"} IA pronta <span class="gold">${pra(n.curto)}.</span></h2>
     <div class="vsl" id="vslBox"></div>
+    <a class="cta jump" id="irOferta" href="#oferta">Quero por R$ 37 <span class="arr" aria-hidden="true">↓</span></a>
 
     <div class="after" id="afterVsl" hidden>
       <div class="prof">
@@ -880,7 +877,6 @@ function renderResult(){
       </div>
 
       <div class="offer" id="oferta"><div class="offer-in">
-        <div class="offer-bf"><span>DESCONTO DE BLACK FRIDAY</span></div>
         <h3>Biblioteca de Skills</h3>
         <ul class="inc">
           <li><i>✓</i><div><b>250 skills testadas</b><small>Separadas em 7 categorias, cada uma com o que faz e o que entrega.</small></div></li>
@@ -934,12 +930,22 @@ function renderResult(){
   const reveal = () => {
     if (revealed || step !== RES_STEP) return; revealed = true;
     after.hidden = false; after.classList.add("show");
-    trackStep("oferta");
     // o carrossel só começa depois de visível (escondido, mediria largura 0)
     requestAnimationFrame(()=>{ if (step === RES_STEP) cleanups.push(makeFlow(document.getElementById("resFlow"), document.getElementById("resDots"), order)); });
   };
-  const dt = setTimeout(reveal, VSL_DELAY*1000);
-  cleanups.push(()=>clearTimeout(dt));
+  if (VSL_DELAY > 0){ const dt = setTimeout(reveal, VSL_DELAY*1000); cleanups.push(()=>clearTimeout(dt)); }
+  else reveal();
+  // "viu a oferta" = a oferta (preço) apareceu na tela
+  const ofertaEl = document.getElementById("oferta");
+  if ("IntersectionObserver" in window){
+    const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting) && step === RES_STEP){ io.disconnect(); trackStep("oferta"); } }, {threshold:.3});
+    io.observe(ofertaEl); cleanups.push(()=>io.disconnect());
+  } else trackStep("oferta");
+  // botão abaixo do vídeo: leva até a oferta de R$ 37
+  document.getElementById("irOferta").addEventListener("click", e => {
+    e.preventDefault();
+    ofertaEl.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start"});
+  });
 }
 
 let vturbLoaded = false;
@@ -1016,8 +1022,7 @@ function trackStep(etapa){
 function updateChrome(){
   const inFlow = step >= 0 && step < RES_STEP;
   prog.hidden = !inFlow;
-  // capa: "100% GRATUITO" (o quiz é grátis); página de resultado (com o preço): faixa de Black Friday
-  topbar.hidden = step < RES_STEP;
+  // capa: "100% GRATUITO" (o quiz é grátis); sem faixa nas perguntas nem no resultado
   document.getElementById("topbarFree").hidden = step >= 0;
   const pct = inFlow ? Math.round((step+1)/STEPS.length*100) : step < 0 ? 0 : 100;
   document.getElementById("tfill").style.width = Math.max(4,pct) + "%";

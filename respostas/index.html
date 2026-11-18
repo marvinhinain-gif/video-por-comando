@@ -313,7 +313,7 @@ const NICHOS = {   // mesmos rótulos do quiz (NICHES)
 const ETAPAS = {   // nomes das etapas (iguais aos da função do banco)
   capa:"Entrou no quiz", nicho:"P1 · O que quer da IA", dor:"P2 · Maior trava", gasto:"P3 · Gasto com apps",
   horas:"P4 · Horas por semana", pausa:"Pausa · Prévia", ia:"P5 · Relação com IA", tempo:"P6 · Tempo livre",
-  carregando:"Carregando", resultado:"Página de resultado", oferta:"Viu a oferta (após o vídeo)", clique:"Clicou no botão de compra"
+  carregando:"Carregando", resultado:"Página de resultado", oferta:"Viu a oferta (rolou até o preço)", clique:"Clicou no botão de compra"
 };
 const BOTOES = {oferta:"Botão da oferta", final:"Botão final (Garantir Agora)"};
 const hasOwn = (o,k) => Object.prototype.hasOwnProperty.call(o,k);
@@ -510,7 +510,7 @@ function blocoCards(F){
 const COM_RESPOSTA = ["nicho","dor","gasto","horas","ia","tempo"];
 const SEM_RESPOSTA = {   // o que acontece nas etapas que não têm pergunta
   capa:"Abriu a capa do quiz", pausa:"Prévia com as contas da pessoa", carregando:"Tela de carregamento (~3 s)",
-  resultado:"Página de vendas com o vídeo", oferta:"Quem ficou ~30 s no resultado", clique:"Clicou em comprar"
+  resultado:"Página de vendas com o vídeo", oferta:"Quem rolou até o preço de R$ 37", clique:"Clicou em comprar"
 };
 /* passagem de uma etapa para a seguinte: quantos chegaram, quantos se perderam e quanto isso representa */
 const perda = (a, b) => { const de = a.sessoes, para = b.sessoes, perdeu = Math.max(0, de - para); return {de, para, perdeu, pc: de ? perdeu / de * 100 : null}; };
