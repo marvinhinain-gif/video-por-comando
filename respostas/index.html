@@ -734,12 +734,14 @@ function fonteDesc(k){
   if (k.startsWith("app:")) return "Abriu dentro do app " + k.slice(4) + ".";
   return "";
 }
+/* nomes da Meta vêm como "Nome|120252123070530524": mostra só o nome (o id fica no title) */
+const semId = t => (t || "").replace(/\s*\|\s*\d{8,}\s*$/, "") || t;
 /* o detalhe (subfonte) de cada fonte */
 function subTexto(fonte, r){
   const s = r.sub;
   if (fonte === "biblioteca" || fonte.startsWith("utm:")){
     if (!s) return ["Sem detalhe da campanha", "Visitas de antes deste rastreio: só a utm_source era guardada."];
-    return [r.anuncio || r.camp || "Sem nome", null];
+    return [semId(r.anuncio || r.camp) || "Sem nome", null];
   }
   if (fonte === "instagram" || fonte === "facebook"){
     const rede = fonte === "instagram" ? "Instagram" : "Facebook";
@@ -781,7 +783,7 @@ function blocoSubfontes(F){
     const [tit, desc] = subTexto(fonteF, r), on = subF === r.sub;
     const det = utm && r.sub ? el("span", {class:"utm"},
       ...[["Campanha", r.camp], ["Conjunto", r.conj], ["Anúncio", r.anuncio], ["Posicionamento", r.posic]]
-        .filter(x => x[1]).flatMap(([a, b]) => [el("span", {text:a}), el("b", {text:b})])) : null;
+        .filter(x => x[1]).flatMap(([a, b]) => [el("span", {text:a}), el("b", {text:semId(b), title:b})])) : null;
     return el("button", {type:"button", class:"frow" + (on ? " on" : ""), "aria-pressed":String(on), onclick:() => escolherSub(on ? null : r.sub)},
       el("span", {class:"nm"}, el("b", {text:tit}), desc ? el("small", {text:desc}) : null, det),
       ...linhaNums(r));
