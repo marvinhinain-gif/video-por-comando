@@ -203,6 +203,21 @@ button.callout::after{content:" →";color:#ff9b9b}
 .chip{font-size:11.5px;line-height:1.3;padding:3px 8px;border-radius:99px;background:var(--card-2);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
 .chip.bad{background:rgba(255,107,107,.14);border-color:rgba(255,107,107,.45);color:#ff9b9b;font-weight:600}
 .chip.live{color:var(--ok);border-color:rgba(79,209,139,.45)}
+.sd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sdc{padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--card-2);display:grid;gap:7px;align-content:start}
+.sdc.bad{border-color:rgba(255,107,107,.45);background:linear-gradient(180deg,rgba(255,107,107,.10),var(--card-2))}
+.sdc.ok{border-color:rgba(79,209,139,.4);background:linear-gradient(180deg,rgba(79,209,139,.08),var(--card-2))}
+.sdc small.k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.sdc.bad small.k{color:#ff9b9b}.sdc.ok small.k{color:var(--ok)}
+.sdc h3{margin:0;font-size:15px}
+.sdc .vz{font-size:32px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.sdc .vz small{font-size:13px;font-weight:500;color:var(--muted);margin-left:5px;letter-spacing:0}
+.sdc p{margin:0;font-size:12.5px;line-height:1.4;color:var(--muted)}
+.sdc p b{color:var(--text)}
+.sdc .t{height:7px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.sdc .t i{display:block;height:100%;border-radius:99px;background:#ff6b6b}
+.sdc.ok .t i{background:var(--ok)}
+@media (max-width:720px){.sd{grid-template-columns:1fr}}
 .fontes{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0;-webkit-overflow-scrolling:touch}
 .fontes::-webkit-scrollbar{display:none}
 .fontes[hidden]{display:none}
@@ -692,6 +707,38 @@ function tabela(title, sub, list){
       el("span", {class:"num", text:pct(r.resultado, r.visitas)}), el("span", {class:"num", text:pct(r.clicaram, r.visitas)})))
   ));
 }
+/* ---------- quem saiu logo no começo: na capa e na 1ª pergunta ---------- */
+function blocoSaidas(F){
+  const g = k => F.etapas.find(e => e.etapa === k), capa = g("capa"), p1 = g("nicho"), p2 = g("dor");
+  if (!capa || !p1 || !capa.sessoes) return null;
+  const entrou = capa.sessoes, s1 = Math.max(0, entrou - p1.sessoes);
+  const s2 = p2 ? Math.max(0, p1.sessoes - p2.sessoes) : null, seguiu = p2 ? p2.sessoes : null;
+  const barra = (v, t) => el("span", {class:"t", "aria-hidden":"true"}, el("i", {style:`width:${t ? Math.min(100, v / t * 100) : 0}%`}));
+  const pessoas = n => n === 1 ? "pessoa" : "pessoas";
+  const cards = [
+    el("div", {class:"sdc bad"},
+      el("small", {class:"k", text:"1ª etapa · capa"}),
+      el("h3", {text:"Saíram assim que entraram"}),
+      el("div", {class:"vz"}, fmtN(s1), el("small", {text:`${pessoas(s1)} · ${pct(s1, entrou)}`})),
+      barra(s1, entrou),
+      el("p", null, "De ", el("b", {text:`${fmtN(entrou)} que entraram`}), `, ${fmtN(s1)} abriram a capa e foram embora sem responder a 1ª pergunta.`))
+  ];
+  if (s2 != null) cards.push(
+    el("div", {class:"sdc bad"},
+      el("small", {class:"k", text:"2ª etapa · P1"}),
+      el("h3", {text:"Saíram na 2ª etapa"}),
+      el("div", {class:"vz"}, fmtN(s2), el("small", {text:`${pessoas(s2)} · ${pct(s2, p1.sessoes)}`})),
+      barra(s2, p1.sessoes),
+      el("p", null, "De ", el("b", {text:`${fmtN(p1.sessoes)} que chegaram na 1ª pergunta`}), `, ${fmtN(s2)} saíram sem ir para a próxima. Isso é ${pct(s2, entrou)} de todos que entraram.`)),
+    el("div", {class:"sdc ok"},
+      el("small", {class:"k", text:"seguiram"}),
+      el("h3", {text:"Passaram das duas primeiras"}),
+      el("div", {class:"vz"}, fmtN(seguiu), el("small", {text:`${pessoas(seguiu)} · ${pct(seguiu, entrou)}`})),
+      barra(seguiu, entrou),
+      el("p", null, "Chegaram na 2ª pergunta. ", el("b", {text:`${fmtN(s1 + s2)} de ${fmtN(entrou)}`}), ` (${pct(s1 + s2, entrou)}) saíram nas duas primeiras etapas.`)));
+  return box("Saídas logo no começo", "quantas pessoas saíram na capa e na 1ª pergunta", el("div", {class:"sd"}, cards), true);
+}
+
 /* ---------- fontes de tráfego ----------
    chave vinda do banco: "utm:<utm_source>" quando tem UTM; sem UTM, a origem deduzida (site anterior, app, clid) */
 const FONTES = {
@@ -860,7 +907,7 @@ function render(keep=false){
     ? emptyIn("Contagem zerada", "Ainda ninguém abriu o quiz desde que você zerou. Os números aparecem aqui sozinhos assim que alguém entrar.")
     : emptyIn("Ainda sem visitas nesse período", "Quando alguém abrir o quiz, o funil aparece aqui."));
   else {
-    dash.append(...[blocoEngajamento(F), blocoCards(F), blocoDisp(F), blocoFontes(F), blocoSubfontes(F)].filter(Boolean));
+    dash.append(...[blocoEngajamento(F), blocoCards(F), blocoSaidas(F), blocoDisp(F), blocoFontes(F), blocoSubfontes(F)].filter(Boolean));
     const g = el("div", {class:"grid"});
     g.append(...[blocoFunil(F), blocoPerdas(F), blocoBotoes(F), blocoDias(F), blocoDiaADia(F)].filter(Boolean),
       tabela("Nicho", null, F.porNicho));
