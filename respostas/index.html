@@ -203,6 +203,28 @@ button.callout::after{content:" →";color:#ff9b9b}
 .chip{font-size:11.5px;line-height:1.3;padding:3px 8px;border-radius:99px;background:var(--card-2);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
 .chip.bad{background:rgba(255,107,107,.14);border-color:rgba(255,107,107,.45);color:#ff9b9b;font-weight:600}
 .chip.live{color:var(--ok);border-color:rgba(79,209,139,.45)}
+.fontes{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0;-webkit-overflow-scrolling:touch}
+.fontes::-webkit-scrollbar{display:none}
+.fontes[hidden]{display:none}
+.fontes button{flex:none;min-height:38px;padding:0 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--muted);font:inherit;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap}
+.fontes button[aria-pressed="true"]{background:var(--gold-grad);color:var(--btn-ink);border-color:transparent}
+.fontes button small{font-weight:500;opacity:.8;margin-left:5px;font-size:12px}
+.fls{display:grid;gap:8px}
+.frow{display:grid;grid-template-columns:minmax(0,1fr) repeat(4,72px);gap:6px 8px;align-items:center;width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card-2);color:inherit;font:inherit;text-align:left;cursor:pointer}
+.frow:hover{border-color:rgba(214,163,41,.5)}
+.frow.on{border-color:var(--gold);background:linear-gradient(180deg,rgba(214,163,41,.12),var(--card-2))}
+.frow .nm{min-width:0}
+.frow .nm b{display:block;font-size:14px;overflow-wrap:anywhere}
+.frow .nm small{display:block;margin-top:2px;font-size:12px;line-height:1.35;color:var(--muted)}
+.frow .num{text-align:right}
+.frow .num b{display:block;font-size:15px}
+.frow .num small{display:block;font-size:10.5px;color:var(--muted)}
+.utm{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;margin-top:6px;font-size:12px}
+.utm span{color:var(--muted)}
+.utm b{font-weight:600;font-size:12px;overflow-wrap:anywhere}
+.fsel{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px;font-size:12.5px;color:var(--muted)}
+.fsel button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:99px;padding:5px 10px;font:inherit;font-size:12px;cursor:pointer}
+@media (max-width:520px){.frow{grid-template-columns:repeat(4,minmax(0,1fr))}.frow .nm{grid-column:1/-1}.frow .num{text-align:left}}
 .chip.orig{max-width:100%;overflow:hidden;text-overflow:ellipsis;color:var(--ok);border-style:dashed;border-color:rgba(79,209,139,.35)}
 
 /* minicards dos botões */
@@ -288,6 +310,7 @@ button.callout::after{content:" →";color:#ff9b9b}
       <button type="button" data-dv="celular" aria-pressed="false">📱 Celular</button>
       <button type="button" data-dv="computador" aria-pressed="false">💻 Computador</button>
     </div>
+    <div class="fontes" id="fontesBar" role="group" aria-label="Fonte de tráfego" hidden></div>
     <select class="sel" id="selNicho" aria-label="Nicho"></select>
   </div>
 
@@ -356,7 +379,7 @@ addEventListener("hashchange", () => { const k = readKey(); if (k){ KEY = k; fun
 
 let funil = null, funErr = false, rows = [], respErr = false, respLoaded = false;
 let testes = [], testeId = 0, querTeste = false, primeira = true;
-let dia = "", dispF = "", periodo = "7", nichoF = "", booted = false, lastUpd = null, funTok = 0, respTok = 0;
+let fonteF = "", subF = null, dia = "", dispF = "", periodo = "7", nichoF = "", booted = false, lastUpd = null, funTok = 0, respTok = 0;
 const $ = id => document.getElementById(id);
 const top_ = $("top"), filters = $("filters"), dash = $("dash"), state = $("state"), upd = $("upd"), selNicho = $("selNicho");
 
@@ -412,7 +435,9 @@ function normFunil(d){   // o funil (quiz_funil_painel)
       pctTopo:PC(f.pct_topo), saida:PC(f.saida_pct), pararam:I(f.pararam_aqui), med:MS(f.mediana_ms),
       respostas: arr(f.respostas).slice(0,12).map(obj).map(r => [S(r.t, 120).trim() || "(vazio)", I(r.n)]).filter(r => r[1] > 0).sort((a,b) => b[1] - a[1])}; }),
     porDia: arr(d.por_dia).map(obj).filter(r => /^\d{4}-\d{2}-\d{2}$/.test(S(r.dia, 10))).map(r => ({dia:S(r.dia,10), ...seg(r)})).sort((a,b)=>a.dia<b.dia?-1:1),
-    porOrigem: arr(d.por_origem).map(obj).map(r => ({nome:S(r.origem, 100).trim() || "direto", ...seg(r)})),
+    fontes: arr(d.fontes).slice(0,40).map(obj).map(r => ({key:S(r.fonte, 80), visitas:I(r.visitas), iniciaram:I(r.iniciaram), resultado:I(r.resultado), clicaram:I(r.clicaram)})).filter(r => r.key),
+    subfontes: arr(d.subfontes).slice(0,100).map(obj).map(r => ({sub:S(r.sub, 900), camp:S(r.camp, 200), conj:S(r.conj, 200), anuncio:S(r.anuncio, 200), posic:S(r.posic, 200),
+      visitas:I(r.visitas), iniciaram:I(r.iniciaram), resultado:I(r.resultado), clicaram:I(r.clicaram)})),
     porNicho: arr(d.por_nicho).map(obj).map(r => ({nome:nichoLabel(S(r.nicho, 40)), key:S(r.nicho, 40), ...seg(r)})),
     testes: arr(d.testes).slice(0,50).map(obj).map(t => ({id:I(t.id), n:I(t.n), ini:new Date(t.inicio), fim:t.fim ? new Date(t.fim) : null}))
       .filter(t => t.id > 0 && !isNaN(t.ini) && !(t.fim && isNaN(t.fim))),
@@ -553,9 +578,9 @@ function blocoPerdas(F){
 const curto = (t, n=12) => t.length > n ? t.slice(0, n - 1) + "…" : t;
 function chipOrigem(lista){
   if (!lista || !lista.length) return null;
-  const vis = lista.slice(0, 2).map(([o, n]) => `${curto(o)} ${fmtN(n)}`).join(" · ") + (lista.length > 2 ? ` · +${lista.length - 2}` : "");
-  return el("span", {class:"chip orig", title:"De onde vieram (UTM): " + lista.map(([o, n]) => `${o}: ${fmtN(n)}`).join(", "),
-    "aria-label":"Origem de quem está aqui agora: " + lista.map(([o, n]) => `${o} ${fmtN(n)}`).join(", "), text:"via " + vis});
+  const vis = lista.slice(0, 2).map(([o, n]) => `${curto(fonteCurta(o))} ${fmtN(n)}`).join(" · ") + (lista.length > 2 ? ` · +${lista.length - 2}` : "");
+  return el("span", {class:"chip orig", title:"De onde vieram: " + lista.map(([o, n]) => `${fonteNome(o)}: ${fmtN(n)}`).join(", "),
+    "aria-label":"Origem de quem está aqui agora: " + lista.map(([o, n]) => `${fonteNome(o)} ${fmtN(n)}`).join(", "), text:"via " + vis});
 }
 function colunaFunil(F, e, i, total, worst){
   const vivo = F.aoVivo.get(e.etapa) || 0, w = e.pctTopo == null ? 0 : e.pctTopo;
@@ -667,6 +692,114 @@ function tabela(title, sub, list){
       el("span", {class:"num", text:pct(r.resultado, r.visitas)}), el("span", {class:"num", text:pct(r.clicaram, r.visitas)})))
   ));
 }
+/* ---------- fontes de tráfego ----------
+   chave vinda do banco: "utm:<utm_source>" quando tem UTM; sem UTM, a origem deduzida (site anterior, app, clid) */
+const FONTES = {
+  biblioteca:["📚 Biblioteca de anúncios / prévia", "Biblioteca", "Clicou no anúncio pela Biblioteca de Anúncios ou numa prévia: a Meta não preencheu os parâmetros {{…}} da UTM."],
+  instagram:["📸 Instagram (sem UTM)", "Instagram", "Veio do Instagram por um link sem UTM: bio, stories, direct ou conteúdo orgânico."],
+  facebook:["📘 Facebook (sem UTM)", "Facebook", "Veio do Facebook por um link sem UTM: post, grupo, Messenger ou perfil."],
+  meta:["Instagram/Facebook fora do app", "Meta", "Link do Instagram ou Facebook (tem fbclid) aberto no navegador do celular, fora do app."],
+  google_ads:["Google Ads", "Google Ads", "Clicou num anúncio do Google (gclid)."],
+  google:["🔎 Google", "Google", "Veio de uma busca no Google ou do app do Google."],
+  youtube:["▶️ YouTube", "YouTube", "Clicou num link no YouTube (descrição, comentário ou cartão)."],
+  tiktok:["🎵 TikTok", "TikTok", "Veio do TikTok (link da bio ou anúncio)."],
+  whatsapp:["💬 WhatsApp", "WhatsApp", "Abriu um link pelo WhatsApp."],
+  linkedin:["LinkedIn", "LinkedIn", "Veio do LinkedIn."],
+  x:["X / Twitter", "X", "Veio do X (Twitter)."],
+  telegram:["Telegram", "Telegram", "Veio do Telegram."],
+  bing:["Bing", "Bing", "Veio do Bing."],
+  site:["🌐 Seu site / página de vendas", "Site", "Clicou num link no seu próprio site ou página."],
+  direto:["✉️ Direto / mandaram o link", "direto", "Chegou sem site anterior: alguém mandou o link (WhatsApp, SMS, e-mail, DM), copiou e colou ou digitou."],
+  sem_dado:["Sem dado de origem", "Sem dado", "Visitas de antes deste rastreio, que entraram sem UTM. Não dá mais pra saber de onde vieram."]
+};
+const UTM_NOMES = {fb:"Anúncio Meta (utm FB)", facebook:"Facebook (UTM)", ig:"Instagram (UTM)", instagram:"Instagram (UTM)", google:"Google (UTM)", youtube:"YouTube (UTM)", tiktok:"TikTok (UTM)", whatsapp:"WhatsApp (UTM)", email:"E-mail (UTM)"};
+function fonteNome(k){
+  if (hasOwn(FONTES, k)) return FONTES[k][0];
+  if (k.startsWith("utm:")){ const v = k.slice(4); return hasOwn(UTM_NOMES, v) ? "🎯 " + UTM_NOMES[v] : "🎯 UTM: " + v; }
+  if (k.startsWith("outro:")) return "🔗 " + k.slice(6);
+  if (k.startsWith("app:")) return "App " + k.slice(4);
+  return k || "?";
+}
+function fonteCurta(k){
+  if (hasOwn(FONTES, k)) return FONTES[k][1];
+  if (k.startsWith("utm:")) return k.slice(4).toUpperCase() === "FB" ? "FB" : k.slice(4);
+  if (k.startsWith("outro:")) return k.slice(6).replace(/^www\./, "");
+  if (k.startsWith("app:")) return k.slice(4);
+  return k || "?";
+}
+function fonteDesc(k){
+  if (hasOwn(FONTES, k)) return FONTES[k][2];
+  if (k.startsWith("utm:")) return `Link com utm_source=${k.slice(4)}. Toque para ver campanha, conjunto, anúncio e posicionamento.`;
+  if (k.startsWith("outro:")) return "Clicou num link em outro site.";
+  if (k.startsWith("app:")) return "Abriu dentro do app " + k.slice(4) + ".";
+  return "";
+}
+/* o detalhe (subfonte) de cada fonte */
+function subTexto(fonte, r){
+  const s = r.sub;
+  if (fonte === "biblioteca" || fonte.startsWith("utm:")){
+    if (!s) return ["Sem detalhe da campanha", "Visitas de antes deste rastreio: só a utm_source era guardada."];
+    return [r.anuncio || r.camp || "Sem nome", null];
+  }
+  if (fonte === "instagram" || fonte === "facebook"){
+    const rede = fonte === "instagram" ? "Instagram" : "Facebook";
+    if (s === "link") return [`Link clicado dentro do ${rede}`, fonte === "instagram" ? "Bio, stories, direct ou anúncio sem UTM." : "Post, grupo, Messenger ou anúncio sem UTM."];
+    if (s === "app") return [`Aberto no navegador do ${rede}`, "Sem site anterior: provavelmente link no direct ou na bio."];
+    return [`${rede} pelo navegador`, "Veio do site do " + rede + " (computador ou navegador do celular)."];
+  }
+  if (fonte === "meta") return ["Link aberto fora do app", "Tinha fbclid, mas abriu no navegador do celular."];
+  if (fonte === "direto"){
+    if (s === "celular") return ["📱 No celular", "Link mandado no WhatsApp, SMS, e-mail ou DM, ou copiado e colado."];
+    if (s === "computador") return ["💻 No computador", "Digitou o endereço, usou um favorito ou abriu um link de e-mail/mensagem."];
+    return ["Sem site anterior", null];
+  }
+  if (!s) return ["Sem detalhe", null];
+  return ["Veio de: " + s, null];
+}
+const linhaNums = r => [
+  el("span", {class:"num"}, el("b", {text:fmtN(r.visitas)}), el("small", {text:"visitas"})),
+  el("span", {class:"num"}, el("b", {text:pct(r.iniciaram, r.visitas)}), el("small", {text:"começaram"})),
+  el("span", {class:"num"}, el("b", {text:pct(r.resultado, r.visitas)}), el("small", {text:"concluíram"})),
+  el("span", {class:"num"}, el("b", {text:pct(r.clicaram, r.visitas)}), el("small", {text:`clicaram · ${fmtN(r.clicaram)}`}))];
+function blocoFontes(F){
+  const lista = F.fontes;
+  if (!lista.length) return box("Fontes de tráfego", null, el("p", {class:"note", text:"Sem dados nesse período."}), true);
+  return box("Fontes de tráfego", "toque numa fonte para ver o funil só dela e as subfontes (UTM)", el("div", {class:"fls"},
+    lista.map(r => el("button", {type:"button", class:"frow" + (fonteF === r.key ? " on" : ""), "aria-pressed":String(fonteF === r.key),
+        onclick:() => escolherFonte(fonteF === r.key ? "" : r.key)},
+      el("span", {class:"nm"}, el("b", {text:fonteNome(r.key)}), el("small", {text:fonteDesc(r.key)})),
+      ...linhaNums(r)))), true);
+}
+function blocoSubfontes(F){
+  if (!fonteF) return null;
+  const lista = F.subfontes, utm = fonteF === "biblioteca" || fonteF.startsWith("utm:");
+  const corpo = [el("div", {class:"fsel"}, "Fonte: ", el("b", {text:fonteNome(fonteF)}),
+    subF !== null ? el("button", {type:"button", text:"✕ ver todas as subfontes", onclick:() => escolherSub(null)}) : null,
+    el("button", {type:"button", text:"✕ tirar o filtro de fonte", onclick:() => escolherFonte("")}))];
+  if (!lista.length) corpo.push(el("p", {class:"note", text:"Sem visitas dessa fonte nesse período."}));
+  else corpo.push(el("div", {class:"fls"}, lista.map(r => {
+    const [tit, desc] = subTexto(fonteF, r), on = subF === r.sub;
+    const det = utm && r.sub ? el("span", {class:"utm"},
+      ...[["Campanha", r.camp], ["Conjunto", r.conj], ["Anúncio", r.anuncio], ["Posicionamento", r.posic]]
+        .filter(x => x[1]).flatMap(([a, b]) => [el("span", {text:a}), el("b", {text:b})])) : null;
+    return el("button", {type:"button", class:"frow" + (on ? " on" : ""), "aria-pressed":String(on), onclick:() => escolherSub(on ? null : r.sub)},
+      el("span", {class:"nm"}, el("b", {text:tit}), desc ? el("small", {text:desc}) : null, det),
+      ...linhaNums(r));
+  })));
+  return box(utm ? "Subfontes · UTM" : "Subfontes · origem deduzida", utm ? "campanha, conjunto, anúncio e posicionamento · toque para filtrar o funil" : "sem UTM, deduzido pelo site anterior e pelo app · toque para filtrar o funil", corpo, true);
+}
+function pintaFontes(){
+  const bar = $("fontesBar"), lista = funil ? funil.fontes : [];
+  bar.hidden = !lista.length && !fonteF;
+  const x = bar.scrollLeft, chips = [el("button", {type:"button", "aria-pressed":String(!fonteF), onclick:() => escolherFonte("")}, "Todas as fontes")];
+  const tem = lista.some(r => r.key === fonteF);
+  (fonteF && !tem ? [{key:fonteF, visitas:0}, ...lista] : lista).forEach(r => chips.push(
+    el("button", {type:"button", "aria-pressed":String(fonteF === r.key), title:fonteDesc(r.key), onclick:() => escolherFonte(fonteF === r.key ? "" : r.key)},
+      fonteCurta(r.key), el("small", {text:fmtN(r.visitas)}))));
+  bar.replaceChildren(...chips); bar.scrollLeft = x;
+}
+function escolherFonte(k){ fonteF = k || ""; subF = null; load(false); }
+function escolherSub(v){ subF = v; load(false); }
 /* celular x computador lado a lado (sempre os dois, mesmo com o filtro de dispositivo ligado) */
 const DISP = {celular:"📱 Celular", computador:"💻 Computador"};
 function blocoDisp(F){
@@ -716,7 +849,7 @@ function render(keep=false){
   // atualização automática: guarda onde a pessoa está (página e faixa do funil) para nada pular
   const velha = dash.querySelector(".fstrip"), sx = velha ? velha.scrollLeft : 0, y = scrollY;
   if (keep) dash.style.minHeight = dash.offsetHeight + "px";
-  fillNichos(); pintaTeste(); pintaHoje();
+  fillNichos(); pintaTeste(); pintaHoje(); pintaFontes();
   $("btnCsv").disabled = !filtered().length;
   dash.replaceChildren();
   const F = funil;
@@ -725,14 +858,14 @@ function render(keep=false){
     ? emptyIn("Contagem zerada", "Ainda ninguém abriu o quiz desde que você zerou. Os números aparecem aqui sozinhos assim que alguém entrar.")
     : emptyIn("Ainda sem visitas nesse período", "Quando alguém abrir o quiz, o funil aparece aqui."));
   else {
-    dash.append(blocoEngajamento(F), blocoCards(F), blocoDisp(F));
+    dash.append(...[blocoEngajamento(F), blocoCards(F), blocoDisp(F), blocoFontes(F), blocoSubfontes(F)].filter(Boolean));
     const g = el("div", {class:"grid"});
     g.append(...[blocoFunil(F), blocoPerdas(F), blocoBotoes(F), blocoDias(F), blocoDiaADia(F)].filter(Boolean),
-      tabela("Origem", "utm_source", F.porOrigem), tabela("Nicho", null, F.porNicho));
+      tabela("Nicho", null, F.porNicho));
     dash.append(g);
   }
   dash.append(el("h2", {class:"sec", text:"O que as pessoas responderam"}),
-    ...(dispF ? [el("p", {class:"note", text:"Este resumo junta celular e computador. As respostas por dispositivo aparecem nas colunas do funil acima."})] : []),
+    ...(dispF || fonteF ? [el("p", {class:"note", text:"Este resumo junta todos os dispositivos e fontes. As respostas com o filtro aplicado aparecem nas colunas do funil acima."})] : []),
     ...blocoRespostas());
   if (keep){
     const nova = dash.querySelector(".fstrip");
@@ -801,7 +934,7 @@ async function load(all=true, silent=false){
 }
 async function carrega(k, ft, rt, all, silent){
   if (periodo === "teste" && !testeAtual()){ periodo = "7"; pintaPeriodo(); }
-  const filtro = {p_chave:k, p_nicho:nichoF || null, p_dispositivo:dispF || null};
+  const filtro = {p_chave:k, p_nicho:nichoF || null, p_dispositivo:dispF || null, p_fonte:fonteF || null, p_sub:fonteF && subF !== null ? subF : null};
   if (periodo === "teste") filtro.p_teste = testeAtual().id;
   else if (periodo === "hoje" && zeroHoje()) filtro.p_teste = zeroHoje().id;   // hoje, a partir do último zerar
   else if (periodo === "dia") filtro.p_dia = dia;

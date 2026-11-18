@@ -989,11 +989,32 @@ const sessao = (()=>{
   return s;   // recarregar na mesma aba = mesma visita
 })();
 const utmSource = (()=>{ try { return (new URLSearchParams(location.search).get("utm_source") || "").replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0,100); } catch(e) { return ""; } })();
+/* de onde a pessoa veio: UTMs completas e, para quem chega sem UTM, os sinais para deduzir a origem
+   (site anterior sem a query, app em que o link abriu e o tipo de clid). Nada pessoal. */
+const ORIGEM = (()=>{
+  const o = {};
+  try {
+    const q = new URLSearchParams(location.search), cl = v => (v || "").replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0,200);
+    ["medium","campaign","content","term"].forEach(k => { const v = cl(q.get("utm_" + k)); if (v) o["utm_" + k] = v; });
+    const clid = q.has("fbclid") ? "fb" : (q.has("gclid") || q.has("gbraid") || q.has("wbraid")) ? "google" : q.has("ttclid") ? "tiktok" : q.has("msclkid") ? "bing" : "";
+    if (clid) o.clid = clid;
+    let ref = "";
+    try { if (document.referrer){ const u = new URL(document.referrer); if (u.host && u.host !== location.host) ref = (u.host + u.pathname).toLowerCase().slice(0,200); } } catch(e) {}
+    o.ref = ref;   // "" = chegou sem site anterior (link mandado por mensagem, copiado ou digitado)
+    const ua = navigator.userAgent || "";
+    const app = /Instagram/i.test(ua) ? "instagram" : /FBAN|FBAV|FB_IAB|FBIOS|FB4A/.test(ua) ? "facebook"
+      : /musical_ly|BytedanceWebview|TikTok|trill_/i.test(ua) ? "tiktok" : /LinkedInApp/i.test(ua) ? "linkedin"
+      : /Twitter/i.test(ua) ? "x" : /Telegram/i.test(ua) ? "telegram" : /WhatsApp/i.test(ua) ? "whatsapp"
+      : /Snapchat/i.test(ua) ? "snapchat" : /Pinterest/i.test(ua) ? "pinterest" : /\bGSA\//.test(ua) ? "google" : /\bLine\//.test(ua) ? "line" : "";
+    if (app) o.app = app;
+  } catch(e) {}
+  return o;
+})();
 const dispositivo = () => { try { return innerWidth < 768 || matchMedia("(pointer: coarse)").matches ? "celular" : "computador"; } catch(e) { return "celular"; } };
 let lastEtapa = null, lastEtapaT = 0;
 function sendEvent(row){
   if (!SUPABASE.url) return;
-  const body = Object.assign({quiz:"biblioteca", sessao, dispositivo:dispositivo()}, row);
+  const body = Object.assign({quiz:"biblioteca", sessao, dispositivo:dispositivo()}, ORIGEM, row);
   if (utmSource) body.utm_source = utmSource;
   if (answers.nicho != null) body.nicho = nicheKey();
   try {
