@@ -356,9 +356,7 @@ const MEDIA = {
   v2:{t:"Personagens 3D que vendem", c:"Vídeo animado", som:1},
   v3:{t:"Anúncio em animação 3D", c:"Vídeo animado", som:1},
   v4:{t:"A obra em 3D, andar por andar", c:"Arquitetura"},
-  v5:{t:"Do terreno à casa pronta", c:"Imóveis", som:1},
   v6:{t:"Mobília no apê vazio", c:"Imóveis", som:1},
-  v7:{t:"Terreno que vira empreendimento", c:"Arquitetura", som:1},
   v8:{t:"Vídeo explicativo animado", c:"Conteúdo", som:1},
   v9:{t:"Série animada pro Reels", c:"Conteúdo", som:1},
   v10:{t:"18 efeitos de edição em 20s", c:"Edição de vídeo"},
@@ -374,7 +372,7 @@ const MEDIA = {
   v16:{t:"WhatsApp automático", c:"Atendimento", soCapa:1}
 };
 /* capa: abre com v3 no centro; à direita v15, v1, v16; à esquerda (o último da lista) o casamento */
-const COVER_ORDER = ["v3","v15","v1","v16","v5","v4","v14","v6","v2","v13","v8","casamento"];
+const COVER_ORDER = ["v3","v15","v1","v16","v4","v14","v6","v2","v13","v8","casamento"];
 
 /* =========================================================
    NICHOS — tudo depois da 1ª pergunta muda por aqui
@@ -409,7 +407,7 @@ const NICHES = {
     pausa:"v1", pedido:"faz um vídeo desse apartamento com o meu avatar",
     tempo:["Fazer mais visitas","Fechar mais negócios","Captar mais imóveis","Ter fim de semana de novo"],
     skills:[["Avatar apresentando o imóvel","video"],["Vídeo do imóvel pro Reels","play"],["CRM de clientes","users"],["Anúncio que faz o cliente chamar","megaphone"]],
-    carrossel:["v1","v6","v5","v7","v11","v12"]},
+    carrossel:["v1","v6","v11","v12"]},
   arq:{desejo:"Mostrar meus projetos em 3D pro cliente", label:"Arquitetura, engenharia ou obra", emoji:"📐", nome:"seus projetos", curto:"seus projetos",
     dores:[
       {t:"Mostrar o projeto pro cliente entender", c:"Cliente que não visualiza não fecha."},
@@ -421,7 +419,7 @@ const NICHES = {
     pausa:"v4", pedido:"mostra essa obra em 3D, andar por andar",
     tempo:["Pegar mais projetos","Focar na parte criativa","Visitar mais obras","Ter mais tempo pra mim"],
     skills:[["Render do projeto","image"],["Obra em 3D andar por andar","layers"],["Orçamento em PDF","file"],["Simulação de empreendimento","ruler"]],
-    carrossel:["v4","v7","v5","v6","relatorio","v12"]},
+    carrossel:["v4","v6","relatorio","v12"]},
   beleza:{desejo:"Lotar minha agenda de clientes", label:"Estética, beleza ou saúde", emoji:"💆‍♀️", nome:"seu espaço de beleza", curto:"seu espaço de beleza",
     dores:[
       {t:"Responder agenda e preço no WhatsApp", c:"Quem não é respondido marca com outra."},
@@ -508,7 +506,7 @@ const PERFIS = {
   corretor:{re:/corretor|imobiliari/, nicho:"imoveis", destaque:true, ordemDor:null,
     eyebrow:"Para corretores de imóveis", h1:["A IA faz o vídeo","do imóvel por você"],
     sub:"E responde seus leads a qualquer hora. Veja em 60 segundos o que ela já faz pelos seus imóveis.",
-    capa:["v1","v6","v5","v7","v11","v12"], para:"corretores de imóveis", curtoPara:"corretores",
+    capa:["v1","v6","v11","v12"], para:"corretores de imóveis", curtoPara:"corretores",
     perde:"Como corretor, você perde", botao:"Quero a biblioteca do corretor", semana:"O que um corretor já faz na primeira semana:"},
   professora:{re:/professor/, nicho:"criador", destaque:true, ordemDor:null,
     eyebrow:"Para professoras e professores", h1:["Aula e material","prontos em minutos"],
@@ -538,7 +536,7 @@ const PERFIS = {
   arquiteto:{re:/arquitet|engenheir/, nicho:"arq", destaque:true, ordemDor:null,
     eyebrow:"Para arquitetura e engenharia", h1:["Seu projeto em 3D","antes de construir"],
     sub:"Mostre a obra andar por andar pro cliente entender e fechar. Veja em 60 segundos o que a IA já faz pelos seus projetos.",
-    capa:["v4","v7","v5","v6","v12","relatorio"], para:"arquitetura e engenharia", curtoPara:"arquitetos",
+    capa:["v4","v6","v12","relatorio"], para:"arquitetura e engenharia", curtoPara:"arquitetos",
     perde:"Nos seus projetos, você perde", botao:"Quero a biblioteca do arquiteto", semana:"O que um arquiteto já faz na primeira semana:"}
 };
 /* ?perfil=chave vence; senão procura a profissão em utm_campaign + utm_content + utm_medium. Qualquer falha = sem perfil */
